@@ -1,0 +1,29 @@
+{
+  "_doc": "Metadatos de la validación complementaria con SonarQube. Cumplimentar tras la primera ejecución real.",
+  "type": "rq2-sonar-complementary-validation",
+  "status": "EXECUTED",
+  "subset": [
+    "PILOT_VALID_NESTED_IN_LOOP",
+    "REAL_COMMONS_LANG_CONTAINS_NONE",
+    "REAL_ANT_MATCH_PATH",
+    "REAL_COMMONS_LANG_CHOMP"
+  ],
+  "sonarqube": {
+    "version": "[PENDIENTE DE REGISTRO]",
+    "edition": "community-build",
+    "host": "http://localhost:9000",
+    "projectKeyBefore": "tfm-rq2-sonar-validation-before",
+    "projectKeyAfter": "tfm-rq2-sonar-validation-after"
+  },
+  "execution": {
+    "executedBeforeAt": null,
+    "executedAfterAt": null,
+    "operator": null,
+    "corpusCommitHash": null
+  },
+  "prototypeReference": {
+    "csv": "output/rq2-batch/rq2-all-results.csv",
+    "calculatorClass": "es.tfm.refactoring.analysis.CognitiveComplexityCalculator"
+  },
+  "notes": "No se han ejecutado escaneos reales de SonarQube en esta entrega. Configuración Maven (sonar-maven-plugin) y procedimiento documentado en docs/sonarqube-setup.md y docs/rq2-sonar-validation-procedure.md. Resultados del prototipo no se han modificado."
+}

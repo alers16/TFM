@@ -1,0 +1,194 @@
+[
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_VALID_SIMPLE",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_VALID_NULL_CHECK",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_VALID_BOUNDS_CHECK",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_VALID_NESTED_IN_LOOP",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_INVALID_ELSE_BRANCH",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_INVALID_METHOD_GUARD",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_INVALID_MULTI_STMT",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "pilot",
+    "caseId": "PILOT_MIXED_OPPORTUNITIES",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_LANG_CHOMP",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_LANG_IS_NUMERIC",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_COLLECTIONS_GET",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_COLLECTIONS_ISEMPTY",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_MATH_CONVERGED",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_MATH_VALIDATE_RANGE",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_ANT_EXECUTE_TASK",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_ANT_MATCH_PATH",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_LANG_CONTAINS_NONE",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "real",
+    "caseId": "REAL_COMMONS_LANG_MID",
+    "statusStrict": "PASS",
+    "diagnosticsStrict": "",
+    "statusRelaxed": "PASS",
+    "diagnosticsRelaxed": ""
+  },
+  {
+    "corpus": "tutor",
+    "caseId": "TUTOR_BCV_EZ_INJECTION_EXECUTE",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "tutor",
+    "caseId": "TUTOR_BCV_RESOURCE_DECOMPILE_SAVE_ALL",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "tutor",
+    "caseId": "TUTOR_BCV_RESOURCE_DECOMPILE_SAVE_OPENED",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "tutor",
+    "caseId": "TUTOR_JMETAL_EBES_READ_DATA_FILE",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "tutor",
+    "caseId": "TUTOR_JMETAL_EBES_VARIABLE_POSITION",
+    "statusStrict": "SKIPPED",
+    "diagnosticsStrict": "caso no elegible",
+    "statusRelaxed": "SKIPPED",
+    "diagnosticsRelaxed": "caso no elegible"
+  },
+  {
+    "corpus": "tutor",
+    "caseId": "TUTOR_JMETAL_LZ09_OBJECTIVE",
+    "statusStrict": "FAIL",
+    "diagnosticsStrict": "L12: cannot find symbol\n  symbol:   class List\n  location: class TutorJmetalLz09Objective | L12: cannot find symbol\n  symbol:   class List\n  location: class TutorJmetalLz09Objective | L14: cannot find symbol\n  symbol:   variable nobj\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L17: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L17: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L18: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L18: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L19: cannot find symbol\n  symbol:   variable nvar\n  location: class TutorJmetalLz09Objective | L22: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L25: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L29: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L30: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L33: cannot find symbol\n  symbol:   variable ptype\n  location: class TutorJmetalLz09Objective | L39: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L43: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L43: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L44: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L44: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L45: cannot find symbol\n  symbol:   variable nvar\n  location: class TutorJmetalLz09Objective | L47: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L50: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L53: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L61: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L62: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L64: cannot find symbol\n  symbol:   variable ptype\n  location: class TutorJmetalLz09Objective | L72: cannot find symbol\n  symbol:   variable nobj\n  location: class TutorJmetalLz09Objective | L72: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L72: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L74: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L74: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L75: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L75: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L76: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L76: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L77: cannot find symbol\n  symbol:   variable nvar\n  location: class TutorJmetalLz09Objective | L78: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L87: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L88: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L89: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L91: cannot find symbol\n  symbol:   variable ptype\n  location: class TutorJmetalLz09Objective",
+    "statusRelaxed": "FAIL",
+    "diagnosticsRelaxed": "L12: cannot find symbol\n  symbol:   class List\n  location: class TutorJmetalLz09Objective | L12: cannot find symbol\n  symbol:   class List\n  location: class TutorJmetalLz09Objective | L14: cannot find symbol\n  symbol:   variable nobj\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L15: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L17: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L17: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L18: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L18: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L19: cannot find symbol\n  symbol:   variable nvar\n  location: class TutorJmetalLz09Objective | L22: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L25: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L29: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L30: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L33: cannot find symbol\n  symbol:   variable ptype\n  location: class TutorJmetalLz09Objective | L39: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L43: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L43: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L44: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L44: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L45: cannot find symbol\n  symbol:   variable nvar\n  location: class TutorJmetalLz09Objective | L47: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L50: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L53: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L61: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L62: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L64: cannot find symbol\n  symbol:   variable ptype\n  location: class TutorJmetalLz09Objective | L72: cannot find symbol\n  symbol:   variable nobj\n  location: class TutorJmetalLz09Objective | L72: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L72: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L74: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L74: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L75: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L75: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L76: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L76: cannot find symbol\n  symbol:   class ArrayList\n  location: class TutorJmetalLz09Objective | L77: cannot find symbol\n  symbol:   variable nvar\n  location: class TutorJmetalLz09Objective | L78: cannot find symbol\n  symbol:   variable ltype\n  location: class TutorJmetalLz09Objective | L87: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L88: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L89: cannot find symbol\n  symbol:   variable dtype\n  location: class TutorJmetalLz09Objective | L91: cannot find symbol\n  symbol:   variable ptype\n  location: class TutorJmetalLz09Objective"
+  }
+]

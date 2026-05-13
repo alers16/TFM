@@ -1,0 +1,32 @@
+# Archivos de compilación
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+!.vscode/settings.json
+.project
+.classpath
+.settings/
+
+# Maven
+*.jar
+*.war
+*.ear
+
+# SO
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Credenciales
+.env
+
+# Carpetas temporales de extracción (no forman parte del TFM)
+tmp-tutor-repo/
+*.zip

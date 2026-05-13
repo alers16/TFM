@@ -1,0 +1,24 @@
+{
+  "campaignPhase": "Phase 9",
+  "campaignType": "exploratory-openai-only",
+  "executionMode": "openai-only",
+  "status": "completed",
+  "statusDetail": "technicalErrors=0",
+  "startedAt": "2026-05-01T15:36:06.657944700Z",
+  "protocolFrozen": true,
+  "protocol": {
+    "expectedInvocations": 18,
+    "subsetSize": 6,
+    "temperature": 0.0,
+    "models": [
+      "gpt-4o"
+    ],
+    "promptVersion": "v1.0",
+    "maxOutputTokens": 2048,
+    "attemptsPerCase": 3
+  },
+  "modelVersions": {
+    "gpt-4o": "gpt-4o"
+  },
+  "completedInvocations": 18
+}

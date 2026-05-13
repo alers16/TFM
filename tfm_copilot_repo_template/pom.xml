@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>es.tfm</groupId>
+    <artifactId>conditional-refactoring</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>TFM - Conditional Refactoring</name>
+    <description>
+        Prototipo para detectar y refactorizar sentencias condicionales anidadas en Java,
+        con el objetivo de reducir la complejidad cognitiva del código.
+    </description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <javaparser.version>3.26.4</javaparser.version>
+        <junit.version>5.11.4</junit.version>
+
+        <!--
+            Validación complementaria con SonarQube (no sustituye el cálculo
+            propio de complejidad cognitiva del prototipo).
+            Ver docs/sonarqube-setup.md y docs/rq2-sonar-validation-procedure.md.
+        -->
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.projectKey>tfm-rq2-sonar-validation</sonar.projectKey>
+        <sonar.projectName>TFM RQ2 Sonar Validation</sonar.projectName>
+        <sonar.java.source>17</sonar.java.source>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- JavaParser: análisis y transformación de AST Java -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>${javaparser.version}</version>
+        </dependency>
+
+        <!-- Gson: serialización JSON para exportar resultados experimentales -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+        <!-- JUnit 5 para tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
+            <!--
+                SonarScanner for Maven — validación complementaria de RQ2.
+                Activar con: mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN ...
+                (ver docs/sonarqube-setup.md para detalles).
+            -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>4.0.0.4121</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

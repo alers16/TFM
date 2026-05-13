@@ -1,0 +1,72 @@
+{
+    "paging": {
+        "pageIndex": 1,
+        "pageSize": 100,
+        "total": 4
+    },
+    "baseComponent": {
+        "key": "tfm-rq2-sonar-validation-after",
+        "name": "TFM RQ2 Sonar Validation (after)",
+        "description": "Prototipo para detectar y refactorizar sentencias condicionales anidadas en Java,\n        con el objetivo de reducir la complejidad cognitiva del código.",
+        "qualifier": "TRK",
+        "measures": []
+    },
+    "components": [
+        {
+            "key": "tfm-rq2-sonar-validation-after:output/rq2-sonar-validation/after-corpus/PilotValidNestedInLoop.java",
+            "name": "PilotValidNestedInLoop.java",
+            "qualifier": "FIL",
+            "path": "output/rq2-sonar-validation/after-corpus/PilotValidNestedInLoop.java",
+            "language": "java",
+            "measures": [
+                {
+                    "metric": "cognitive_complexity",
+                    "value": "4",
+                    "bestValue": false
+                }
+            ]
+        },
+        {
+            "key": "tfm-rq2-sonar-validation-after:output/rq2-sonar-validation/after-corpus/RealAntMatchPath.java",
+            "name": "RealAntMatchPath.java",
+            "qualifier": "FIL",
+            "path": "output/rq2-sonar-validation/after-corpus/RealAntMatchPath.java",
+            "language": "java",
+            "measures": [
+                {
+                    "metric": "cognitive_complexity",
+                    "value": "4",
+                    "bestValue": false
+                }
+            ]
+        },
+        {
+            "key": "tfm-rq2-sonar-validation-after:output/rq2-sonar-validation/after-corpus/RealCommonsLangChomp.java",
+            "name": "RealCommonsLangChomp.java",
+            "qualifier": "FIL",
+            "path": "output/rq2-sonar-validation/after-corpus/RealCommonsLangChomp.java",
+            "language": "java",
+            "measures": [
+                {
+                    "metric": "cognitive_complexity",
+                    "value": "6",
+                    "bestValue": false
+                }
+            ]
+        },
+        {
+            "key": "tfm-rq2-sonar-validation-after:output/rq2-sonar-validation/after-corpus/RealCommonsLangContainsNone.java",
+            "name": "RealCommonsLangContainsNone.java",
+            "qualifier": "FIL",
+            "path": "output/rq2-sonar-validation/after-corpus/RealCommonsLangContainsNone.java",
+            "language": "java",
+            "measures": [
+                {
+                    "metric": "cognitive_complexity",
+                    "value": "11",
+                    "bestValue": false
+                }
+            ]
+        }
+    ]
+}
