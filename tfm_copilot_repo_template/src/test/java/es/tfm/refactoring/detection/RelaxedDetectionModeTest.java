@@ -178,7 +178,7 @@ class RelaxedDetectionModeTest {
         }
 
         @Test
-        @DisplayName("else interno → rechazado en RELAXED (P4 intacta)")
+        @DisplayName("else interno no vacío → rechazado en RELAXED (P4 intacta para else con cuerpo)")
         void innerElseRejectedInRelaxed() {
             MethodDeclaration m = parseMethod(
                     "class X { void f(String s) {" +
@@ -192,7 +192,155 @@ class RelaxedDetectionModeTest {
             assertTrue(relaxedResults.stream()
                     .anyMatch(r -> !r.isAccepted()
                             && r.getDiscardReasons().contains(DiscardReason.INNER_HAS_ELSE)),
-                    "RELAXED debe seguir rechazando else interno (P4 intacta)");
+                    "RELAXED debe seguir rechazando else interno con cuerpo (P4 intacta)");
+        }
+    }
+
+    // =========================================================================
+    // P4' — else vacío en if interno aceptado en RELAXED
+    // =========================================================================
+
+    @Nested
+    @DisplayName("P4' — else vacío en if interno (RELAXED acepta, STRICT rechaza)")
+    class EmptyElseRelaxation {
+
+        @Test
+        @DisplayName("else {} vacío en if interno → aceptado en RELAXED")
+        void emptyInnerElseAcceptedInRelaxed() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(int a, int b) {" +
+                    "  if (a > 0) {" +
+                    "    if (b > 0) { doSomething(); } else {}" +
+                    "  }" +
+                    "} void doSomething() {} }");
+
+            List<DetectionResult> relaxedResults = RELAXED.detectWithReasons(m);
+            assertTrue(relaxedResults.stream().anyMatch(DetectionResult::isAccepted),
+                    "RELAXED debe aceptar if interno con else vacío (P4')");
+        }
+
+        @Test
+        @DisplayName("else {} vacío en if interno → rechazado en STRICT")
+        void emptyInnerElseRejectedInStrict() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(int a, int b) {" +
+                    "  if (a > 0) {" +
+                    "    if (b > 0) { doSomething(); } else {}" +
+                    "  }" +
+                    "} void doSomething() {} }");
+
+            List<DetectionResult> strictResults = STRICT.detectWithReasons(m);
+            assertTrue(strictResults.stream()
+                    .anyMatch(r -> !r.isAccepted()
+                            && r.getDiscardReasons().contains(DiscardReason.INNER_HAS_ELSE)),
+                    "STRICT debe rechazar else vacío igual que cualquier otro else (P4 sin relajar)");
+        }
+
+        @Test
+        @DisplayName("else { stmt; } no vacío → rechazado en RELAXED (P4' no aplica)")
+        void nonEmptyInnerElseStillRejectedInRelaxed() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(int a, int b) {" +
+                    "  if (a > 0) {" +
+                    "    if (b > 0) { doSomething(); } else { doOther(); }" +
+                    "  }" +
+                    "} void doSomething() {} void doOther() {} }");
+
+            List<DetectionResult> relaxedResults = RELAXED.detectWithReasons(m);
+            assertTrue(relaxedResults.stream()
+                    .anyMatch(r -> !r.isAccepted()
+                            && r.getDiscardReasons().contains(DiscardReason.INNER_HAS_ELSE)),
+                    "RELAXED debe seguir rechazando else con sentencias");
+        }
+    }
+
+    // =========================================================================
+    // P5''' — patrón null-guard: outer 'x != null', inner 'x.method()'
+    // =========================================================================
+
+    @Nested
+    @DisplayName("P5''' — patrón null-guard (outer: x != null, inner: x.method())")
+    class NullGuardRelaxation {
+
+        @Test
+        @DisplayName("null-guard clásico: outer 'x != null', inner 'x.process()' → aceptado en RELAXED")
+        void nullGuardAcceptedInRelaxed() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(Service x) {" +
+                    "  if (x != null) {" +
+                    "    if (x.process()) { doSomething(); }" +
+                    "  }" +
+                    "} void doSomething() {} }");
+
+            List<DetectionResult> relaxedResults = RELAXED.detectWithReasons(m);
+            assertTrue(relaxedResults.stream().anyMatch(DetectionResult::isAccepted),
+                    "RELAXED debe aceptar null-guard (x != null / x.method()) aunque el método no esté en el allowlist");
+        }
+
+        @Test
+        @DisplayName("null-guard invertido: outer 'null != x', inner 'x.validate()' → aceptado en RELAXED")
+        void nullGuardInvertedAcceptedInRelaxed() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(Service x) {" +
+                    "  if (null != x) {" +
+                    "    if (x.validate()) { doSomething(); }" +
+                    "  }" +
+                    "} void doSomething() {} }");
+
+            List<DetectionResult> relaxedResults = RELAXED.detectWithReasons(m);
+            assertTrue(relaxedResults.stream().anyMatch(DetectionResult::isAccepted),
+                    "RELAXED debe aceptar null-guard en forma 'null != x'");
+        }
+
+        @Test
+        @DisplayName("null-guard: outer 'x != null', inner 'x.process()' → rechazado en STRICT")
+        void nullGuardRejectedInStrict() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(Service x) {" +
+                    "  if (x != null) {" +
+                    "    if (x.process()) { doSomething(); }" +
+                    "  }" +
+                    "} void doSomething() {} }");
+
+            List<DetectionResult> strictResults = STRICT.detectWithReasons(m);
+            assertTrue(strictResults.stream()
+                    .anyMatch(r -> !r.isAccepted()
+                            && r.getDiscardReasons().contains(DiscardReason.METHOD_CALL_IN_CONDITION)),
+                    "STRICT debe rechazar null-guard: cualquier llamada a método es descarte");
+        }
+
+        @Test
+        @DisplayName("outer no es null-check → inner 'x.process()' rechazado en RELAXED (no null-guard)")
+        void nonNullGuardOuterRejectedInRelaxed() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(Service x, boolean flag) {" +
+                    "  if (flag) {" +
+                    "    if (x.process()) { doSomething(); }" +
+                    "  }" +
+                    "} void doSomething() {} }");
+
+            List<DetectionResult> relaxedResults = RELAXED.detectWithReasons(m);
+            assertTrue(relaxedResults.stream()
+                    .anyMatch(r -> !r.isAccepted()
+                            && r.getDiscardReasons().contains(DiscardReason.METHOD_CALL_IN_CONDITION)),
+                    "RELAXED debe rechazar si la condición externa no es null-check y el método no está en el allowlist");
+        }
+
+        @Test
+        @DisplayName("null-guard: inner llama a método de DIFERENTE variable → rechazado en RELAXED")
+        void nullGuardDifferentVarRejectedInRelaxed() {
+            MethodDeclaration m = parseMethod(
+                    "class X { void f(Service x, Service y) {" +
+                    "  if (x != null) {" +
+                    "    if (y.process()) { doSomething(); }" +  // y, not x
+                    "  }" +
+                    "} void doSomething() {} }");
+
+            List<DetectionResult> relaxedResults = RELAXED.detectWithReasons(m);
+            assertTrue(relaxedResults.stream()
+                    .anyMatch(r -> !r.isAccepted()
+                            && r.getDiscardReasons().contains(DiscardReason.METHOD_CALL_IN_CONDITION)),
+                    "RELAXED debe rechazar si la llamada es sobre una variable distinta a la null-guardada");
         }
     }
 

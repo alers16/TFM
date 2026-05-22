@@ -9,15 +9,15 @@
     "REAL_COMMONS_LANG_CHOMP"
   ],
   "sonarqube": {
-    "version": "[PENDIENTE DE REGISTRO]",
+    "version": "26.4.0.121862",
     "edition": "community-build",
     "host": "http://localhost:9000",
-    "projectKeyBefore": "tfm-rq2-sonar-validation-before",
-    "projectKeyAfter": "tfm-rq2-sonar-validation-after"
+    "projectKeyBefore": "tfm-rq2-before",
+    "projectKeyAfter": "tfm-rq2-after"
   },
   "execution": {
-    "executedBeforeAt": null,
-    "executedAfterAt": null,
+    "executedBeforeAt": "2026-05-18T12:22:28+02:00",
+    "executedAfterAt": "2026-05-18T12:23:00+02:00",
     "operator": null,
     "corpusCommitHash": null
   },

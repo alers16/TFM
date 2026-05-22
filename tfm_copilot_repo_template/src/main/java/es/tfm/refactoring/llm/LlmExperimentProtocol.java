@@ -99,6 +99,24 @@ public class LlmExperimentProtocol {
         );
     }
 
+    /**
+     * Protocolo con prompt v2.0 (few-shot) para la evaluación comparativa de prompts.
+     * <p>
+     * Mantiene los mismos parámetros que {@link #defaultProtocol()} salvo la versión
+     * del prompt, que pasa a {@code v2.0} con ejemplos few-shot incrustados en el
+     * system prompt. El objetivo es comparar si los ejemplos mejoran la tasa de
+     * corrección respecto al prompt zero-shot v1.0.
+     */
+    public static LlmExperimentProtocol promptV2Protocol() {
+        return new LlmExperimentProtocol(
+                List.of("gpt-4o", "gpt-4.1"),
+                0.0,
+                3,
+                LlmPromptBuilder.PROMPT_VERSION_V2,
+                2048
+        );
+    }
+
     @Override
     public String toString() {
         return String.format(java.util.Locale.US,

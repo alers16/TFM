@@ -1,0 +1,571 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+
+% ─── Tema ────────────────────────────────────────────────────────────────────
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+% ─── Paquetes ────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{amsmath}
+
+% ─── Listados Java ───────────────────────────────────────────────────────────
+\lstdefinestyle{java}{
+  language=Java,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{gray},
+  stringstyle=\color{orange!80!black},
+  numbers=none,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!8},
+  xleftmargin=2pt, xrightmargin=2pt,
+  aboveskip=4pt, belowskip=2pt
+}
+
+% ─── Metadatos ───────────────────────────────────────────────────────────────
+\title[Refactorización de Condicionales]{%
+  Refactorización de sentencias condicionales anidadas\\
+  para reducir la complejidad cognitiva en Java}
+\subtitle{Avance TFM --- Reunión con tutor}
+\author{Alejandro Román}
+\date{Mayo 2026}
+
+% ─── Colores utilitarios ─────────────────────────────────────────────────────
+\definecolor{okgreen}{RGB}{0,140,0}
+\definecolor{warnred}{RGB}{180,0,0}
+\newcommand{\ok}[1]{\textcolor{okgreen}{\textbf{#1}}}
+\newcommand{\warn}[1]{\textcolor{warnred}{\textbf{#1}}}
+\newcommand{\rq}[1]{\textbf{RQ#1}}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+% ── Portada ──────────────────────────────────────────────────────────────────
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ── Índice ───────────────────────────────────────────────────────────────────
+\begin{frame}{Contenido}
+  \tableofcontents
+\end{frame}
+
+% =============================================================================
+\section{Preguntas de investigación}
+% =============================================================================
+
+\begin{frame}{Preguntas de investigación (literales)}
+  \begin{block}{RQ1}
+    ¿En qué casos se pueden combinar sentencias condicionales anidadas
+    y cuál sería el resultado?
+  \end{block}
+  \begin{block}{RQ2}
+    ¿Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?
+  \end{block}
+  \begin{block}{RQ3}
+    ¿Pueden los grandes modelos de lenguaje realizar esta refactorización
+    de forma correcta y automática?
+  \end{block}
+\end{frame}
+
+% =============================================================================
+\section{Transformación objetivo}
+% =============================================================================
+
+\begin{frame}[fragile]{Transformación objetivo}
+  \begin{columns}[T]
+    \column{0.45\textwidth}
+      \textbf{Antes}
+      \begin{lstlisting}[style=java]
+if (A) {
+    if (B) {
+        S;
+    }
+}
+      \end{lstlisting}
+
+    \column{0.10\textwidth}
+      \vspace{1.5cm}
+      \centering $\Rightarrow$
+
+    \column{0.45\textwidth}
+      \textbf{Después}
+      \begin{lstlisting}[style=java]
+if (A && B) {
+    S;
+}
+      \end{lstlisting}
+  \end{columns}
+
+  \vspace{0.6em}
+  \begin{alertblock}{¿Por qué es equivalente?}
+    El operador \texttt{\&\&} aplica cortocircuito en Java: \texttt{B} sólo se
+    evalúa si \texttt{A} es verdadero, igual que en el anidado original.
+    La equivalencia se preserva si y sólo si se cumplen las precondiciones P1--P5.
+  \end{alertblock}
+\end{frame}
+
+% =============================================================================
+\section{Precondiciones P1--P5 y arquitectura}
+% =============================================================================
+
+\begin{frame}{Precondiciones de aplicabilidad (P1--P5)}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{cll}
+      \toprule
+      \textbf{P} & \textbf{Condición} & \textbf{Componente} \\
+      \midrule
+      P1 & \texttt{if} externo sin \texttt{else}/\texttt{else-if} & \texttt{NestedIfDetector} \\
+      P2 & Bloque \texttt{then} externo con exactamente una sentencia & \texttt{NestedIfDetector} \\
+      P3 & Esa sentencia única es otro \texttt{if} & \texttt{NestedIfDetector} \\
+      P4 & \texttt{if} interno sin \texttt{else}/\texttt{else-if} & \texttt{NestedIfDetector} \\
+      P5 & Ninguna condición contiene \emph{side effects} detectables & \texttt{NestedIfDetector} \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.5em}
+  \begin{itemize}
+    \item Son \emph{condiciones suficientes}, no necesarias
+          $\rightarrow$ pueden relajarse incrementalmente.
+    \item Modo \textbf{RELAXED}: P5' acepta llamadas del \emph{allowlist}
+          (\texttt{isEmpty}, \texttt{size}, getters, \ldots);
+          P4' acepta \texttt{else\{\}} vacío; P5''' acepta
+          \texttt{x.m()} si la condición externa es \texttt{x\,!=\,null}.
+    \item \textbf{Stack:} Java 17, Maven, JavaParser 3.26.4, JUnit 5 ---
+          \ok{384/384 tests en verde}.
+  \end{itemize}
+\end{frame}
+
+% =============================================================================
+\section{Relajaciones del modo RELAXED}
+% =============================================================================
+
+\begin{frame}{Nuevas relajaciones incorporadas al modo RELAXED}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{clp{5.8cm}}
+      \toprule
+      \textbf{Regla} & \textbf{Nombre} & \textbf{Descripción} \\
+      \midrule
+      P4'
+        & Else vacío
+        & El \texttt{if} interno puede tener \texttt{else\{\}} vacío;
+          un bloque sin sentencias no aporta semántica y se ignora. \\
+      \addlinespace
+      P5'''
+        & Patrón null-guard
+        & Si la condición externa es \texttt{x\,!=\,null} (o \texttt{null\,!=\,x})
+          y la condición interna llama a métodos sobre \emph{la misma} variable
+          \texttt{x}, el cortocircuito de \texttt{\&\&} garantiza que
+          \texttt{x} no es nulo cuando se evalúa \texttt{x.m()}. \\
+      \addlinespace
+      Allowlist+
+        & Iteradores
+        & Añadidos \texttt{hasNext}, \texttt{hasMoreTokens},
+          \texttt{hasMoreElements} al allowlist de pureza. \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.4em}
+  \begin{block}{Invariante preservado}
+    \textbf{STRICT permanece inalterado.} Las relajaciones operan
+    únicamente en la rama \texttt{mode == RELAXED} del detector;
+    toda la suite de tests (384/384) continúa en verde.
+  \end{block}
+\end{frame}
+
+% =============================================================================
+\section{Resultados RQ2 — Complejidad cognitiva}
+% =============================================================================
+
+\begin{frame}{RQ2 --- Modo STRICT (P1--P5 completas)}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{lrrrrr}
+      \toprule
+      \textbf{Corpus} & \textbf{N} & \textbf{Elegibles} & \textbf{\%} &
+        $\boldsymbol{\Delta}$\textbf{CC total} & $\boldsymbol{\Delta}$\textbf{CC/caso} \\
+      \midrule
+      pilot (sintético)   & 8  & 5  & 63\% & $-7$  & $-1.4$ \\
+      real (Apache/Ant)   & 10 & 5  & 50\% & $-11$ & $-2.2$ \\
+      tutor (BCV/jMetal)  & 6  & 1  & 17\% & $-3$  & $-3.0$ \\
+      \midrule
+      \textbf{Total}      & \textbf{24} & \textbf{11} & \textbf{46\%}
+        & $\boldsymbol{-21}$ & $\boldsymbol{-1.9}$ \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}{RQ2 --- Modo RELAXED (P1--P4\'\,+\,P5'\,+\,P5'''\,+\,Allowlist+)}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{lrrrrl}
+      \toprule
+      \textbf{Corpus} & \textbf{N} & \textbf{Elegibles} & \textbf{\%} &
+        $\boldsymbol{\Delta}$\textbf{CC total} & \textbf{Nuevos vs STRICT} \\
+      \midrule
+      pilot  & 8  & 6  & 75\%  & $-9$  & $+1$ \\
+      real   & 10 & 8  & 80\%  & $-22$ & $+3$ \\
+      tutor  & 6  & 1  & 17\%  & $-3$  & $+0$ \\
+      \midrule
+      \textbf{Total} & \textbf{24} & \textbf{15} & \textbf{63\%}
+        & $\boldsymbol{-34}$ & $\boldsymbol{+4}$ \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.5em}
+  \begin{itemize}
+    \item RELAXED amplía elegibilidad \ok{$+36\%$ en real-corpus} (5 $\to$ 8)
+          y duplica $\Delta$CC total ($-11 \to -22$).
+    \item \warn{tutor-corpus sin variación:} los descartes son por P1/P4
+          (ramas \texttt{else}), no por P5.
+    \item \textbf{Hallazgo RQ1:} en código industrial de CC extrema, la
+          barrera dominante es la presencia de ramas \texttt{else},
+          \emph{no} los side effects en condiciones.
+    \item \footnotesize Re-validado tras incorporar P4', P5''' y Allowlist+:
+          \ok{números idénticos} --- ningún caso del corpus activa los nuevos patrones
+          (confirma cero falsos positivos nuevos).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RQ2 --- Validación con SonarQube}
+  \begin{itemize}
+    \item Validación complementaria ejecutada sobre un subconjunto de
+          \textbf{4 casos} (2 pilot + 2 real) con
+          SonarQube Community Build 26.4.0.121862 en Docker local.
+    \item \ok{8/8 mediciones de CC: coincidencia exacta} con el prototipo.
+    \item Esto confirma que \texttt{CognitiveComplexityCalculator} es
+          equivalente a SonarQube para los casos evaluados.
+  \end{itemize}
+
+  \vspace{0.4em}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{llrr}
+      \toprule
+      \textbf{Caso} & \textbf{Estado} & \textbf{CC antes} & \textbf{CC después} \\
+      \midrule
+      PilotValidSimple           & before+after & medido & $-1$ \\
+      PilotValidNestedInLoop     & before+after & medido & $-2$ \\
+      RealCommonsLangContainsNone & before+after & medido & $-1$ \\
+      RealAntMatchPath           & before+after & medido & $-2$ \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \footnotesize
+  \textit{Artefacto de evidencia: \texttt{output/rq2-sonar-validation/rq2-sonar-validation.md}}
+\end{frame}
+
+% =============================================================================
+\section{Resultados RQ3 — LLMs como refactorizadores}
+% =============================================================================
+
+\begin{frame}{RQ3 --- Fase 9: Campaña principal (prompt v1.0 zero-shot)}
+  \textbf{Protocolo:} 6 casos $\times$ 2 modelos $\times$ 3 intentos
+  $= 36$ invocaciones. Temperatura = 0.
+
+  \vspace{0.5em}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{lrrrrr}
+      \toprule
+      \textbf{Modelo} & \textbf{SUCCESS} & \textbf{INCORRECT} &
+        \textbf{Tasa} & \textbf{Consistencia} \\
+      \midrule
+      gpt-4o  & 18/18 & 0 & \ok{100\%} & 100\% \\
+      gpt-4.1 & 15/18 & 3 & 83.3\%     & 100\% \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.4em}
+  \begin{itemize}
+    \item Caso que \warn{gpt-4.1 falla consistentemente:}
+          \texttt{REAL\_COMMONS\_COLLECTIONS\_GET}
+          (condición con llamada a método, riesgo de side effect).
+    \item gpt-4.1 aplica la transformación aunque hay indicios de P5;
+          el detector la rechaza por diseño.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RQ3 --- Campaña trampa: tasa de falsos positivos}
+  \textbf{Motivación:} ¿aplican los LLMs la transformación en casos
+  \emph{que parecen elegibles pero no lo son}?
+
+  \vspace{0.4em}
+  \textbf{3 casos trampa} (sintéticos), cada uno viola exactamente una
+  precondición de forma no obvia:
+
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{llll}
+      \toprule
+      \textbf{Caso} & \textbf{Precondición} & \textbf{gpt-4o} & \textbf{gpt-4.1} \\
+      \midrule
+      \texttt{TRAP\_P4\_INNER\_ELSE}      & P4 --- if interno con \texttt{else}
+                                           & \ok{3/3 ✓} & \ok{3/3 ✓} \\
+      \texttt{TRAP\_P2\_MULTI\_STATEMENT} & P2 --- then externo con 2 sentencias
+                                           & \ok{3/3 ✓} & \ok{3/3 ✓} \\
+      \texttt{TRAP\_P5\_ASSIGNMENT}       & P5 --- asignación en condición
+                                           & \ok{3/3 ✓} & \ok{3/3 ✓} \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.4em}
+  \begin{block}{Resultado}
+    \ok{\textbf{Tasa de falsos positivos: 0\% (0 / 18 invocaciones).}}\\
+    Ambos modelos rechazaron correctamente todos los casos trampa.
+  \end{block}
+\end{frame}
+
+\begin{frame}{RQ3 --- Comparativa prompt v1.0 vs v2.0 (few-shot)}
+  \textbf{Hipótesis:} añadir ejemplos few-shot (APPLICABLE + NOT APPLICABLE)
+  en el system prompt mejora la tasa de éxito.
+
+  \vspace{0.5em}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{lrrr}
+      \toprule
+      \textbf{Modelo} & \textbf{Tasa v1.0 zero-shot} &
+        \textbf{Tasa v2.0 few-shot} & \textbf{Variación} \\
+      \midrule
+      gpt-4o  & 100\%  & 100\%  & $\pm 0$ \\
+      gpt-4.1 & 83.3\% & 83.3\% & $\pm 0$ \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.4em}
+  \begin{itemize}
+    \item Los ejemplos few-shot \warn{no aportan ganancia} con temperatura 0.
+    \item La consistencia ya es máxima (T=0); los ejemplos no desbloquean
+          \texttt{REAL\_COMMONS\_COLLECTIONS\_GET}.
+    \item Ese caso requiere razonamiento sobre \emph{pureza de método},
+          no más ejemplos de sintaxis.
+  \end{itemize}
+\end{frame}
+
+% =============================================================================
+\section{Respuestas a las preguntas de investigación}
+% =============================================================================
+
+\begin{frame}{Respuesta a \rq{1}}
+  \begin{block}{RQ1}
+    ¿En qué casos se pueden combinar sentencias condicionales anidadas
+    y cuál sería el resultado?
+  \end{block}
+
+  \vspace{0.4em}
+  \begin{itemize}
+    \item \textbf{La combinación es aplicable cuando se cumplen P1--P5:}
+          el \texttt{if} externo no tiene \texttt{else}, el bloque interno
+          contiene únicamente otro \texttt{if}, y ninguna condición tiene
+          efectos secundarios detectables. Son condiciones \emph{suficientes}
+          (conservadoras), no necesarias: el modo RELAXED las relaja.
+
+    \item \textbf{¿Qué ocurre con el código resultante?}
+          Los dos \texttt{if} anidados se fusionan en uno solo con
+          \texttt{\&\&}. El operador cortocircuita igual que el anidado
+          original --- la semántica se preserva exactamente. Se elimina un
+          nivel de indentación y la complejidad cognitiva baja.
+
+    \item \textbf{¿Con qué frecuencia aplica en código real?}
+          En el corpus de 24 métodos: STRICT detecta oportunidad en el
+          \ok{46\%} de los casos; RELAXED (relajando P5) lo amplía al
+          \ok{63\%}. En código industrial de alta CC la barrera no son los
+          side effects --- son las ramas \texttt{else} (P1/P4), que el
+          modo RELAXED no puede eliminar por diseño.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Respuesta a \rq{2}}
+  \begin{block}{RQ2}
+    ¿Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?
+  \end{block}
+
+  \vspace{0.4em}
+  \begin{itemize}
+    \item \textbf{La refactorización siempre reduce CC, nunca la aumenta.}
+          Cada fusión de \texttt{if} anidados elimina exactamente 1 punto de
+          penalización por anidamiento en la métrica de SonarSource.
+          La reducción media por caso elegible es \ok{$\Delta$CC\,=\,$-$1,9}
+          (STRICT) y \ok{$-$2,3} (RELAXED), porque los casos adicionales
+          que RELAXED acepta tienen más anidamiento.
+
+    \item \textbf{En el corpus real (Apache/Ant), RELAXED duplica el impacto:}
+          de $-$11 a $-$22 puntos de CC acumulados, pasando de 5 a 8 casos
+          elegibles. Esto se debe a que los 3 casos extra tienen
+          llamadas a métodos del allowlist (inspectores, getters).
+
+    \item \textbf{La medición ha sido validada externamente con SonarQube:}
+          \ok{8/8 mediciones con coincidencia exacta} entre el prototipo y
+          SonarQube Community Build en Docker local. Esto confirma que los
+          números reportados no son artefactos del prototipo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Respuesta a \rq{3}}
+  \begin{block}{RQ3}
+    ¿Pueden los grandes modelos de lenguaje realizar esta refactorización
+    de forma correcta y automática?
+  \end{block}
+
+  \vspace{0.4em}
+  \begin{itemize}
+    \item \textbf{Sí, con alta precisión sobre casos elegibles:}
+          gpt-4o acierta el \ok{100\%} de las 18 invocaciones; gpt-4.1
+          el 83,3\% (15/18). El fallo de gpt-4.1 es consistente: siempre
+          en el mismo caso (\texttt{REAL\_COMMONS\_COLLECTIONS\_GET}),
+          donde aplica la transformación pese a que la condición contiene
+          una llamada a método que el detector rechaza por P5.
+
+    \item \textbf{Los modelos también reconocen cuándo \emph{no} deben
+          transformar:} el corpus trampa (3 casos que \emph{parecen}
+          elegibles pero violan P4 o P2 o P5 de forma no obvia) obtuvo
+          \ok{0\% de falsos positivos} en 18 invocaciones --- ambos modelos
+          rechazaron correctamente todos los casos.
+
+    \item \textbf{LLMs y detector son complementarios, no sustitutos:}
+          el detector garantiza corrección formal y es trazable caso a caso;
+          los LLMs son más flexibles pero no garantizan corrección. El fallo
+          de gpt-4.1 en el caso de side effect confirma precisamente que
+          el detector cubre una brecha que los modelos no resuelven solos.
+  \end{itemize}
+\end{frame}
+
+% =============================================================================
+\section{Discusión}
+% =============================================================================
+
+\begin{frame}{Discusión --- Comparación de enfoques}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{p{3.2cm}p{4.2cm}p{4.2cm}}
+      \toprule
+      & \textbf{Detector P1--P5} & \textbf{LLMs (gpt-4o / gpt-4.1)} \\
+      \midrule
+      \textbf{Corrección formal}
+        & Garantizada por construcción
+        & Heurística; no garantizada \\
+      \textbf{Tasa de éxito}
+        & 100\% en casos elegibles
+        & 100\% / 83.3\% \\
+      \textbf{Falsos positivos}
+        & 0\% (por diseño)
+        & \ok{0\%} (corpus trampa) \\
+      \textbf{Transparencia}
+        & Trazable (DiscardReason)
+        & Caja negra \\
+      \textbf{Generalización}
+        & Limitada a P1--P5
+        & Potencialmente mayor \\
+      \textbf{Coste}
+        & Gratuito (AST local)
+        & API de pago; latencia \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+% =============================================================================
+\section{Limitaciones y trabajo futuro}
+% =============================================================================
+
+\begin{frame}{Amenazas a la validez}
+  \begin{table}
+    \centering
+    \footnotesize
+    \begin{tabular}{p{2.2cm}p{4.5cm}p{4.5cm}}
+      \toprule
+      \textbf{Tipo} & \textbf{Limitación} & \textbf{Mitigación} \\
+      \midrule
+      Interna
+        & P1--P5 son suficientes, no necesarias
+        & Modo RELAXED; futuro: pureza interprocedural \\
+      Interna
+        & CC calculada por prototipo, no SonarQube
+        & Validación complementaria: \ok{8/8 exacto} \\
+      Externa
+        & Solo Java, solo una transformación, N pequeño
+        & Alcance explícito del MVP \\
+      Constructo
+        & CC como proxy de legibilidad
+        & Futuro: estudio de usuarios / revisión humana \\
+      RQ3
+        & Corpus trampa sintético y pequeño (3 casos)
+        & Punto de partida; ampliable \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}{Trabajo futuro y pendientes}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+      \textbf{Alta prioridad}
+      \begin{itemize}
+        \item Validación dinámica: ejecutar tests del proyecto original sobre
+              código refactorizado
+        \item Redactar §5 Resultados de la memoria
+      \end{itemize}
+
+      \vspace{0.8em}
+      \textbf{Media prioridad}
+      \begin{itemize}
+        \item Tasas de descarte por \texttt{DiscardReason} $\times$ corpus
+              (cuantitativa RQ1)
+        \item Ampliar corpus trampa (casos P1, P3, combinados)
+      \end{itemize}
+
+    \column{0.5\textwidth}
+      \textbf{Completado en esta fase}
+      \begin{itemize}
+        \item[\ok{✓}] Detector STRICT/RELAXED sobre 3 corpus
+        \item[\ok{✓}] Validación SonarQube 8/8
+        \item[\ok{✓}] Campaña RQ3 fase 9 (36 inv.)
+        \item[\ok{✓}] Campaña trampa --- 0\% falsos positivos
+        \item[\ok{✓}] Comparativa prompt v1.0 vs v2.0
+        \item[\ok{✓}] 384/384 tests en verde
+        \item[\ok{✓}] Relajaciones P4', P5''', allowlist+ en RELAXED
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+% ── Cierre ───────────────────────────────────────────────────────────────────
+\begin{frame}
+  \centering
+  \vspace{1.5cm}
+  {\Large \textbf{Gracias}}\\[0.8em]
+  {\normalsize Preguntas / comentarios del tutor}\\[2em]
+  \footnotesize
+  Repositorio: \texttt{tfm\_copilot\_repo\_template}\\
+  Artefactos: \texttt{output/rq2-*/} · \texttt{output/rq3-*/}
+\end{frame}
+
+\end{document}

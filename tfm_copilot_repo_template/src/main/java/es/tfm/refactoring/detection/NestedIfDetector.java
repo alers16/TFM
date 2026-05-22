@@ -2,9 +2,11 @@ package es.tfm.refactoring.detection;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.AssignExpr;
+import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.LambdaExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
@@ -15,6 +17,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Detecta oportunidades de combinación de sentencias condicionales anidadas.
@@ -149,16 +152,20 @@ public class NestedIfDetector {
             return;
         }
 
-        // P4: el if interno no tiene else
+        // P4: el if interno no tiene else (en RELAXED: else vacío se acepta — P4')
         if (innerIf.hasElseBranch()) {
-            return;
+            if (mode == DetectionMode.STRICT || !isEmptyElse(innerIf)) {
+                return;
+            }
         }
 
         // P5: ninguna condición contiene side effects detectables
-        if (containsSideEffects(outerIf.getCondition())) {
+        // En RELAXED: patrón null-guard exime las llamadas del if interno (P5''')
+        Optional<String> nullGuardedVar = extractNullCheckedName(outerIf.getCondition());
+        if (containsSideEffects(outerIf.getCondition(), Optional.empty())) {
             return;
         }
-        if (containsSideEffects(innerIf.getCondition())) {
+        if (containsSideEffects(innerIf.getCondition(), nullGuardedVar)) {
             return;
         }
 
@@ -208,15 +215,30 @@ public class NestedIfDetector {
      * @return true si se detectan indicios de side effects
      */
     private boolean containsSideEffects(Expression condition) {
+        return containsSideEffects(condition, Optional.empty());
+    }
+
+    /**
+     * Variante con patrón null-guard: si {@code nullGuardedVar} está presente,
+     * las llamadas a métodos cuyo receptor sea esa variable se aceptan en modo
+     * RELAXED incluso si el nombre no figura en el allowlist (P5''').
+     */
+    private boolean containsSideEffects(Expression condition, Optional<String> nullGuardedVar) {
         List<MethodCallExpr> calls = condition.findAll(MethodCallExpr.class);
         if (!calls.isEmpty()) {
             if (mode == DetectionMode.STRICT) {
                 return true;
             }
-            // RELAXED: acepta llamadas si TODOS los métodos están en el allowlist
-            boolean allPure = calls.stream()
-                    .allMatch(call -> MethodCallAllowlist.isPresumablyPure(call.getNameAsString()));
-            if (!allPure) {
+            // RELAXED: acepta si el método está en el allowlist O si el receptor
+            // es la variable null-guardada (P5''')
+            boolean allAccepted = calls.stream().allMatch(call -> {
+                if (MethodCallAllowlist.isPresumablyPure(call.getNameAsString())) return true;
+                return nullGuardedVar.isPresent() && call.getScope()
+                        .map(s -> s.isNameExpr()
+                                && s.asNameExpr().getNameAsString().equals(nullGuardedVar.get()))
+                        .orElse(false);
+            });
+            if (!allAccepted) {
                 return true;
             }
         }
@@ -276,16 +298,20 @@ public class NestedIfDetector {
                     Collections.singletonList(reason), line);
         }
 
-        // P4: el if interno no tiene else
+        // P4: el if interno no tiene else (en RELAXED: else vacío se acepta — P4')
         if (innerIf.hasElseBranch()) {
-            return DetectionResult.rejected(
-                    Collections.singletonList(DiscardReason.INNER_HAS_ELSE), line);
+            if (mode == DetectionMode.STRICT || !isEmptyElse(innerIf)) {
+                return DetectionResult.rejected(
+                        Collections.singletonList(DiscardReason.INNER_HAS_ELSE), line);
+            }
         }
 
         // P5: side effects en condiciones (recopilar todos los motivos)
+        // En RELAXED: patrón null-guard exime las llamadas del if interno (P5''')
+        Optional<String> nullGuardedVar = extractNullCheckedName(outerIf.getCondition());
         List<DiscardReason> sideEffectReasons = new ArrayList<>();
-        collectSideEffectReasons(outerIf.getCondition(), sideEffectReasons);
-        collectSideEffectReasons(innerIf.getCondition(), sideEffectReasons);
+        collectSideEffectReasons(outerIf.getCondition(), sideEffectReasons, Optional.empty());
+        collectSideEffectReasons(innerIf.getCondition(), sideEffectReasons, nullGuardedVar);
 
         if (!sideEffectReasons.isEmpty()) {
             return DetectionResult.rejected(sideEffectReasons, line);
@@ -302,15 +328,27 @@ public class NestedIfDetector {
      */
     private void collectSideEffectReasons(Expression condition,
                                           List<DiscardReason> reasons) {
+        collectSideEffectReasons(condition, reasons, Optional.empty());
+    }
+
+    private void collectSideEffectReasons(Expression condition,
+                                          List<DiscardReason> reasons,
+                                          Optional<String> nullGuardedVar) {
         List<MethodCallExpr> calls = condition.findAll(MethodCallExpr.class);
         if (!calls.isEmpty()) {
             if (mode == DetectionMode.STRICT) {
                 reasons.add(DiscardReason.METHOD_CALL_IN_CONDITION);
             } else {
-                // RELAXED: solo añade motivo si alguna llamada no está en el allowlist
-                boolean anyImpure = calls.stream()
-                        .anyMatch(call -> !MethodCallAllowlist.isPresumablyPure(call.getNameAsString()));
-                if (anyImpure) {
+                // RELAXED: motivo solo si alguna llamada no está en el allowlist
+                // ni está protegida por null-guard (P5''')
+                boolean anyUnaccepted = calls.stream().anyMatch(call -> {
+                    if (MethodCallAllowlist.isPresumablyPure(call.getNameAsString())) return false;
+                    return !(nullGuardedVar.isPresent() && call.getScope()
+                            .map(s -> s.isNameExpr()
+                                    && s.asNameExpr().getNameAsString().equals(nullGuardedVar.get()))
+                            .orElse(false));
+                });
+                if (anyUnaccepted) {
                     reasons.add(DiscardReason.METHOD_CALL_IN_CONDITION);
                 }
             }
@@ -334,5 +372,36 @@ public class NestedIfDetector {
         if (!condition.findAll(ObjectCreationExpr.class).isEmpty()) {
             reasons.add(DiscardReason.OBJECT_CREATION_IN_CONDITION);
         }
+    }
+
+    /**
+     * Comprueba si la rama else del if proporcionado es un bloque vacío ({@code else {}}).
+     * Se usa en modo RELAXED para implementar P4' (else vacío aceptado).
+     */
+    private boolean isEmptyElse(IfStmt ifStmt) {
+        return ifStmt.getElseStmt()
+                .map(e -> e.isBlockStmt() && e.asBlockStmt().isEmpty())
+                .orElse(false);
+    }
+
+    /**
+     * Si la condición es de la forma {@code x != null} o {@code null != x},
+     * devuelve el nombre de la variable null-comprobada.
+     * Se usa en modo RELAXED para implementar P5''' (patrón null-guard).
+     *
+     * @param condition expresión a analizar
+     * @return el nombre de la variable, o {@code Optional.empty()} si no aplica
+     */
+    private Optional<String> extractNullCheckedName(Expression condition) {
+        if (!condition.isBinaryExpr()) return Optional.empty();
+        BinaryExpr bin = condition.asBinaryExpr();
+        if (bin.getOperator() != BinaryExpr.Operator.NOT_EQUALS) return Optional.empty();
+        if (bin.getRight().isNullLiteralExpr() && bin.getLeft().isNameExpr()) {
+            return Optional.of(bin.getLeft().asNameExpr().getNameAsString());
+        }
+        if (bin.getLeft().isNullLiteralExpr() && bin.getRight().isNameExpr()) {
+            return Optional.of(bin.getRight().asNameExpr().getNameAsString());
+        }
+        return Optional.empty();
     }
 }

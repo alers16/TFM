@@ -1,13 +1,14 @@
 # RQ2 — Validación complementaria con SonarQube
 
-> **Estado:** plantilla con valores del prototipo pre-rellenos.
-> **Pendiente:** ejecución real de SonarQube y cumplimentación de las
-> columnas correspondientes.
+> **Estado:** VALIDADO — ejecución real completada el 2026-05-18.
+> **SonarQube Community Build:** 26.4.0.121862 · servidor local Docker.
+> **Resultado:** 8/8 medidas individuales con coincidencia exacta (divergencia = 0).
 >
 > Procedimiento de ejecución:
 > [docs/rq2-sonar-validation-procedure.md](../../docs/rq2-sonar-validation-procedure.md).
 > Arranque del servidor:
 > [docs/sonarqube-setup.md](../../docs/sonarqube-setup.md).
+> Artefactos brutos: `sonar-before.json`, `sonar-after.json` (este directorio).
 
 ## 1. Contexto
 

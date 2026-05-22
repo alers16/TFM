@@ -59,6 +59,10 @@ public final class MethodCallAllowlist {
             "regionMatches",
             // Optional inspectors
             "isPresent",
+            // Iterator / enumeration inspectors
+            "hasNext",
+            "hasMoreTokens",
+            "hasMoreElements",
             // Object comparison
             "compareTo",
             "compareToIgnoreCase"

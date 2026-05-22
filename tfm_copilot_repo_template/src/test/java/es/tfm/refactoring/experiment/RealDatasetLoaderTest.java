@@ -35,17 +35,19 @@ class RealDatasetLoaderTest {
     class Loading {
 
         @Test
-        @DisplayName("standardRealFiles() devuelve 10 archivos")
+        @DisplayName("standardRealFiles() descubre al menos 100 archivos del corpus")
         void standardFileCount() {
-            assertEquals(10, RealDatasetLoader.standardRealFiles().size());
+            int count = RealDatasetLoader.standardRealFiles().size();
+            assertTrue(count >= 100,
+                    "El corpus real debe tener al menos 100 casos, tiene: " + count);
         }
 
         @Test
         @DisplayName("Carga todos los archivos estándar sin excepción")
         void loadAllStandard() throws IOException {
-            List<ExperimentCase> cases = loader.load(
-                    RealDatasetLoader.standardRealFiles());
-            assertEquals(10, cases.size());
+            List<String> files = RealDatasetLoader.standardRealFiles();
+            List<ExperimentCase> cases = loader.load(files);
+            assertEquals(files.size(), cases.size());
         }
 
         @Test
@@ -169,10 +171,10 @@ class RealDatasetLoaderTest {
         }
 
         @Test
-        @DisplayName("Pipeline procesa los 10 casos y produce 10 resultados")
+        @DisplayName("Pipeline procesa todos los casos del corpus y produce un resultado por caso")
         void processesAllCases() {
             List<ExperimentResult> results = runner.run(realCases);
-            assertEquals(10, results.size());
+            assertEquals(realCases.size(), results.size());
         }
 
         @Test
@@ -290,20 +292,121 @@ class RealDatasetLoaderTest {
                             + r.getDiscardCategories());
         }
 
+        // --- Nuevos casos elegibles (lote ampliado) ---
+
+        @Test
+        @DisplayName("RealCommonsIoArraySubrange: elegible, null + field access, CC 3→2")
+        void commonsIoArraySubrange() {
+            ExperimentResult r = runCase("REAL_COMMONS_IO_ARRAY_SUBRANGE");
+            assertTrue(r.isEligible(), "null+field access debe ser elegible");
+            assertEquals(3, r.getComplexityBefore());
+            assertEquals(2, r.getComplexityAfter());
+            assertEquals(-1, r.getDelta());
+        }
+
+        @Test
+        @DisplayName("RealCommonsLangValidIndex: elegible, null + aritmética pura, CC 3→2")
+        void commonsLangValidIndex() {
+            ExperimentResult r = runCase("REAL_COMMONS_LANG_VALID_INDEX");
+            assertTrue(r.isEligible(), "null+aritmética debe ser elegible");
+            assertEquals(3, r.getComplexityBefore());
+            assertEquals(2, r.getComplexityAfter());
+            assertEquals(-1, r.getDelta());
+        }
+
+        @Test
+        @DisplayName("RealAntScanEnabled: elegible, null + booleano, CC 3→2")
+        void antScanEnabled() {
+            ExperimentResult r = runCase("REAL_ANT_SCAN_ENABLED");
+            assertTrue(r.isEligible(), "null+boolean debe ser elegible");
+            assertEquals(3, r.getComplexityBefore());
+            assertEquals(2, r.getComplexityAfter());
+            assertEquals(-1, r.getDelta());
+        }
+
+        @Test
+        @DisplayName("RealCommonsMathInInterval: elegible, dos comparaciones aritméticas, CC 3→2")
+        void commonsMathInInterval() {
+            ExperimentResult r = runCase("REAL_COMMONS_MATH_IN_INTERVAL");
+            assertTrue(r.isEligible(), "dos comparaciones puras deben ser elegibles");
+            assertEquals(3, r.getComplexityBefore());
+            assertEquals(2, r.getComplexityAfter());
+            assertEquals(-1, r.getDelta());
+        }
+
+        @Test
+        @DisplayName("RealCommonsLangTripleGuard: elegible, triple null check, CC 6→2, delta -4")
+        void commonsLangTripleGuard() {
+            ExperimentResult r = runCase("REAL_COMMONS_LANG_TRIPLE_GUARD");
+            assertTrue(r.isEligible(), "triple null check debe ser elegible");
+            assertEquals(6, r.getComplexityBefore());
+            assertEquals(2, r.getComplexityAfter());
+            assertEquals(-4, r.getDelta());
+        }
+
+        // --- Nuevos casos no elegibles (lote ampliado, razones nuevas) ---
+
+        @Test
+        @DisplayName("RealCommonsCollectionsInnerElse: no elegible (P4 — inner has else)")
+        void commonsCollectionsInnerElse() {
+            ExperimentResult r = runCase("REAL_COMMONS_COLLECTIONS_INNER_ELSE");
+            assertFalse(r.isEligible());
+            assertTrue(r.getDiscardCategories().contains("INNER_HAS_ELSE"),
+                    "Debe incluir INNER_HAS_ELSE: " + r.getDiscardCategories());
+        }
+
+        @Test
+        @DisplayName("RealCommonsLangAssignmentCond: no elegible (P5 — assignment in condition)")
+        void commonsLangAssignmentCond() {
+            ExperimentResult r = runCase("REAL_COMMONS_LANG_ASSIGNMENT_COND");
+            assertFalse(r.isEligible());
+            assertTrue(r.getDiscardCategories().contains("ASSIGNMENT_IN_CONDITION"),
+                    "Debe incluir ASSIGNMENT_IN_CONDITION: " + r.getDiscardCategories());
+        }
+
+        @Test
+        @DisplayName("RealCommonsMathNoNesting: no elegible (SINGLE_STATEMENT_NOT_IF — ifs secuenciales con return)")
+        void commonsMathNoNesting() {
+            ExperimentResult r = runCase("REAL_COMMONS_MATH_NO_NESTING");
+            assertFalse(r.isEligible());
+            assertTrue(r.getDiscardCategories().contains("SINGLE_STATEMENT_NOT_IF"),
+                    "Debe incluir SINGLE_STATEMENT_NOT_IF: " + r.getDiscardCategories());
+        }
+
+        @Test
+        @DisplayName("RealCommonsLangInnerMethodCall: no elegible (P5 — method call en condición interna)")
+        void commonsLangInnerMethodCall() {
+            ExperimentResult r = runCase("REAL_COMMONS_LANG_INNER_METHOD_CALL");
+            assertFalse(r.isEligible());
+            assertTrue(r.getDiscardCategories().contains("METHOD_CALL_IN_CONDITION"),
+                    "Debe incluir METHOD_CALL_IN_CONDITION: " + r.getDiscardCategories());
+        }
+
+        @Test
+        @DisplayName("RealCommonsLangDecrementCond: no elegible (P5 — decremento en condición)")
+        void commonsLangDecrementCond() {
+            ExperimentResult r = runCase("REAL_COMMONS_LANG_DECREMENT_COND");
+            assertFalse(r.isEligible());
+            assertTrue(r.getDiscardCategories().contains("INCREMENT_OR_DECREMENT_IN_CONDITION"),
+                    "Debe incluir INCREMENT_OR_DECREMENT_IN_CONDITION: "
+                            + r.getDiscardCategories());
+        }
+
         // --- Estadísticas globales ---
 
         @Test
-        @DisplayName("5 casos elegibles y 5 no elegibles en corpus real")
+        @DisplayName("Al menos el 75% de los casos del corpus son elegibles")
         void eligibilityDistribution() {
             List<ExperimentResult> results = runner.run(realCases);
             long eligible = results.stream()
                     .filter(ExperimentResult::isEligible).count();
             long ineligible = results.stream()
                     .filter(r -> !r.isEligible()).count();
-            assertEquals(5, eligible,
-                    "Debe haber 5 elegibles (2 completos + 3 parciales)");
-            assertEquals(5, ineligible,
-                    "Debe haber 5 no elegibles");
+            assertEquals(realCases.size(), eligible + ineligible,
+                    "Total debe coincidir con casos cargados");
+            assertTrue(eligible >= realCases.size() * 0.75,
+                    "Al menos el 75% deben ser elegibles, elegibles=" + eligible
+                            + " de " + realCases.size());
         }
 
         @Test

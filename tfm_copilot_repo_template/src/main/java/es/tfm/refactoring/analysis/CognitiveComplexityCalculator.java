@@ -3,21 +3,33 @@ package es.tfm.refactoring.analysis;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.BodyDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.ConditionalExpr;
+import java.util.ArrayList;
+import java.util.List;
+import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.LambdaExpr;
+import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
 import com.github.javaparser.ast.stmt.ContinueStmt;
 import com.github.javaparser.ast.stmt.DoStmt;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.ForEachStmt;
 import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.LabeledStmt;
+import com.github.javaparser.ast.stmt.LocalClassDeclarationStmt;
+import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.SwitchEntry;
 import com.github.javaparser.ast.stmt.SwitchStmt;
+import com.github.javaparser.ast.stmt.ThrowStmt;
 import com.github.javaparser.ast.stmt.TryStmt;
 import com.github.javaparser.ast.stmt.WhileStmt;
 
@@ -32,20 +44,22 @@ import com.github.javaparser.ast.stmt.WhileStmt;
  * Reglas implementadas (basadas en el modelo SonarSource):
  * <ul>
  *   <li>Incremento estructural (+1): if, else if, else, for, for-each, while,
- *       do-while, switch, catch, break/continue con etiqueta.</li>
+ *       do-while, switch, catch, break/continue con etiqueta, operador ternario.</li>
  *   <li>Incremento de anidamiento (+nivel): if, for, for-each, while, do-while,
  *       switch, catch. No aplica a else-if ni else.</li>
  *   <li>Operadores lógicos: +1 por cada secuencia de operadores del mismo tipo
- *       ({@code &&} o {@code ||}) en condiciones de control de flujo.</li>
+ *       ({@code &&} o {@code ||}) en cualquier expresión (condiciones, return,
+ *       asignaciones, argumentos de método, etc.).</li>
+ *   <li>Lambda: el cuerpo se procesa a nestingLevel+1.</li>
+ *   <li>Clase anónima ({@code new Foo() {...}}): los métodos del cuerpo se procesan
+ *       a nestingLevel+1.</li>
+ *   <li>Clase local ({@code class Foo {...}} dentro de un método): los métodos del
+ *       cuerpo se procesan a nestingLevel+1.</li>
  * </ul>
  * <p>
  * Limitaciones conocidas (no cubierto en esta versión):
  * <ul>
- *   <li>Operador ternario ({@code ?:}) en expresiones.</li>
- *   <li>Operadores lógicos fuera de condiciones de control de flujo.</li>
  *   <li>Detección de recursión.</li>
- *   <li>Lambdas como incremento de anidamiento.</li>
- *   <li>Clases anónimas o internas como incremento de anidamiento.</li>
  * </ul>
  * <p>
  * Referencia del modelo: G. Ann Campbell, "Cognitive Complexity — A new way of measuring
@@ -126,6 +140,29 @@ public class CognitiveComplexityCalculator {
         if (stmt.isContinueStmt() && stmt.asContinueStmt().getLabel().isPresent()) {
             return 1;
         }
+        if (stmt.isReturnStmt()) {
+            ReturnStmt ret = stmt.asReturnStmt();
+            return ret.getExpression().map(e -> processExpression(e, nestingLevel)).orElse(0);
+        }
+        if (stmt.isExpressionStmt()) {
+            return processExpression(stmt.asExpressionStmt().getExpression(), nestingLevel);
+        }
+        if (stmt.isThrowStmt()) {
+            return processExpression(stmt.asThrowStmt().getExpression(), nestingLevel);
+        }
+        if (stmt.isLocalClassDeclarationStmt()) {
+            int c = 0;
+            for (BodyDeclaration<?> member :
+                    stmt.asLocalClassDeclarationStmt().getClassDeclaration().getMembers()) {
+                if (member instanceof MethodDeclaration) {
+                    MethodDeclaration md = (MethodDeclaration) member;
+                    if (md.getBody().isPresent()) {
+                        c += processStatements(md.getBody().get().getStatements(), nestingLevel + 1);
+                    }
+                }
+            }
+            return c;
+        }
         return 0;
     }
 
@@ -148,8 +185,8 @@ public class CognitiveComplexityCalculator {
             complexity += nestingLevel; // nesting increment
         }
 
-        // Logical operators in condition
-        complexity += countLogicalOperatorSequences(ifStmt.getCondition());
+        // Operadores lógicos, ternario y lambdas en la condición
+        complexity += processExpression(ifStmt.getCondition(), nestingLevel);
 
         // Then body at nesting + 1
         complexity += processStatement(ifStmt.getThenStmt(), nestingLevel + 1);
@@ -171,7 +208,7 @@ public class CognitiveComplexityCalculator {
     private int processFor(ForStmt stmt, int nestingLevel) {
         int complexity = 1 + nestingLevel;
         if (stmt.getCompare().isPresent()) {
-            complexity += countLogicalOperatorSequences(stmt.getCompare().get());
+            complexity += processExpression(stmt.getCompare().get(), nestingLevel);
         }
         complexity += processStatement(stmt.getBody(), nestingLevel + 1);
         return complexity;
@@ -185,20 +222,21 @@ public class CognitiveComplexityCalculator {
 
     private int processWhile(WhileStmt stmt, int nestingLevel) {
         int complexity = 1 + nestingLevel;
-        complexity += countLogicalOperatorSequences(stmt.getCondition());
+        complexity += processExpression(stmt.getCondition(), nestingLevel);
         complexity += processStatement(stmt.getBody(), nestingLevel + 1);
         return complexity;
     }
 
     private int processDo(DoStmt stmt, int nestingLevel) {
         int complexity = 1 + nestingLevel;
-        complexity += countLogicalOperatorSequences(stmt.getCondition());
+        complexity += processExpression(stmt.getCondition(), nestingLevel);
         complexity += processStatement(stmt.getBody(), nestingLevel + 1);
         return complexity;
     }
 
     private int processSwitch(SwitchStmt stmt, int nestingLevel) {
         int complexity = 1 + nestingLevel;
+        complexity += processExpression(stmt.getSelector(), nestingLevel);
         for (SwitchEntry entry : stmt.getEntries()) {
             complexity += processStatements(entry.getStatements(), nestingLevel + 1);
         }
@@ -250,16 +288,167 @@ public class CognitiveComplexityCalculator {
             if (op != BinaryExpr.Operator.AND && op != BinaryExpr.Operator.OR) {
                 continue;
             }
-            // A new sequence starts when the parent is NOT the same logical operator
-            boolean parentIsSameLogicalOp = binExpr.getParentNode()
-                    .filter(parent -> parent instanceof BinaryExpr)
-                    .map(parent -> ((BinaryExpr) parent).getOperator())
-                    .filter(parentOp -> parentOp == op)
-                    .isPresent();
+            // A new sequence starts when the parent is NOT the same logical operator.
+            // EnclosedExpr (paréntesis explícitos) se ignoran al subir por el árbol,
+            // siguiendo la especificación SonarSource: «parentheses completely ignored».
+            boolean parentIsSameLogicalOp = effectiveParentOp(binExpr) == op;
             if (!parentIsSameLogicalOp) {
                 count++;
             }
         }
         return count;
+    }
+
+    /**
+     * Devuelve el operador del ancestro BinaryExpr efectivo de {@code binExpr},
+     * ignorando nodos EnclosedExpr intermedios (paréntesis explícitos).
+     * Devuelve {@code null} si no hay ancestro BinaryExpr.
+     */
+    private BinaryExpr.Operator effectiveParentOp(BinaryExpr binExpr) {
+        Node parent = binExpr.getParentNode().orElse(null);
+        while (parent instanceof EnclosedExpr) {
+            parent = parent.getParentNode().orElse(null);
+        }
+        if (parent instanceof BinaryExpr) {
+            return ((BinaryExpr) parent).getOperator();
+        }
+        return null;
+    }
+
+    /**
+     * Devuelve {@code true} si {@code bin} es la raíz de un grupo de operadores
+     * lógicos, es decir, su ancestro BinaryExpr efectivo no es AND ni OR.
+     */
+    private boolean isLogicalRoot(BinaryExpr bin) {
+        BinaryExpr.Operator parentOp = effectiveParentOp(bin);
+        return parentOp != BinaryExpr.Operator.AND && parentOp != BinaryExpr.Operator.OR;
+    }
+
+    /**
+     * Recopila, en orden de aparición en el código fuente (recorrido en inorden),
+     * todos los operadores lógicos (&&/||) que forman parte del mismo grupo plano.
+     * <p>
+     * Reglas de recorrido:
+     * <ul>
+     *   <li>{@link BinaryExpr}: se visita hijo izquierdo, luego el operador (si es
+     *       lógico), luego hijo derecho.</li>
+     *   <li>{@link EnclosedExpr}: transparente (los paréntesis son completamente
+     *       ignorados, igual que SonarSource).</li>
+     *   <li>Cualquier otro nodo: se detiene (scope boundary). Los operadores lógicos
+     *       dentro de lambdas, ternarios, clases anónimas, argumentos de métodos, etc.
+     *       serán contados por la llamada recursiva de {@link #processExpression}.</li>
+     * </ul>
+     */
+    private void collectFlatLogicalOps(Node node, List<BinaryExpr.Operator> ops) {
+        if (node instanceof BinaryExpr) {
+            BinaryExpr bin = (BinaryExpr) node;
+            collectFlatLogicalOps(bin.getLeft(), ops);
+            BinaryExpr.Operator op = bin.getOperator();
+            if (op == BinaryExpr.Operator.AND || op == BinaryExpr.Operator.OR) {
+                ops.add(op);
+            }
+            collectFlatLogicalOps(bin.getRight(), ops);
+        } else if (node instanceof EnclosedExpr) {
+            collectFlatLogicalOps(((EnclosedExpr) node).getInner(), ops);
+        }
+        // Para todo lo demás (llamadas a métodos, ternarios, lambdas, terminales):
+        // se detiene. processExpression los procesará por separado.
+    }
+
+    /**
+     * Dada una lista de operadores lógicos en orden plano, devuelve el número de
+     * secuencias distintas (grupos de operadores consecutivos del mismo tipo).
+     */
+    private int countLogicalSequences(List<BinaryExpr.Operator> ops) {
+        int count = 0;
+        BinaryExpr.Operator prev = null;
+        for (BinaryExpr.Operator op : ops) {
+            if (op != prev) {
+                count++;
+            }
+            prev = op;
+        }
+        return count;
+    }
+
+    /**
+     * Calcula la complejidad cognitiva aportada por una expresión y todos sus
+     * descendientes, respetando los límites de scope de lambdas y clases anónimas.
+     *
+     * <ul>
+     *   <li>Operador ternario ({@code ?:}): +1 estructural.</li>
+     *   <li>Operador lógico ({@code &&}/{@code ||}): +1 si inicia una nueva secuencia
+     *       (el padre efectivo no es del mismo tipo).</li>
+     *   <li>Lambda: el cuerpo se procesa a {@code nestingLevel+1}.</li>
+     *   <li>Clase anónima: los métodos del cuerpo se procesan a {@code nestingLevel+1}.</li>
+     * </ul>
+     *
+     * @param node         nodo raíz a procesar
+     * @param nestingLevel nivel de anidamiento actual
+     * @return complejidad cognitiva aportada
+     */
+    private int processExpression(Node node, int nestingLevel) {
+        if (node instanceof ConditionalExpr) {
+            ConditionalExpr ternary = (ConditionalExpr) node;
+            int c = 1; // +1 estructural por operador ternario
+            c += processExpression(ternary.getCondition(), nestingLevel);
+            c += processExpression(ternary.getThenExpr(), nestingLevel);
+            c += processExpression(ternary.getElseExpr(), nestingLevel);
+            return c;
+        }
+        if (node instanceof BinaryExpr) {
+            BinaryExpr binExpr = (BinaryExpr) node;
+            BinaryExpr.Operator op = binExpr.getOperator();
+            int c = 0;
+            if (op == BinaryExpr.Operator.AND || op == BinaryExpr.Operator.OR) {
+                // Si es la raíz del grupo lógico, contar secuencias con recorrido plano
+                // (igual que SonarSource: paréntesis completamente ignorados).
+                if (isLogicalRoot(binExpr)) {
+                    List<BinaryExpr.Operator> ops = new ArrayList<>();
+                    collectFlatLogicalOps(binExpr, ops);
+                    c = countLogicalSequences(ops);
+                }
+                // Siempre recursamos para procesar ternarios/lambdas/clases que pudiera
+                // haber dentro del árbol lógico.
+            }
+            c += processExpression(binExpr.getLeft(), nestingLevel);
+            c += processExpression(binExpr.getRight(), nestingLevel);
+            return c;
+        }
+        if (node instanceof LambdaExpr) {
+            // El cuerpo de la lambda se procesa a nestingLevel+1.
+            // getBody() devuelve Statement (ExpressionStmt para lambdas de una sola
+            // expresión, BlockStmt para lambdas con llaves).
+            return processStatement(((LambdaExpr) node).getBody(), nestingLevel + 1);
+        }
+        if (node instanceof ObjectCreationExpr) {
+            ObjectCreationExpr oce = (ObjectCreationExpr) node;
+            if (oce.getAnonymousClassBody().isPresent()) {
+                // Clase anónima: los métodos del cuerpo a nestingLevel+1.
+                int c = 0;
+                for (BodyDeclaration<?> member : oce.getAnonymousClassBody().get()) {
+                    if (member instanceof MethodDeclaration) {
+                        MethodDeclaration md = (MethodDeclaration) member;
+                        if (md.getBody().isPresent()) {
+                            c += processStatements(
+                                    md.getBody().get().getStatements(), nestingLevel + 1);
+                        }
+                    }
+                }
+                return c;
+            }
+            // Construcción normal: recorrer argumentos.
+            int c = 0;
+            for (Expression arg : oce.getArguments()) {
+                c += processExpression(arg, nestingLevel);
+            }
+            return c;
+        }
+        // Caso general: recorrer todos los hijos.
+        int c = 0;
+        for (Node child : node.getChildNodes()) {
+            c += processExpression(child, nestingLevel);
+        }
+        return c;
     }
 }

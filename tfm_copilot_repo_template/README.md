@@ -12,19 +12,51 @@ Trabajo de Fin de Máster sobre refactorización de sentencias condicionales par
 
 ```
 ├── src/main/java/es/tfm/refactoring/
-│   ├── Main.java                          # Punto de entrada
-│   ├── detection/                         # Detector de oportunidades
-│   │   ├── NestedIfDetector.java
-│   │   └── RefactoringOpportunity.java
-│   ├── transformation/                    # Transformador
+│   ├── Main.java                                  # Punto de entrada
+│   ├── detection/                                 # Detector de oportunidades (P1–P5)
+│   │   ├── NestedIfDetector.java                  # Detección con razones de descarte
+│   │   ├── DetectionMode.java                     # STRICT / RELAXED
+│   │   ├── DiscardReason.java                     # Enum de motivos de descarte
+│   │   └── MethodCallAllowlist.java               # Métodos permitidos en modo RELAXED
+│   ├── transformation/                            # Transformador AST
 │   │   └── NestedIfTransformer.java
-│   └── analysis/                          # Métricas
-│       └── CognitiveComplexityCalculator.java
-├── src/test/java/es/tfm/refactoring/      # Tests
+│   ├── analysis/                                  # Métricas de complejidad
+│   │   └── CognitiveComplexityCalculator.java     # Proxy de SonarQube CC
+│   ├── experiment/                                # Pipeline experimental RQ2
+│   │   ├── BatchRunner.java
+│   │   ├── ResultExporter.java
+│   │   ├── Rq2BatchExecutor.java                  # Ejecución corpus piloto + real
+│   │   ├── Rq2TutorBatchExecutor.java             # Ejecución corpus tutor
+│   │   ├── Rq2ComparisonExecutor.java             # Comparativa STRICT vs RELAXED
+│   │   ├── RealDatasetLoader.java                 # Carga 33 casos real-corpus
+│   │   ├── PilotCorpusLoader.java                 # Carga 8 casos pilot-corpus
+│   │   └── TutorCorpusLoader.java                 # Carga 8 casos tutor-corpus
+│   ├── scanner/                                   # Escáner masivo de proyectos OSS
+│   │   ├── ProjectCorpusScanner.java              # Escanea un proyecto completo
+│   │   ├── ScanFinding.java                       # Resultado por candidato
+│   │   ├── CorpusScanRunner.java                  # CLI: escanea N proyectos
+│   │   └── CorpusFileGenerator.java               # Genera ficheros corpus desde CSV
+│   └── llm/                                       # Protocolo experimental RQ3
+│       ├── LlmPromptBuilder.java                  # Prompt v1.0 y v2.0
+│       ├── LlmResponseValidator.java              # Oráculo v1.1
+│       ├── CampaignExecutor.java                  # CLI: ejecuta campaña RQ3
+│       └── ...
+├── src/main/resources/
+│   ├── pilot-corpus/    (8 casos)
+│   ├── real-corpus/     (33 casos — 20 originales + 13 del escáner masivo)
+│   ├── tutor-corpus/    (8 casos)
+│   └── trap-corpus/     (3 casos trampa para validar falsos positivos)
+├── src/test/java/es/tfm/refactoring/      # 415 tests
+├── output/                                 # Artefactos generados
+│   ├── rq2-batch/                          # Resultados RQ2 (41 casos, Δ=-70)
+│   ├── rq2-comparison/                     # STRICT vs RELAXED (49 casos)
+│   ├── rq2-tutor/                          # Corpus tutor (8 casos)
+│   ├── corpus-scan/                        # Escáner masivo (24.987 candidatos)
+│   └── rq3-campaign-real-phase9/           # RQ3 live (36 invocaciones)
+├── tmp-projects/                           # Proyectos OSS clonados para el escáner
 ├── memoria/                                # Memoria del TFM
-├── prompts/                                # Prompts de Copilot
-├── .github/                                # Configuración de Copilot
-└── pom.xml                                 # Configuración Maven
+├── docs/                                   # Documentación del protocolo y resultados
+└── pom.xml
 ```
 
 ## Requisitos

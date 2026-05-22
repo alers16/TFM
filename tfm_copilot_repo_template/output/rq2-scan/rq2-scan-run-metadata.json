@@ -1,0 +1,11 @@
+{
+  "artifactType": "rq2-scanner-batch",
+  "startedAt": "2026-05-20T18:50:31.617588400Z",
+  "finishedAt": "2026-05-20T18:50:31.717681Z",
+  "corpusDir": "C:\\Users\\Ale Roman\\Downloads\\tfm_copilot_repo_template\\tfm_copilot_repo_template\\output\\corpus-scan\\generated-corpus",
+  "totalCases": 46,
+  "eligibleCount": 40,
+  "ineligibleCount": 6,
+  "totalDelta": -150,
+  "note": "Corpus generado automaticamente por CorpusScanRunner + CorpusFileGenerator. Los valores de CC son estimaciones proxy del prototipo, no equivalentes directas a SonarQube. Revisar casos elegibles antes de incluir en corpus oficial."
+}

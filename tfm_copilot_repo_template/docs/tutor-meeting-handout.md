@@ -71,7 +71,7 @@ ResultExporter            ← genera CSV / JSON / Markdown
 ```
 
 **Stack:** Java 17, Maven, JavaParser 3.26.4, JUnit 5.11.4, Gson 2.11.0.  
-**Tests:** 399/399 en verde.
+**Tests:** 415/415 en verde.
 
 ---
 
@@ -80,10 +80,13 @@ ResultExporter            ← genera CSV / JSON / Markdown
 | Corpus | N casos | Origen | Propósito |
 |---|---|---|---|
 | `pilot-corpus` | 8 | Sintético | Smoke-test del detector |
-| `real-corpus` | 10 | Apache Commons, Ant (código real open-source) | Evaluación RQ2 sobre código realista |
-| `tutor-corpus` | 6 | Saborido et al., IEEE Access 2022 — BCV (GPL-3.0) y jMetal (LGPL-3.0) | Replicación parcial del paper del tutor |
+| `real-corpus` | 33 | Apache Commons Lang/IO/Math/Compress, Ant, Bytecode Viewer (código real open-source) | Evaluación RQ2 sobre código realista |
+| `tutor-corpus` | 8 | Saborido et al., IEEE Access 2022 — BCV (GPL-3.0), jMetal (MIT) y FileDrop | Replicación parcial del paper del tutor |
 
-> El `tutor-corpus` usa los 6 métodos diana del paper, seleccionados como **outliers de complejidad extrema**,
+> El `real-corpus` se amplió de 10 a 33 casos mediante un **escáner masivo** que analizó 24.987 candidatos
+> en 8 proyectos open-source. Los 13 nuevos casos proceden de Apache Ant 1.10.14 y Bytecode Viewer 2.11.2.
+
+> El `tutor-corpus` usa métodos diana del paper, seleccionados como **outliers de complejidad extrema**,
 > no como muestra representativa. Esto es relevante para interpretar sus tasas de elegibilidad (ver §6.3).
 
 ---
@@ -95,9 +98,9 @@ ResultExporter            ← genera CSV / JSON / Markdown
 | Corpus | N | Elegibles | % Elegible | ΔCC total | ΔCC medio/caso |
 |---|---|---|---|---|---|
 | pilot | 8 | 5 | 63% | −7 | −1.4 |
-| real | 10 | 5 | 50% | −11 | −2.2 |
-| tutor | 6 | 1 | 17% | −3 | −3.0 |
-| **Total** | **24** | **11** | **46%** | **−21** | **−1.9** |
+| real | 33 | 23 | 70% | −63 | −2.7 |
+| tutor | 8 | 1 | 13% | −3 | −3.0 |
+| **Total** | **49** | **29** | **59%** | **−73** | **−2.5** |
 
 ### 6.2 Modo RELAXED (P1–P4 + P5' con allowlist de pureza)
 
@@ -107,18 +110,19 @@ P5' acepta llamadas a métodos presumiblemente puros: `isEmpty`, `size`, `contai
 | Corpus | N | Elegibles | % Elegible | ΔCC total | Nuevos vs STRICT |
 |---|---|---|---|---|---|
 | pilot | 8 | 6 | 75% | −9 | **+1** |
-| real | 10 | 8 | 80% | −22 | **+3** |
-| tutor | 6 | 1 | 17% | −3 | **0** |
-| **Total** | **24** | **15** | **63%** | **−34** | **+4** |
+| real | 33 | 27 | 82% | −75 | **+4** |
+| tutor | 8 | 1 | 13% | −3 | **0** |
+| **Total** | **49** | **34** | **69%** | **−87** | **+5** |
 
 ### 6.3 Interpretación
 
-- **RELAXED amplía eligibilidad +36% en real-corpus** (5 → 8) y duplica el ΔCC total (−11 → −22).
-- **RELAXED no cambia el tutor-corpus (1/6):** los descartes allí son por P1/P4 (ramas `else`), no por P5.
+- **RELAXED amplía eligibilidad en real-corpus** (23 → 27, +4 casos) con un ΔCC total de −75 vs −63 en STRICT.
+- **RELAXED no cambia el tutor-corpus (1/8):** los descartes allí son por P1/P4 (ramas `else`), no por P5.
   - **Hallazgo RQ1:** en código industrial de complejidad extrema la barrera dominante es la presencia de
     ramas `else`, no los side effects en condiciones. Relajar P5 no es suficiente para ese tipo de código.
-- Los 2 casos `real-corpus` que ningún modo acepta (`REAL_COMMONS_MATH_VALIDATE_RANGE`, `REAL_ANT_EXECUTE_TASK`)
-  fallan por P1 o P2 — barrera estructural, no P5.
+- Los 10 casos `real-corpus` que ningún modo acepta fallan por P1, P2 o P5 (distintas barreras).
+- El escáner masivo (24.987 candidatos en 8 proyectos OSS) confirma que las precondiciones P1–P5 en modo
+  STRICT son restrictivas: tasa de elegibilidad natural ≈ 0.06% (15 elegibles / 24.987 candidatos).
 
 > **Nota metodológica:** los valores de CC son estimaciones del prototipo (`CognitiveComplexityCalculator`),
 > no equivalentes directos a SonarQube. La validación con SonarQube sobre un subconjunto de 4 casos está
@@ -128,7 +132,9 @@ P5' acepta llamadas a métodos presumiblemente puros: `isEmpty`, `size`, `contai
 
 ## 7. Resultados RQ3 — LLMs como refactorizadores
 
-**Campaña ejecutada:** fase 9 — 6 casos × 2 modelos × 3 intentos = 36 invocaciones.
+### 7.1 Fase 9 — Campaña principal (prompt v1.0 zero-shot)
+
+**36 invocaciones:** 6 casos × 2 modelos × 3 intentos.
 
 | Modelo | Éxito | Incorrecto | Tasa de éxito | Consistencia |
 |---|---|---|---|---|
@@ -137,12 +143,45 @@ P5' acepta llamadas a métodos presumiblemente puros: `isEmpty`, `size`, `contai
 
 **Caso donde gpt-4.1 falla consistentemente:** `REAL_COMMONS_COLLECTIONS_GET` (50% global).
 
-**Interpretación:**
-- Los LLMs **no aplican P1–P5** explícitamente: operan heurísticamente.
-- gpt-4o produce transformaciones correctas en todos los casos de la campaña.
-- gpt-4.1 falla en un caso real-corpus donde la condición original incluye una llamada de método —
-  posiblemente porque no detecta el riesgo de side effect que P5 evita por construcción.
-- Esto ilustra la diferencia clave: **el detector es conservador y formal; los LLMs son permisivos y heurísticos**.
+---
+
+### 7.2 Campaña trampa — Tasa de falsos positivos (prompt v1.0)
+
+**18 invocaciones:** 3 casos trampa × 2 modelos × 3 intentos.  
+Cada caso trampa viola exactamente una precondición de forma no obvia:
+
+| Caso trampa | Precondición violada | Modelo | Rechaza correctamente |
+|---|---|---|---|
+| `TRAP_P4_INNER_ELSE` | P4 — if interno con `else` | gpt-4o | 3/3 ✓ |
+| `TRAP_P4_INNER_ELSE` | P4 — if interno con `else` | gpt-4.1 | 3/3 ✓ |
+| `TRAP_P2_MULTI_STATEMENT` | P2 — then externo con 2 sentencias | gpt-4o | 3/3 ✓ |
+| `TRAP_P2_MULTI_STATEMENT` | P2 — then externo con 2 sentencias | gpt-4.1 | 3/3 ✓ |
+| `TRAP_P5_ASSIGNMENT` | P5 — asignación en condición interna | gpt-4o | 3/3 ✓ |
+| `TRAP_P5_ASSIGNMENT` | P5 — asignación en condición interna | gpt-4.1 | 3/3 ✓ |
+
+**Tasa de falsos positivos: 0% (0/18 invocaciones).** Ambos modelos reconocen en todos los casos que la transformación no es aplicable.
+
+---
+
+### 7.3 Comparativa prompt v2.0 few-shot vs v1.0 zero-shot
+
+**36 invocaciones:** mismos 6 casos de la fase 9, mismos modelos, mismo protocolo excepto el prompt.
+
+| Modelo | Tasa (v1.0 zero-shot) | Tasa (v2.0 few-shot) | Variación |
+|---|---|---|---|
+| gpt-4o | 100% | **100%** | 0 |
+| gpt-4.1 | 83.3% | **83.3%** | 0 |
+
+`REAL_COMMONS_COLLECTIONS_GET` sigue siendo el único caso que gpt-4.1 falla (3/3 INCORRECT en ambas versiones del prompt). Los ejemplos few-shot no alteran el comportamiento con temperatura 0.
+
+---
+
+### 7.4 Interpretación consolidada
+
+- Los LLMs **no aplican P1–P5** explícitamente: operan heurísticamente, pero identifican correctamente los casos no elegibles cuando la violación es estructural (P2, P4) o de efecto lateral evidente (P5-asignación).
+- **Falsos positivos: 0%** sobre el corpus trampa actual. Los modelos son más conservadores de lo esperado.
+- **El few-shot no aporta ganancia** con temperatura 0: la consistencia del modelo ya es máxima y los ejemplos no desbloquean el caso que falla (`REAL_COMMONS_COLLECTIONS_GET`). Este caso requiere razonamiento sobre pureza de método, no más ejemplos de sintaxis.
+- Diferencia clave entre enfoques: **el detector es conservador y formal (P1–P5 verificadas en AST); los LLMs son heurísticos pero sorprendentemente robustos** en los casos evaluados.
 
 ---
 
@@ -159,7 +198,12 @@ P5' acepta llamadas a métodos presumiblemente puros: `isEmpty`, `size`, `contai
 | `src/.../experiment/Rq2TutorBatchExecutor.java` | Ejecución sobre tutor-corpus |
 | `src/.../analysis/CognitiveComplexityCalculator.java` | Proxy de complejidad cognitiva |
 | `output/rq2-comparison/rq2-comparison-summary.md` | Tabla comparativa con todos los datos |
-| `output/rq3-campaign-real-phase9/rq3-aggregated.md` | Resultados RQ3 |
+| `output/rq3-campaign-real-phase9/rq3-aggregated.md` | Resultados RQ3 fase 9 |
+| `src/.../llm/LlmTrapSubset.java` | Define los 3 casos trampa (todos inelegibles) |
+| `src/.../experiment/TrapCorpusLoader.java` | Carga casos desde `/trap-corpus/` |
+| `output/rq3-trap-campaign/rq3-trap-aggregated.md` | Resultados campaña trampa (falsos positivos) |
+| `src/.../llm/LlmPromptBuilder.java` | Prompt v1.0 (zero-shot) y v2.0 (few-shot) |
+| `output/rq3-promptv2-campaign/rq3-promptv2-aggregated.md` | Resultados comparativa prompt v2.0 |
 
 ---
 
@@ -196,7 +240,8 @@ P5' acepta llamadas a métodos presumiblemente puros: `isEmpty`, `size`, `contai
 | 🔴 Alta | Redactar §5 (resultados) con tablas de §6 de este handout | 1–2 sesiones |
 | 🟡 Media | Validación con SonarQube sobre subset de 4 casos | 1 sesión |
 | 🟡 Media | Reporte de tasas de descarte por `DiscardReason` × corpus (RQ1 cuantitativa) | 1 sesión |
-| 🟡 Media | Campaña RQ3 con casos trampa (side effects en condición) | 2 sesiones |
+| ✅ Hecho | Campaña RQ3 con casos trampa — 0% falsos positivos (0/18), ambos modelos | Completado |
+| ✅ Hecho | Comparativa prompt v2.0 few-shot — sin mejora sobre v1.0 (temperatura 0) | Completado |
 | 🟢 Baja | Documentar tutor-corpus en §4.5 de la memoria | 30 min |
 | 🟢 Baja | Estudio Likert de legibilidad (triangulación de CC) | 1 semana |
 
@@ -208,3 +253,33 @@ P5' acepta llamadas a métodos presumiblemente puros: `isEmpty`, `size`, `contai
 2. ¿El corpus tutor se trata como *replicación* o como *caso de estudio complementario* en la memoria?
 3. ¿La validación con SonarQube es necesaria para la entrega o es suficiente con la nota metodológica?
 4. ¿Qué capítulos tienen prioridad de revisión antes de la entrega?
+
+## 13. Marco investigador / aprendizajes provisionales
+
+Más allá de la implementación del prototipo, el trabajo me está permitiendo situar el problema en un punto intermedio entre dos enfoques distintos de refactorización automática:
+
+- **Enfoque formal y conservador**, basado en reglas explícitas de aplicabilidad sobre AST (P1–P5).
+- **Enfoque heurístico**, representado por los LLMs, que no aplican esas precondiciones de forma explícita sino que deciden a partir de patrones aprendidos de simplificación.
+
+Desde ese punto de vista, el interés del TFM no está solo en “hacer la transformación”, sino en responder a tres cuestiones:
+
+1. **Cuándo puede hacerse con seguridad**  
+   El detector no intenta maximizar cobertura a toda costa, sino delimitar condiciones suficientes para preservar la equivalencia observacional en el patrón MVP.
+
+2. **Qué se gana realmente al hacerla**  
+   La complejidad cognitiva se ha elegido porque el problema estudiado afecta directamente al flujo de control y al anidamiento, que es precisamente donde esta métrica resulta más informativa.
+
+3. **Cómo se comportan los LLMs frente a ese criterio conservador**  
+   La comparación con los modelos no se plantea como una competición abstracta, sino como una forma de estudiar hasta qué punto un enfoque heurístico respeta o no las restricciones que el baseline determinista considera necesarias.
+
+### Aprendizajes provisionales
+
+- En los corpus más realistas, **no siempre domina el problema de los efectos secundarios**; en varios casos la barrera principal es más bien **estructural**, por ejemplo la presencia de ramas `else` o de bloques con varias sentencias.
+- La relajación parcial de P5 mejora claramente la cobertura en código real, pero **no cambia apenas el comportamiento en el `tutor-corpus`**, lo que sugiere que en métodos de complejidad extrema el cuello de botella puede estar más en la estructura de control que en la pureza de las condiciones.
+- En RQ3, la divergencia observada entre **gpt-4o** y **gpt-4.1** en un caso no elegible sugiere que los LLMs pueden comportarse muy bien en casos compatibles con el baseline, pero no necesariamente respetan de forma robusta las precondiciones del detector.
+
+### Preguntas que me abre el trabajo
+
+- ¿Hasta qué punto conviene refinar P5 mediante análisis de pureza más preciso en lugar de una política conservadora por patrones?
+- ¿Es suficiente trabajar sobre condiciones, o en código industrial complejo el problema principal pasa antes por normalizar estructuras con `else`?
+- ¿La complejidad cognitiva reducida por la transformación se traduce siempre en una mejora real de legibilidad, o hay casos donde solo baja la métrica?

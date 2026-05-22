@@ -2,9 +2,16 @@ package es.tfm.refactoring.experiment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Carga casos experimentales desde archivos Java ubicados en el classpath
@@ -91,19 +98,31 @@ public class PilotCorpusLoader {
     }
 
     /**
-     * Lista de archivos del corpus piloto estándar.
-     * Los archivos deben existir como recursos en {@code /pilot-corpus/}.
+     * Descubre dinámicamente todos los archivos {@code .java} presentes en
+     * {@code /pilot-corpus/} del classpath y los devuelve ordenados.
      */
     public static List<String> standardPilotFiles() {
-        return List.of(
-                "PilotValidSimple.java",
-                "PilotValidNullCheck.java",
-                "PilotValidBoundsCheck.java",
-                "PilotValidNestedInLoop.java",
-                "PilotInvalidElseBranch.java",
-                "PilotInvalidMethodCallGuard.java",
-                "PilotInvalidMultiStatement.java",
-                "PilotMixedOpportunities.java"
-        );
+        return discoverDir(RESOURCE_PREFIX);
+    }
+
+    private static List<String> discoverDir(String resourceDir) {
+        URL dirUrl = PilotCorpusLoader.class.getResource(resourceDir);
+        if (dirUrl == null) {
+            throw new IllegalStateException(
+                    "Directorio no encontrado en classpath: " + resourceDir);
+        }
+        try {
+            Path dirPath = Paths.get(dirUrl.toURI());
+            try (Stream<Path> files = Files.list(dirPath)) {
+                return files
+                        .map(p -> p.getFileName().toString())
+                        .filter(name -> name.endsWith(".java"))
+                        .sorted()
+                        .collect(Collectors.toList());
+            }
+        } catch (URISyntaxException | IOException e) {
+            throw new IllegalStateException(
+                    "Error al descubrir archivos en " + resourceDir, e);
+        }
     }
 }

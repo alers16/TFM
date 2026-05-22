@@ -1,5 +1,10 @@
 # Resultados de la Primera Campaña Experimental — RQ3
 
+> **Nota:** Este documento describe la **campaña de ensayo (dry run / Fase 8)** con respuestas pre-grabadas.
+> Los resultados reales (Fase 9, 36 invocaciones live completadas) están en
+> [`docs/campaign-results-rq3-phase9.md`](campaign-results-rq3-phase9.md) y en
+> `output/rq3-campaign-real-phase9/rq3-aggregated.md`.
+
 > **RQ3.** ¿Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?
 
 ## 0. Nota sobre el tipo de ejecución

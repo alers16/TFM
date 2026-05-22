@@ -4,23 +4,23 @@
   "executionMode": "live",
   "status": "completed",
   "statusDetail": "technicalErrors=0",
-  "startedAt": "2026-05-01T15:51:30.240618Z",
+  "startedAt": "2026-05-18T18:16:04.534340100Z",
   "protocolFrozen": true,
   "protocol": {
-    "temperature": 0.0,
     "subsetSize": 6,
-    "expectedInvocations": 36,
-    "attemptsPerCase": 3,
-    "maxOutputTokens": 2048,
-    "promptVersion": "v1.0",
+    "temperature": 0.0,
     "models": [
       "gpt-4o",
       "gpt-4.1"
-    ]
+    ],
+    "promptVersion": "v1.0",
+    "maxOutputTokens": 2048,
+    "attemptsPerCase": 3,
+    "expectedInvocations": 36
   },
   "modelVersions": {
-    "gpt-4.1": "gpt-4.1",
-    "gpt-4o": "gpt-4o"
+    "gpt-4o": "gpt-4o",
+    "gpt-4.1": "gpt-4.1"
   },
   "completedInvocations": 36
 }

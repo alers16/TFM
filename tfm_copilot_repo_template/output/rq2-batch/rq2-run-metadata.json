@@ -1,12 +1,12 @@
 {
   "artifactType": "rq2-batch",
-  "startedAt": "2026-05-01T16:58:47.747596500Z",
-  "finishedAt": "2026-05-01T16:58:47.980413600Z",
+  "startedAt": "2026-05-20T18:56:38.249604900Z",
+  "finishedAt": "2026-05-20T18:56:39.005158100Z",
   "pilotCases": 8,
-  "realCases": 10,
-  "totalCases": 18,
-  "eligibleCount": 10,
-  "ineligibleCount": 8,
-  "totalDelta": -18,
+  "realCases": 118,
+  "totalCases": 126,
+  "eligibleCount": 104,
+  "ineligibleCount": 22,
+  "totalDelta": -278,
   "note": "Valores de complejidad cognitiva = estimación provisional del prototipo (proxy), no equivalente directa a SonarQube/SonarLint."
 }

@@ -1,10 +1,10 @@
 {
   "artifactType": "rq2-tutor-batch",
-  "startedAt": "2026-05-04T11:12:42.946598200Z",
-  "finishedAt": "2026-05-04T11:12:43.398878700Z",
-  "tutorCases": 6,
-  "eligibleCount": 1,
-  "ineligibleCount": 5,
-  "totalDelta": -3,
+  "startedAt": "2026-05-20T18:50:31.270519800Z",
+  "finishedAt": "2026-05-20T18:50:31.317520Z",
+  "tutorCases": 12,
+  "eligibleCount": 5,
+  "ineligibleCount": 7,
+  "totalDelta": -24,
   "note": "Corpus extraido del repositorio del tutor (SoftwareCognitiveComplexityReducer, Saborido et al. 2022). Valores de complejidad = estimacion proxy del prototipo."
 }

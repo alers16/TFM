@@ -1,85 +1,5 @@
 [
   {
-    "caseId": "PILOT_VALID_SIMPLE",
-    "origin": "synthetic-realistic",
-    "description": "Validación de rango de entrada — patrón canónico if-if sin else",
-    "eligible": true,
-    "discardReason": null,
-    "opportunitiesDetected": 1,
-    "opportunitiesApplied": 1,
-    "totalPasses": 1,
-    "complexityBefore": 3,
-    "complexityAfter": 2,
-    "delta": -1,
-    "methodSignature": "void processIfInRange(int, int)",
-    "sourceBefore": "/**\r\n * Procesa un valor si está en rango positivo y dentro del límite.\r\n * Patrón típico de validación de entrada en métodos de negocio.\r\n */\r\nvoid processIfInRange(int value, int limit) {\r\n    if (value > 0) {\r\n        if (value <= limit) {\r\n            System.out.println(\"Valor aceptado: \" + value);\r\n        }\r\n    }\r\n}",
-    "sourceAfter": "/**\r\n * Procesa un valor si está en rango positivo y dentro del límite.\r\n * Patrón típico de validación de entrada en métodos de negocio.\r\n */\r\nvoid processIfInRange(int value, int limit) {\r\n    if (value > 0 && value <= limit) {\r\n        System.out.println(\"Valor aceptado: \" + value);\r\n    }\r\n}",
-    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
-    "discardCategories": [
-      "SINGLE_STATEMENT_NOT_IF"
-    ]
-  },
-  {
-    "caseId": "PILOT_VALID_NULL_CHECK",
-    "origin": "synthetic-realistic",
-    "description": "Guarda null seguida de comprobación de propiedad — patrón frecuente en Java",
-    "eligible": true,
-    "discardReason": null,
-    "opportunitiesDetected": 1,
-    "opportunitiesApplied": 1,
-    "totalPasses": 1,
-    "complexityBefore": 3,
-    "complexityAfter": 2,
-    "delta": -1,
-    "methodSignature": "void processArray(int[])",
-    "sourceBefore": "/**\r\n * Comprueba que un array no es null antes de verificar su longitud.\r\n * Patrón habitual en código defensivo Java.\r\n * Nota: la condición no contiene llamadas a métodos — es segura para el MVP.\r\n */\r\nvoid processArray(int[] data) {\r\n    if (data != null) {\r\n        if (data.length > 0) {\r\n            int first = data[0];\r\n            System.out.println(\"Primer elemento: \" + first);\r\n        }\r\n    }\r\n}",
-    "sourceAfter": "/**\r\n * Comprueba que un array no es null antes de verificar su longitud.\r\n * Patrón habitual en código defensivo Java.\r\n * Nota: la condición no contiene llamadas a métodos — es segura para el MVP.\r\n */\r\nvoid processArray(int[] data) {\r\n    if (data != null && data.length > 0) {\r\n        int first = data[0];\r\n        System.out.println(\"Primer elemento: \" + first);\r\n    }\r\n}",
-    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
-    "discardCategories": [
-      "OUTER_BLOCK_MULTIPLE_STATEMENTS"
-    ]
-  },
-  {
-    "caseId": "PILOT_VALID_BOUNDS_CHECK",
-    "origin": "synthetic-realistic",
-    "description": "Doble comprobación de límites inferior y superior — validación de índice",
-    "eligible": true,
-    "discardReason": null,
-    "opportunitiesDetected": 1,
-    "opportunitiesApplied": 1,
-    "totalPasses": 1,
-    "complexityBefore": 4,
-    "complexityAfter": 2,
-    "delta": -2,
-    "methodSignature": "void checkBounds(int[], int)",
-    "sourceBefore": "/**\r\n * Verifica que un índice está dentro de los límites de un array\r\n * y que el valor en esa posición es positivo.\r\n * Ambas condiciones son expresiones puras sin side effects.\r\n */\r\nvoid checkBounds(int[] array, int index) {\r\n    if (index >= 0 && index < array.length) {\r\n        if (array[index] > 0) {\r\n            System.out.println(\"Valor positivo en índice \" + index);\r\n        }\r\n    }\r\n}",
-    "sourceAfter": "/**\r\n * Verifica que un índice está dentro de los límites de un array\r\n * y que el valor en esa posición es positivo.\r\n * Ambas condiciones son expresiones puras sin side effects.\r\n */\r\nvoid checkBounds(int[] array, int index) {\r\n    if (index >= 0 && index < array.length && array[index] > 0) {\r\n        System.out.println(\"Valor positivo en índice \" + index);\r\n    }\r\n}",
-    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
-    "discardCategories": [
-      "SINGLE_STATEMENT_NOT_IF"
-    ]
-  },
-  {
-    "caseId": "PILOT_VALID_NESTED_IN_LOOP",
-    "origin": "synthetic-realistic",
-    "description": "Filtrado condicional dentro de bucle — patrón de procesamiento de colecciones",
-    "eligible": true,
-    "discardReason": null,
-    "opportunitiesDetected": 1,
-    "opportunitiesApplied": 1,
-    "totalPasses": 1,
-    "complexityBefore": 6,
-    "complexityAfter": 4,
-    "delta": -2,
-    "methodSignature": "void filterAndProcess(int[], int)",
-    "sourceBefore": "/**\r\n * Filtra elementos de un array aplicando dos condiciones encadenadas.\r\n * El anidamiento dentro de un bucle produce mayor impacto en complejidad\r\n * cognitiva al combinarse.\r\n */\r\nvoid filterAndProcess(int[] values, int threshold) {\r\n    for (int i = 0; i < values.length; i++) {\r\n        if (values[i] > 0) {\r\n            if (values[i] < threshold) {\r\n                System.out.println(\"Aceptado: \" + values[i]);\r\n            }\r\n        }\r\n    }\r\n}",
-    "sourceAfter": "/**\r\n * Filtra elementos de un array aplicando dos condiciones encadenadas.\r\n * El anidamiento dentro de un bucle produce mayor impacto en complejidad\r\n * cognitiva al combinarse.\r\n */\r\nvoid filterAndProcess(int[] values, int threshold) {\r\n    for (int i = 0; i < values.length; i++) {\r\n        if (values[i] > 0 && values[i] < threshold) {\r\n            System.out.println(\"Aceptado: \" + values[i]);\r\n        }\r\n    }\r\n}",
-    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
-    "discardCategories": [
-      "SINGLE_STATEMENT_NOT_IF"
-    ]
-  },
-  {
     "caseId": "PILOT_INVALID_ELSE_BRANCH",
     "origin": "synthetic-realistic",
     "description": "If externo con else — no combinable por precondición P1",
@@ -161,6 +81,86 @@
     "discardCategories": [
       "SINGLE_STATEMENT_NOT_IF",
       "METHOD_CALL_IN_CONDITION"
+    ]
+  },
+  {
+    "caseId": "PILOT_VALID_BOUNDS_CHECK",
+    "origin": "synthetic-realistic",
+    "description": "Doble comprobación de límites inferior y superior — validación de índice",
+    "eligible": true,
+    "discardReason": null,
+    "opportunitiesDetected": 1,
+    "opportunitiesApplied": 1,
+    "totalPasses": 1,
+    "complexityBefore": 4,
+    "complexityAfter": 2,
+    "delta": -2,
+    "methodSignature": "void checkBounds(int[], int)",
+    "sourceBefore": "/**\r\n * Verifica que un índice está dentro de los límites de un array\r\n * y que el valor en esa posición es positivo.\r\n * Ambas condiciones son expresiones puras sin side effects.\r\n */\r\nvoid checkBounds(int[] array, int index) {\r\n    if (index >= 0 && index < array.length) {\r\n        if (array[index] > 0) {\r\n            System.out.println(\"Valor positivo en índice \" + index);\r\n        }\r\n    }\r\n}",
+    "sourceAfter": "/**\r\n * Verifica que un índice está dentro de los límites de un array\r\n * y que el valor en esa posición es positivo.\r\n * Ambas condiciones son expresiones puras sin side effects.\r\n */\r\nvoid checkBounds(int[] array, int index) {\r\n    if (index >= 0 && index < array.length && array[index] > 0) {\r\n        System.out.println(\"Valor positivo en índice \" + index);\r\n    }\r\n}",
+    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
+    "discardCategories": [
+      "SINGLE_STATEMENT_NOT_IF"
+    ]
+  },
+  {
+    "caseId": "PILOT_VALID_NESTED_IN_LOOP",
+    "origin": "synthetic-realistic",
+    "description": "Filtrado condicional dentro de bucle — patrón de procesamiento de colecciones",
+    "eligible": true,
+    "discardReason": null,
+    "opportunitiesDetected": 1,
+    "opportunitiesApplied": 1,
+    "totalPasses": 1,
+    "complexityBefore": 6,
+    "complexityAfter": 4,
+    "delta": -2,
+    "methodSignature": "void filterAndProcess(int[], int)",
+    "sourceBefore": "/**\r\n * Filtra elementos de un array aplicando dos condiciones encadenadas.\r\n * El anidamiento dentro de un bucle produce mayor impacto en complejidad\r\n * cognitiva al combinarse.\r\n */\r\nvoid filterAndProcess(int[] values, int threshold) {\r\n    for (int i = 0; i < values.length; i++) {\r\n        if (values[i] > 0) {\r\n            if (values[i] < threshold) {\r\n                System.out.println(\"Aceptado: \" + values[i]);\r\n            }\r\n        }\r\n    }\r\n}",
+    "sourceAfter": "/**\r\n * Filtra elementos de un array aplicando dos condiciones encadenadas.\r\n * El anidamiento dentro de un bucle produce mayor impacto en complejidad\r\n * cognitiva al combinarse.\r\n */\r\nvoid filterAndProcess(int[] values, int threshold) {\r\n    for (int i = 0; i < values.length; i++) {\r\n        if (values[i] > 0 && values[i] < threshold) {\r\n            System.out.println(\"Aceptado: \" + values[i]);\r\n        }\r\n    }\r\n}",
+    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
+    "discardCategories": [
+      "SINGLE_STATEMENT_NOT_IF"
+    ]
+  },
+  {
+    "caseId": "PILOT_VALID_NULL_CHECK",
+    "origin": "synthetic-realistic",
+    "description": "Guarda null seguida de comprobación de propiedad — patrón frecuente en Java",
+    "eligible": true,
+    "discardReason": null,
+    "opportunitiesDetected": 1,
+    "opportunitiesApplied": 1,
+    "totalPasses": 1,
+    "complexityBefore": 3,
+    "complexityAfter": 2,
+    "delta": -1,
+    "methodSignature": "void processArray(int[])",
+    "sourceBefore": "/**\r\n * Comprueba que un array no es null antes de verificar su longitud.\r\n * Patrón habitual en código defensivo Java.\r\n * Nota: la condición no contiene llamadas a métodos — es segura para el MVP.\r\n */\r\nvoid processArray(int[] data) {\r\n    if (data != null) {\r\n        if (data.length > 0) {\r\n            int first = data[0];\r\n            System.out.println(\"Primer elemento: \" + first);\r\n        }\r\n    }\r\n}",
+    "sourceAfter": "/**\r\n * Comprueba que un array no es null antes de verificar su longitud.\r\n * Patrón habitual en código defensivo Java.\r\n * Nota: la condición no contiene llamadas a métodos — es segura para el MVP.\r\n */\r\nvoid processArray(int[] data) {\r\n    if (data != null && data.length > 0) {\r\n        int first = data[0];\r\n        System.out.println(\"Primer elemento: \" + first);\r\n    }\r\n}",
+    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
+    "discardCategories": [
+      "OUTER_BLOCK_MULTIPLE_STATEMENTS"
+    ]
+  },
+  {
+    "caseId": "PILOT_VALID_SIMPLE",
+    "origin": "synthetic-realistic",
+    "description": "Validación de rango de entrada — patrón canónico if-if sin else",
+    "eligible": true,
+    "discardReason": null,
+    "opportunitiesDetected": 1,
+    "opportunitiesApplied": 1,
+    "totalPasses": 1,
+    "complexityBefore": 3,
+    "complexityAfter": 2,
+    "delta": -1,
+    "methodSignature": "void processIfInRange(int, int)",
+    "sourceBefore": "/**\r\n * Procesa un valor si está en rango positivo y dentro del límite.\r\n * Patrón típico de validación de entrada en métodos de negocio.\r\n */\r\nvoid processIfInRange(int value, int limit) {\r\n    if (value > 0) {\r\n        if (value <= limit) {\r\n            System.out.println(\"Valor aceptado: \" + value);\r\n        }\r\n    }\r\n}",
+    "sourceAfter": "/**\r\n * Procesa un valor si está en rango positivo y dentro del límite.\r\n * Patrón típico de validación de entrada en métodos de negocio.\r\n */\r\nvoid processIfInRange(int value, int limit) {\r\n    if (value > 0 && value <= limit) {\r\n        System.out.println(\"Valor aceptado: \" + value);\r\n    }\r\n}",
+    "observations": "Pases hasta punto fijo: 1. Transformaciones aplicadas: 1",
+    "discardCategories": [
+      "SINGLE_STATEMENT_NOT_IF"
     ]
   }
 ]

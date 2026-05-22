@@ -1,4 +1,4 @@
-# Archivos de compilación
+# Archivos de compilacion
 target/
 *.class
 
@@ -27,6 +27,6 @@ desktop.ini
 # Credenciales
 .env
 
-# Carpetas temporales de extracción (no forman parte del TFM)
+# Carpetas temporales de extraccion (no forman parte del TFM)
 tmp-tutor-repo/
 *.zip

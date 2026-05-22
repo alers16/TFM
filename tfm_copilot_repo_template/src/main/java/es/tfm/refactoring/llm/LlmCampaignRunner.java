@@ -55,11 +55,44 @@ public class LlmCampaignRunner {
             LlmResponseProvider responseProvider,
             Map<String, String> modelVersions) throws IOException {
 
-        // 1. Cargar casos del subset
         Map<String, CaseWithBaseline> cases = loadCasesWithBaselines();
+        return executeProtocol(protocol, responseProvider, modelVersions, cases);
+    }
 
-        // 2. Ejecutar invocaciones según protocolo
+    /**
+     * Ejecuta la campaña sobre un conjunto de casos pre-cargados.
+     * <p>
+     * Útil para subcampañas con corpus distintos del subset estándar
+     * (p.ej. corpus trampa, evaluación de prompt v2.0).
+     *
+     * @param protocol         configuración del protocolo experimental
+     * @param responseProvider  proveedor de respuestas LLM
+     * @param modelVersions    mapa modelo → versión exacta utilizada
+     * @param cases            casos ya cargados con sus baselines
+     * @return lista de registros de invocación con resultados completos
+     */
+    public List<LlmInvocationRecord> executeCampaign(
+            LlmExperimentProtocol protocol,
+            LlmResponseProvider responseProvider,
+            Map<String, String> modelVersions,
+            Map<String, CaseWithBaseline> cases) {
+
+        return executeProtocol(protocol, responseProvider, modelVersions, cases);
+    }
+
+    /**
+     * Núcleo de la campaña: itera modelos × casos × intentos respetando el protocolo.
+     * Selecciona el prompt según la versión indicada en el protocolo.
+     */
+    private List<LlmInvocationRecord> executeProtocol(
+            LlmExperimentProtocol protocol,
+            LlmResponseProvider responseProvider,
+            Map<String, String> modelVersions,
+            Map<String, CaseWithBaseline> cases) {
+
         List<LlmInvocationRecord> records = new ArrayList<>();
+        boolean useV2 = LlmPromptBuilder.PROMPT_VERSION_V2.equals(
+                protocol.getPromptVersion());
 
         for (String model : protocol.getModels()) {
             String modelVersion = modelVersions.getOrDefault(model, model);
@@ -68,7 +101,9 @@ public class LlmCampaignRunner {
                 String caseId = entry.getKey();
                 CaseWithBaseline cwb = entry.getValue();
 
-                String prompt = promptBuilder.buildFullPrompt(cwb.experimentCase);
+                String prompt = useV2
+                        ? promptBuilder.buildFullPromptV2(cwb.experimentCase)
+                        : promptBuilder.buildFullPrompt(cwb.experimentCase);
 
                 for (int attempt = 1; attempt <= protocol.getAttemptsPerCase(); attempt++) {
                     Instant before = Instant.now();

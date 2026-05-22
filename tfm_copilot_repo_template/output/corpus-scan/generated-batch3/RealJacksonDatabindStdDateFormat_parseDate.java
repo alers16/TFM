@@ -1,0 +1,36 @@
+// @caseId JACKSON_DATABIND_STD_DATE_FORMAT_PARSE_DATE
+// @origin jackson-databind
+// @project jackson-databind
+// @file StdDateFormat.java
+// @method _parseDate(String, ParsePosition)
+// @license [PENDIENTE]
+// @sonarCCBefore 12
+// @sonarCCAfter 10   (estimado; CC delta=-2)
+// @eligible YES
+// @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
+
+class JacksonDatabindStdDateFormatParseDate {
+    protected Date _parseDate(String dateStr, ParsePosition pos) throws ParseException {
+        if (looksLikeISO8601(dateStr)) {
+            // also includes "plain"
+            return parseAsISO8601(dateStr, pos);
+        }
+        // Also consider "stringified" simple time stamp
+        int i = dateStr.length();
+        while (--i >= 0) {
+            char ch = dateStr.charAt(i);
+            if (ch < '0' || ch > '9') {
+                // 07-Aug-2013, tatu: And [databind#267] points out that negative numbers should also work
+                if (i > 0 || ch != '-') {
+                    break;
+                }
+            }
+        }
+        if ((i < 0) && // let's just assume negative numbers are fine (can't be RFC-1123 anyway); check length for positive
+        (dateStr.charAt(0) == '-' || NumberInput.inLongRange(dateStr, false))) {
+            return _parseDateFromLong(dateStr, pos);
+        }
+        // Otherwise, fall back to using RFC 1123. NOTE: call will NOT throw, just returns `null`
+        return parseAsRFC1123(dateStr, pos);
+    }
+}

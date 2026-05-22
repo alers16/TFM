@@ -9,7 +9,7 @@
 | STRICT | 10 | 1 | 13 | 0 |
 | RELAXED | 14 | 1 | 9 | 0 |
 
-## Resultados por caso
+## Resultados por caso                                                                    
 
 | Corpus | caseId | STRICT | RELAXED | Diagnóstico (si FAIL/ERROR) |
 |---|---|---|---|---|

@@ -32,17 +32,21 @@ class PilotCorpusLoaderTest {
     class Loading {
 
         @Test
-        @DisplayName("standardPilotFiles() devuelve 8 archivos")
+        @DisplayName("standardPilotFiles() descubre todos los archivos del corpus piloto")
         void standardFileCount() {
-            assertEquals(8, PilotCorpusLoader.standardPilotFiles().size());
+            int count = PilotCorpusLoader.standardPilotFiles().size();
+            assertFalse(PilotCorpusLoader.standardPilotFiles().isEmpty(),
+                    "El corpus piloto no debe estar vacío");
+            assertTrue(count >= 8,
+                    "El corpus piloto debe tener al menos 8 casos, tiene: " + count);
         }
 
         @Test
         @DisplayName("Carga todos los archivos estándar sin excepción")
         void loadAllStandard() throws IOException {
-            List<ExperimentCase> cases = loader.load(
-                    PilotCorpusLoader.standardPilotFiles());
-            assertEquals(8, cases.size());
+            List<String> files = PilotCorpusLoader.standardPilotFiles();
+            List<ExperimentCase> cases = loader.load(files);
+            assertEquals(files.size(), cases.size());
         }
 
         @Test
@@ -116,10 +120,10 @@ class PilotCorpusLoaderTest {
         }
 
         @Test
-        @DisplayName("Pipeline procesa los 8 casos y produce 8 resultados")
+        @DisplayName("Pipeline procesa todos los casos del corpus piloto y produce un resultado por caso")
         void processesAllCases() {
             List<ExperimentResult> results = runner.run(pilotCases);
-            assertEquals(8, results.size());
+            assertEquals(pilotCases.size(), results.size());
         }
 
         @Test

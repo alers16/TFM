@@ -171,14 +171,12 @@ class CognitiveComplexityCalculatorTest {
         }
 
         @Test
-        @DisplayName("if con || && || → 3 (limitación conocida: Sonar contaría 4, ver Javadoc)")
+        @DisplayName("if con || && || (lectura plana) → 4")
         void threeSequences() {
-            // a > 0 || b > 0 && c || d se parsea como (a > 0 || (b > 0 && c)) || d
-            // El algoritmo basado en AST cuenta 2 grupos de operadores lógicos (OR + AND),
-            // no 3 como haría SonarSource al leer la secuencia plana (||, &&, ||).
-            // Esta es una limitación documentada de la estimación provisional.
-            // if: +1, ||: +1, &&: +1 → 3
-            assertEquals(3, calculator.calculate(parseMethod(
+            // a > 0 || b > 0 && c || d se parsea como OR(OR(a>0, AND(b>0,c)), d)
+            // Recorrido en inorden: ||, &&, || → 3 secuencias distintas
+            // if: +1, ||: +1, &&: +1, ||: +1 → 4
+            assertEquals(4, calculator.calculate(parseMethod(
                     "if (a > 0 || b > 0 && c || d) { System.out.println(); }")));
         }
     }

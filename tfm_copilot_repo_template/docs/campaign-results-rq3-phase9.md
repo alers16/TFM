@@ -1,78 +1,100 @@
-# Fase 9 - Primera Campana Real de RQ3
+# Fase 9 — Primera Campaña Real de RQ3
 
 > **RQ3.** ¿Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?
 
-## Diagnostico
+## Estado de ejecución
 
-Esta fase cambia la ejecucion de campana desde respuestas pregrabadas (dry run) a provider real de API, manteniendo el protocolo experimental congelado.
+- Tipo de campaña: primera ejecución real de RQ3 (live, no dry run)
+- Modo de ejecución: `live`
+- Resultado operativo: **completada sin incidencias técnicas**
+- Invocaciones completadas: `36/36`
+- Fecha de ejecución: 2026-05-01
 
-Estado de ejecucion en esta corrida:
+## Protocolo congelado
 
-- Tipo de campana: primera ejecucion real de RQ3
-- Modo de ejecucion: `live`
-- Resultado operativo: bloqueada en arranque por falta de `OPENAI_API_KEY`
-- Invocaciones completadas: `0/36`
+| Parámetro | Valor |
+|-----------|-------|
+| Modelos | `gpt-4o`, `gpt-4.1` |
+| Temperatura | `0.0` |
+| Intentos por caso × modelo | `3` |
+| Prompt | `v1.0` (zero-shot) |
+| Max tokens | `2048` |
+| Subset de casos | `6` (4 elegibles + 2 inelegibles) |
+| Total invocaciones | `36` (6 × 2 × 3) |
+| Oráculo | `LlmResponseValidator` v1.1 |
 
-## Condiciones congeladas (sin cambios)
+## Resultados por modelo
 
-- Subset RQ3: 6 casos
-- Modelos del protocolo: `gpt-4o`, `claude-3.5-sonnet`
-- Temperatura: `0.0`
-- Intentos por caso y modelo: `3`
-- Prompt: `v1.0`
-- Max tokens: `2048`
-- Oraculo: `LlmResponseValidator` v1.1 (sin modificaciones durante la campana)
+| Modelo | SUCCESS | INCORRECT | Tasa éxito | Baseline match | Consistencia |
+|--------|---------|-----------|-----------|---------------|-------------|
+| gpt-4o | 18/18 | 0/18 | **100%** | 100% | 100% |
+| gpt-4.1 | 15/18 | 3/18 | **83.3%** | 83.3% | 100% |
 
-## Que se ejecuto
+## Resultados por caso
 
-1. Se habilito `LiveLlmResponseProvider` como provider por defecto en `CampaignExecutor`.
-2. Se mantuvo separacion limpia mediante interfaz `LlmResponseProvider`.
-3. Se ejecuto la campana con `LlmExperimentProtocol.defaultProtocol()`.
-4. Se exporto evidencia reproducible incluso en caso de bloqueo tecnico de arranque.
+| Caso | Elegibilidad baseline | gpt-4o | gpt-4.1 | Tasa global |
+|------|-----------------------|--------|---------|-------------|
+| `PILOT_VALID_SIMPLE` | Elegible (δ = −1) | 3/3 ✅ | 3/3 ✅ | 100% |
+| `PILOT_VALID_NESTED_IN_LOOP` | Elegible (δ = −2) | 3/3 ✅ | 3/3 ✅ | 100% |
+| `REAL_COMMONS_MATH_CONVERGED` | Elegible (δ = −1) | 3/3 ✅ | 3/3 ✅ | 100% |
+| `REAL_ANT_MATCH_PATH` | Elegible (δ = −2) | 3/3 ✅ | 3/3 ✅ | 100% |
+| `REAL_COMMONS_MATH_VALIDATE_RANGE` | Inelegible (P1 — outer else) | 3/3 ✅ | 3/3 ✅ | 100% |
+| `REAL_COMMONS_COLLECTIONS_GET` | Inelegible (P5 — method call) | 3/3 ✅ | **0/3 ❌** | 50% |
 
-## Trazabilidad por invocacion y evidencia
+### Caso problemático: `REAL_COMMONS_COLLECTIONS_GET` con gpt-4.1
 
-Para esta corrida no hubo invocaciones efectivas porque el bloqueo fue previo a la primera llamada de API.
-Aun asi, se conservaron artefactos de evidencia y de incidente tecnico para replicacion.
+gpt-4.1 combina consistentemente `map != null && map.containsKey(key)` en una sola condición, violando la precondición P5 (llamada a método). El oráculo v1.1 clasifica esto como INCORRECT porque el baseline determinista rechaza el caso. Aunque la transformación preserva semántica en Java gracias al cortocircuito de `&&`, está fuera del alcance de las precondiciones P1–P5 del prototipo.
 
-### Archivos generados
+**gpt-4o** rechaza correctamente la transformación en todos los intentos.
+
+## Campañas complementarias ejecutadas posteriormente
+
+### Campaña OpenAI-only (rq3-openai-only)
+
+Modo exploratorio con un solo modelo para validación incremental. 18 invocaciones (6 casos × 1 modelo × 3 intentos).
+
+| Modelo | SUCCESS | Tasa éxito |
+|--------|---------|-----------|
+| gpt-4o | 18/18 | **100%** |
+
+Artefactos en `output/rq3-openai-only/`.
+
+### Campaña trampa — tasa de falsos positivos (rq3-trap-campaign)
+
+3 casos trampa × 2 modelos × 3 intentos = 18 invocaciones. Cada caso trampa viola exactamente una precondición de forma no obvia.
+
+| Caso trampa | Precondición | gpt-4o | gpt-4.1 |
+|-------------|-------------|--------|---------|
+| `TRAP_P4_INNER_ELSE` | P4 — if interno con `else` | 3/3 ✅ | 3/3 ✅ |
+| `TRAP_P2_MULTI_STATEMENT` | P2 — then externo con 2 sentencias | 3/3 ✅ | 3/3 ✅ |
+| `TRAP_P5_ASSIGNMENT` | P5 — asignación en condición interna | 3/3 ✅ | 3/3 ✅ |
+
+**Tasa de falsos positivos: 0% (0/18).** Artefactos en `output/rq3-trap-campaign/`.
+
+### Comparativa prompt v2.0 few-shot (rq3-promptv2-campaign)
+
+Mismos 6 casos de la Fase 9, mismo protocolo, únicamente se cambia el prompt a v2.0 (few-shot).
+36 invocaciones totales.
+
+| Modelo | Tasa v1.0 (zero-shot) | Tasa v2.0 (few-shot) | Variación |
+|--------|----------------------|---------------------|-----------|
+| gpt-4o | 100% | **100%** | 0 |
+| gpt-4.1 | 83.3% | **83.3%** | 0 |
+
+El few-shot no altera el comportamiento con temperatura 0. `REAL_COMMONS_COLLECTIONS_GET` sigue siendo el único caso que gpt-4.1 falla en ambas versiones del prompt.
+Artefactos en `output/rq3-promptv2-campaign/`.
+
+## Archivos generados (Fase 9 principal)
 
 - `output/rq3-campaign-real-phase9/rq3-full-evidence.json`
 - `output/rq3-campaign-real-phase9/rq3-summary.csv`
 - `output/rq3-campaign-real-phase9/rq3-aggregated.md`
 - `output/rq3-campaign-real-phase9/rq3-run-metadata.json`
-- `output/rq3-campaign-real-phase9/rq3-incidents.md`
+- `output/rq3-campaign-real-phase9/rq3-incidents.md` (sin incidencias)
 
-### Incidencia tecnica registrada
+## Interpretación (respuesta a RQ3)
 
-- Etapa: `startup`
-- Motivo: variable de entorno obligatoria no configurada (`OPENAI_API_KEY`)
-- Impacto: campana no iniciada, 0 invocaciones realizadas
-
-## Resultados preliminares
-
-No hay resultados de veredictos por modelo en esta corrida porque no se realizaron invocaciones.
-
-- SUCCESS: 0
-- INCORRECT: 0
-- INVALID_OUTPUT: 0
-- REFUSED: 0
-- PARTIAL: 0
-- ERROR: 0 (por invocacion)
-
-Nota metodologica:
-
-- La incidencia quedo registrada fuera del flujo de invocacion, en `rq3-incidents.md` y `rq3-run-metadata.json`.
-
-## Limitaciones de esta muestra
-
-1. Esta evidencia documenta una corrida real bloqueada por configuracion, no una corrida completa de 36 invocaciones.
-2. No se pueden estimar tasa de exito, baseline match ni comportamiento en elegibles/inelegibles hasta completar la ejecucion live.
-3. Coste y latencia de API quedan [PENDIENTE DE VERIFICACION].
-
-## Siguiente paso inmediato
-
-1. Configurar `OPENAI_API_KEY` y `ANTHROPIC_API_KEY` en el entorno de ejecucion.
-2. Re-ejecutar exactamente el mismo comando de campana live sobre `output/rq3-campaign-real-phase9` o un subdirectorio de fecha.
-3. Conservar todos los artefactos generados, incluyendo incidencias si ocurren durante invocaciones.
-4. Actualizar este informe con resultados agregados por modelo y por caso tras la corrida completa.
+- **gpt-4o** realiza correctamente la refactorización en el 100% de los casos evaluados, incluyendo identificación correcta de casos inelegibles y aplicación precisa de la transformación cuando corresponde.
+- **gpt-4.1** falla sistemáticamente en un caso inelegible por P5 (method call), transformándolo cuando no debería. El fallo es consistente (3/3 intentos) y robusto al cambio de prompt.
+- **Falsos positivos: 0%** sobre el corpus trampa (casos diseñados para confundir). Ambos modelos son más conservadores de lo esperado ante violaciones estructurales.
+- El few-shot (prompt v2.0) no aporta mejora sobre zero-shot con temperatura 0: la consistencia ya era máxima y los ejemplos no desbloquean el caso problemático de gpt-4.1.
