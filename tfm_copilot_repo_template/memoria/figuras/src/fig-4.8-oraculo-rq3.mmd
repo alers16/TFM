@@ -1,0 +1,22 @@
+%% Fig. 4.8 — Oráculo LlmResponseValidator (8 pasos) + guarda de elegibilidad v1.1.
+%% Fuente de verdad: LlmResponseValidator.java / LlmVerdict.java
+%% Render:  mmdc -i fig-4.8-oraculo-rq3.mmd -o ../img/fig-4.8.svg
+flowchart TD
+    R[Respuesta del LLM] --> S1{1. ¿NO_REFACTORING_<br/>APPLICABLE?}
+    S1 -- Sí --> REFUSED[REFUSED]
+    S1 -- No --> S2[2. Extraer bloque ```java```]
+    S2 --> S3{3. ¿Parseable?}
+    S3 -- No --> INVALID[INVALID_OUTPUT]
+    S3 -- Sí --> S4{4. ¿≥1 método?}
+    S4 -- No --> INVALID
+    S4 -- Sí --> S5{5. ¿Firma preservada?}
+    S5 -- No --> ERRV[error de validación]
+    S5 -- Sí --> S6[6. Medir CC after]
+    ERRV --> S6
+    S6 --> S7[7. Δ y comparación<br/>con baseline]
+    S7 --> G{Guarda v1.1:<br/>baseline NO elegible<br/>y Δ ≠ 0?}
+    G -- Sí --> INCORRECT[INCORRECT]
+    G -- No --> S8{8. Veredicto}
+    S8 --> SUCCESS[SUCCESS]
+    S8 --> PARTIAL[PARTIAL]
+    S8 --> INCORRECT

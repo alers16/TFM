@@ -1,0 +1,152 @@
+% =====================================================================
+%  Memoria del Trabajo Fin de Máster (TFM)
+%  Máster Universitario en Ingeniería del Software e Inteligencia
+%  Artificial — Universidad de Málaga (UMA)
+%
+%  Título: Refactorización de sentencias condicionales anidadas para
+%          reducir la complejidad cognitiva en Java.
+%
+%  Formato: clase `report` (orientada a memoria/tesis: capítulos con
+%  \chapter, índice nativo), márgenes a página completa con `geometry`.
+%  La guía de la UMA no exige LNCS; pide márgenes a página completa, que
+%  aquí se cubren con `geometry`. (Decisión revisada respecto a llncs,
+%  inadecuada para un documento con capítulos y apéndices.)
+%
+%  Compilación recomendada:  latexmk -pdf main.tex
+%  Alternativa:              pdflatex main -> bibtex main -> pdflatex x2
+%  (El índice se rellena en la 2ª pasada; usar latexmk evita el problema.)
+% =====================================================================
+\documentclass[12pt,a4paper,oneside]{report}
+
+% --- Codificación y tipografía -------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-noindentfirst,es-noshorthands]{babel}
+
+% --- Márgenes a página completa ------------------------------------
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+% --- Gráficos, tablas, color ---------------------------------------
+\usepackage{graphicx}
+\graphicspath{{figuras/img/}}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{float}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{statistics}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, shapes.misc}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{statistics}
+
+% --- Código fuente Java --------------------------------------------
+\usepackage{listings}
+\lstset{
+  language=Java,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue!60!black}\bfseries,
+  commentstyle=\color{green!40!black}\itshape,
+  stringstyle=\color{red!60!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b
+}
+
+% --- Matemáticas y enlaces -----------------------------------------
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{hidelinks}
+\usepackage{microtype}
+\setlength{\emergencystretch}{3em}
+
+% --- Profundidad del índice y de la numeración ---------------------
+% Índice hasta sección (capítulo + sección + subsección quedaría muy
+% denso). Numeración interna del cuerpo hasta subsección.
+\setcounter{tocdepth}{2}      % índice: \chapter + \section + \subsection
+\setcounter{secnumdepth}{3}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]
+  {\normalfont\huge\bfseries}   % tipografía del encabezado
+  {\thechapter}                 % etiqueta: solo el número (sin «Capítulo»)
+  {1ex}                         % separación número–título
+  {}                            % código antes del título
+\titlespacing*{\chapter}{0pt}{0pt}{2ex}
+
+% =====================================================================
+%  Marcadores reservados de trazabilidad (NO eliminar)
+%  Hacen visibles y localizables los pendientes exigidos por las
+%  instrucciones del repositorio (AGENTS.md, CLAUDE.md).
+% =====================================================================
+\newcommand{\pendientecita}[1][]{{\color{red}\textbf{[PENDIENTE DE CITA#1]}}}
+\newcommand{\pendienteverif}[1][]{{\color{orange!80!black}\textbf{[PENDIENTE DE VERIFICACIÓN#1]}}}
+\newcommand{\pendientemetodo}[1][]{{\color{violet}\textbf{[PENDIENTE DE REDACCIÓN METODOLÓGICA#1]}}}
+\newcommand{\pendienteredaccion}[1][]{{\color{gray}\textbf{[PENDIENTE DE REDACCIÓN#1]}}}
+\newcommand{\hipotesis}[1][]{{\color{blue!70!black}\textbf{[HIPÓTESIS DE TRABAJO#1]}}}
+
+% =====================================================================
+\begin{document}
+
+% --- Portada --------------------------------------------------------
+\begin{titlepage}
+\centering
+{\large Universidad de Málaga\\
+Escuela Técnica Superior de Ingeniería Informática\par}
+\vspace{0.5cm}
+{\large Máster Universitario en Ingeniería del Software e Inteligencia Artificial\par}
+\vfill
+{\Huge\bfseries Refactorización de sentencias condicionales anidadas para reducir la complejidad cognitiva en Java\par}
+\vspace{1cm}
+{\large\itshape Nested conditional refactoring for reducing cognitive complexity in Java\par}
+\vfill
+{\large
+\begin{tabular}{rl}
+Autor: & Alejandro Román \\[0.4em]
+Tutor(a): & \pendienteverif{} (nombre del tutor/a) \\
+\end{tabular}\par}
+\vfill
+{\large Málaga, \pendienteverif{} (mes y año)\par}
+\end{titlepage}
+
+% --- Resumen / Abstract / Keywords ---------------------------------
+\input{secciones/00-preliminares}
+
+% --- Índice ---------------------------------------------------------
+% Con `report` el índice es nativo. Recordatorio: se rellena en la 2ª
+% pasada de compilación (usar latexmk -pdf para evitar el problema).
+\tableofcontents
+\clearpage
+
+% --- Cuerpo de la memoria ------------------------------------------
+%\input{secciones/01-introduccion}
+%\input{secciones/02-antecedentes}
+%\input{secciones/03-problema}
+\input{secciones/04-propuesta}
+\input{secciones/04a-diseno}
+\input{secciones/04b-arquitectura}
+\input{secciones/04c-implementacion}
+%\input{secciones/04d-experimento}
+\input{secciones/04e-resultados}
+%\input{secciones/04f-amenazas}
+%\input{secciones/05-conclusiones}
+
+% --- Bibliografía ---------------------------------------------------
+% No se incluyen entradas inventadas. Ver bibliografia/referencias.bib.
+% Estilo neutro `plain` (el formato definitivo está [PENDIENTE DE
+% VERIFICACIÓN] según la guía UMA).
+\bibliographystyle{plain}
+\bibliography{bibliografia/referencias}
+
+% --- Apéndices ------------------------------------------------------
+\input{secciones/99-apendices}
+
+\end{document}

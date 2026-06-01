@@ -1,0 +1,134 @@
+% =====================================================================
+%  Capítulo 3. Descripción del problema  (Bloque UMA obligatorio)
+%  ESTADO: REDACTADO (sección estable). Incluye objetivos, RQ literales
+%  y operacionalización. Migrado de memoria/cap3-objetivos.md y
+%  memoria/cap3-descripcion-problema.md.
+% =====================================================================
+\chapter{Descripción del problema}
+\label{cap:problema}
+
+Este capítulo concreta el terreno sobre el que se construye el resto del
+trabajo. En primer lugar se formula el problema y se fija el patrón
+objetivo de transformación. A continuación se reproducen las preguntas de
+investigación oficiales y se operacionalizan, sin reformular su
+enunciado. Por último, se delimita el alcance del prototipo y se señalan
+los riesgos metodológicos que conviene tener presentes desde el principio.
+
+\section{Formulación del problema}
+\label{sec:formulacion}
+Los condicionales anidados son una de las construcciones que más
+contribuyen a la complejidad cognitiva de un método: cada nivel de
+anidamiento añade un salto mental que el lector debe sostener
+\pendientecita{}. Sin embargo, en muchos casos dos sentencias
+\lstinline|if| anidadas sin ramas alternativas no expresan dos decisiones,
+sino una sola condición conjuntiva escrita en dos pisos. Cuando esto
+ocurre, aplanarlas en \lstinline|if (A && B)| simplifica el código sin
+cambiar lo que hace.
+
+El problema abordado nace de esa observación y tiene dos caras.
+La primera es \emph{determinar en qué condiciones esa combinación es
+semánticamente segura y automatizable}; la segunda, \emph{medir su efecto
+sobre la complejidad cognitiva}. Interesa responder a ambas no solo para
+una herramienta determinista, sino también para un gran modelo de lenguaje,
+lo que permite comparar dos formas muy distintas de afrontar la misma tarea.
+
+\section{Patrón objetivo}
+\label{sec:patron}
+La transformación canónica estudiada parte del anidamiento simple y
+produce una condición conjuntiva equivalente:
+
+\begin{lstlisting}[caption={Antes: condicionales anidados.},label={lst:antes}]
+if (A) {
+    if (B) {
+        S
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Después: condición combinada.},label={lst:despues}]
+if (A && B) {
+    S
+}
+\end{lstlisting}
+
+\noindent donde \lstinline|A| y \lstinline|B| son expresiones booleanas y
+\lstinline|S| un bloque de sentencias arbitrario. La equivalencia se
+sostiene \emph{bajo las precondiciones P1--P5} (\autoref{sec:precondiciones}):
+en ausencia de efectos colaterales en \lstinline|A| y \lstinline|B|, el
+operador \lstinline|&&| preserva la evaluación en cortocircuito y, por
+tanto, el comportamiento observable.
+
+\section{Preguntas de investigación}
+\label{sec:rq}
+% IMPORTANTE: RQ oficiales. Reproducir SIEMPRE literalmente. No reformular.
+\begin{description}
+  \item[RQ1.] ¿En qué casos se pueden combinar sentencias condicionales anidadas y cuál sería el resultado?
+  \item[RQ2.] ¿Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?
+  \item[RQ3.] ¿Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?
+\end{description}
+
+\section{Operacionalización de las preguntas de investigación}
+\label{sec:operacionalizacion}
+La siguiente operacionalización concreta cada RQ con fines de
+implementación y evaluación, \emph{sin alterar} su enunciado oficial.
+
+\paragraph{RQ1 — Alcance operativo.}
+\begin{itemize}
+  \item Se estudian condicionales anidados de tipo \lstinline|if| en Java.
+  \item Foco inicial: un \lstinline|if| que contiene exactamente otro
+  \lstinline|if|, sin ramas \lstinline|else| ni \lstinline|else if|, y sin
+  sentencias adicionales en el bloque externo.
+  \item El resultado es la transformación
+  \lstinline|if (A) { if (B) { S } }| $\rightarrow$ \lstinline|if (A && B) { S }|.
+  \item Se documentan las precondiciones de aplicabilidad
+  (\autoref{sec:precondiciones}). Extensiones posteriores podrán ampliar el
+  conjunto de patrones cubiertos.
+\end{itemize}
+
+\paragraph{RQ2 — Criterio de medición.}
+\begin{itemize}
+  \item La complejidad cognitiva se mide siguiendo el modelo propuesto por
+  SonarSource~\cite{10.1145/3194164.3194186}, mediante una implementación
+  \emph{proxy} cuyas limitaciones se declaran en la \autoref{sec:proxy}.
+  \item Se compara el valor antes y después de aplicar la refactorización
+  sobre cada caso del corpus.
+  \item Se reporta la reducción absoluta y relativa por caso y agregada.
+\end{itemize}
+
+\paragraph{RQ3 — Protocolo de comparación.}
+\begin{itemize}
+  \item Se selecciona un subconjunto del corpus de evaluación
+  (\autoref{sec:corpus}).
+  \item Se solicita a uno o más LLMs que realicen la misma refactorización
+  bajo un prompt estandarizado y un protocolo congelado.
+  \item Se comparan los resultados en corrección semántica, completitud de
+  detección y calidad del código resultante, mediante un oráculo
+  automático (\autoref{sec:oraculo}).
+\end{itemize}
+
+\section{Hipótesis de trabajo}
+\label{sec:hipotesis}
+\hipotesis{} H1: existe un subconjunto no trivial de condicionales
+anidados en código Java real para los que la combinación es segura bajo
+P1--P5.
+\hipotesis{} H2: la combinación reduce la complejidad cognitiva (proxy) de
+forma medible en los casos elegibles.
+\hipotesis{} H3: los LLMs pueden reproducir la transformación con tasas de
+acierto elevadas en casos elegibles, pero pueden fallar en el rechazo de
+casos no elegibles. \pendienteverif{} (Las hipótesis se contrastan con los
+resultados; no anticipan cifras.)
+
+\section{Alcance y exclusiones iniciales}
+\label{sec:alcance}
+De acuerdo con la estrategia conservadora del proyecto, quedan fuera del
+alcance inicial: ramas \lstinline|else|/\lstinline|else if| complejas,
+expresiones lambda, \emph{streams}, concurrencia, efectos colaterales,
+asignaciones en condiciones y, en general, cualquier construcción cuya
+equivalencia tras la combinación no pueda garantizarse sintácticamente.
+
+\section{Riesgos metodológicos}
+\label{sec:riesgos}
+Se identifican tres riesgos principales, tratados en detalle en la
+\autoref{cap:amenazas}: (i)~las limitaciones del proxy de complejidad
+cognitiva frente a la medición oficial; (ii)~el tamaño y la composición del
+corpus; y (iii)~la dependencia de un proveedor concreto de LLM en RQ3.

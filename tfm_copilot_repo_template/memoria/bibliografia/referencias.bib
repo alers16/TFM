@@ -1,0 +1,211 @@
+% =====================================================================
+%  Bibliografía de la memoria del TFM.
+%
+%  POLÍTICA (AGENTS.md, CLAUDE.md, skill tfm-state-of-the-art):
+%   - NO inventar entradas. Cada referencia debe verificarse antes de
+%     añadirse, con: autores, año, título, venue/editorial y DOI o URL.
+%   - Mientras no exista la entrada verificada, el texto usa el marcador
+%     \pendientecita{} en lugar de \cite{}.
+%
+%  Estilo: plain (numérico).  Compilación: bibtex main.
+%
+%  Bloques temáticos previstos (sin entradas todavía):
+%   - Complejidad cognitiva y métricas de mantenibilidad (SonarSource).
+%   - Refactorización automática y preservación semántica.
+%   - Análisis estático y manipulación de AST en Java (JavaParser).
+%   - Grandes modelos de lenguaje aplicados a tareas de código.
+%   - Metodología Design Science Research.
+%   - Documentación oficial de SonarQube y de los modelos OpenAI usados.
+%
+%  [PENDIENTE DE VERIFICACIÓN] Confirmar el formato de citas exigido por
+%  la guía UMA (p. ej. LNCS/Springer, IEEE, APA).
+% =====================================================================
+
+% --- Complejidad cognitiva (modelo de SonarSource) -----------------
+% Verificada en ACM Digital Library / DBLP (TechDebt@ICSE 2018).
+@inproceedings{10.1145/3194164.3194186,
+  author    = {Campbell, G. Ann},
+  title     = {Cognitive Complexity: An Overview and Evaluation},
+  booktitle = {Proceedings of the 2018 International Conference on Technical Debt (TechDebt '18)},
+  year      = {2018},
+  pages     = {57--58},
+  publisher = {ACM},
+  address   = {Gothenburg, Sweden},
+  doi       = {10.1145/3194164.3194186}
+}
+
+% --- Métricas de complejidad de código ----------------------------
+% Verificadas (IEEE TSE / ACM-IEEE ESEM; DOIs comprobados).
+@article{10.1109/TSE.1976.233837,
+  author  = {McCabe, Thomas J.},
+  title   = {A Complexity Measure},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {SE-2},
+  number  = {4},
+  pages   = {308--320},
+  year    = {1976},
+  doi     = {10.1109/TSE.1976.233837}
+}
+
+@inproceedings{10.1145/3382494.3410636,
+  author    = {Mu{\~n}oz Bar{\'o}n, Marvin and Wyrich, Marvin and Wagner, Stefan},
+  title     = {An Empirical Validation of Cognitive Complexity as a Measure of Source Code Understandability},
+  booktitle = {Proceedings of the 14th ACM/IEEE International Symposium on Empirical Software Engineering and Measurement (ESEM)},
+  year      = {2020},
+  doi       = {10.1145/3382494.3410636}
+}
+
+% --- Refactorización y preservación semántica --------------------
+% Verificadas: Fowler (libro, 2.ª ed., Addison-Wesley); Opdyke (tesis
+% doctoral UIUC, TR UIUC-DCS-R-92-1759); Mens & Tourwe (IEEE TSE, DOI
+% comprobado). Opdyke introduce las refactorizaciones como
+% transformaciones que preservan el comportamiento si se cumplen sus
+% precondiciones: antecedente directo del enfoque P1--P5 de este TFM.
+@book{fowler2018refactoring,
+  author    = {Fowler, Martin},
+  title     = {Refactoring: Improving the Design of Existing Code},
+  edition   = {2},
+  year      = {2018},
+  publisher = {Addison-Wesley},
+  address   = {Boston, MA},
+  isbn      = {978-0134757599}
+}
+
+@phdthesis{opdyke1992refactoring,
+  author = {Opdyke, William F.},
+  title  = {Refactoring Object-Oriented Frameworks},
+  school = {University of Illinois at Urbana-Champaign},
+  year   = {1992},
+  note   = {Technical Report UIUC-DCS-R-92-1759}
+}
+
+@article{10.1109/TSE.2004.1265817,
+  author  = {Mens, Tom and Tourw{\'e}, Tom},
+  title   = {A Survey of Software Refactoring},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {30},
+  number  = {2},
+  pages   = {126--139},
+  year    = {2004},
+  doi     = {10.1109/TSE.2004.1265817}
+}
+
+% --- Análisis estático y manipulación de AST en Java (JavaParser) -
+% Libro oficial de la biblioteca JavaParser (Leanpub). La versión de la
+% biblioteca usada por el prototipo se fija en pom.xml (3.26.4).
+@book{smith2023javaparser,
+  author    = {Smith, Nicholas and van Bruggen, Danny and Tomassetti, Federico},
+  title     = {JavaParser: Visited},
+  year      = {2023},
+  publisher = {Leanpub},
+  url       = {https://leanpub.com/javaparservisited}
+}
+
+% --- Grandes modelos de lenguaje aplicados a tareas de código -----
+% Chen et al. (Codex): preprint fundacional, arXiv:2107.03374.
+% DePalma et al.: estudio empírico revisado (Expert Systems with
+% Applications, DOI comprobado) sobre ChatGPT refactorizando Java.
+% Liu et al.: estudio empírico (arXiv:2411.04444) sobre el potencial y
+% las limitaciones de los LLMs identificando oportunidades de refactor.
+@misc{chen2021codex,
+  author       = {Chen, Mark and Tworek, Jerry and Jun, Heewoo and Yuan, Qiming and others},
+  title        = {Evaluating Large Language Models Trained on Code},
+  year         = {2021},
+  eprint       = {2107.03374},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.LG},
+  note         = {arXiv:2107.03374}
+}
+
+@article{10.1016/j.eswa.2024.123602,
+  author  = {DePalma, Kayla and Miminoshvili, Izabel and Henselder, Chiara and Moss, Kate and AlOmar, Eman Abdullah},
+  title   = {Exploring {ChatGPT}'s code refactoring capabilities: An empirical study},
+  journal = {Expert Systems with Applications},
+  volume  = {249},
+  pages   = {123602},
+  year    = {2024},
+  doi     = {10.1016/j.eswa.2024.123602}
+}
+
+@misc{liu2024llmrefactoring,
+  author        = {Liu, Bo and Jiang, Yanjie and Zhang, Yuxia and Niu, Nan and Li, Guangjie and Liu, Hui},
+  title         = {An Empirical Study on the Potential of {LLMs} in Automated Software Refactoring},
+  year          = {2024},
+  eprint        = {2411.04444},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.SE},
+  note          = {arXiv:2411.04444}
+}
+
+% --- Reducción automática de complejidad cognitiva (paper del tutor) ---
+% Verificada en IEEE Xplore (doc 9686676) y RIUMA (UMA). Proyectos de
+% evaluación = tmp-tutor-projects/. Antecedente directo del TFM.
+@article{10.1109/ACCESS.2022.3144743,
+  author  = {Saborido, Rub{\'e}n and Ferrer, Javier and Chicano, Francisco and Alba, Enrique},
+  title   = {Automatizing Software Cognitive Complexity Reduction},
+  journal = {IEEE Access},
+  volume  = {10},
+  pages   = {11642--11656},
+  year    = {2022},
+  doi     = {10.1109/ACCESS.2022.3144743}
+}
+
+% --- Design Science Research (metodología) -------------------------
+% Verificadas (DOIs comprobados en MIS Quarterly / JMIS).
+@article{10.2307/25148625,
+  author  = {Hevner, Alan R. and March, Salvatore T. and Park, Jinsoo and Ram, Sudha},
+  title   = {Design Science in Information Systems Research},
+  journal = {MIS Quarterly},
+  volume  = {28},
+  number  = {1},
+  pages   = {75--105},
+  year    = {2004},
+  doi     = {10.2307/25148625}
+}
+
+@article{10.2753/MIS0742-1222240302,
+  author  = {Peffers, Ken and Tuunanen, Tuure and Rothenberger, Marcus A. and Chatterjee, Samir},
+  title   = {A Design Science Research Methodology for Information Systems Research},
+  journal = {Journal of Management Information Systems},
+  volume  = {24},
+  number  = {3},
+  pages   = {45--77},
+  year    = {2007},
+  doi     = {10.2753/MIS0742-1222240302}
+}
+
+% --- Análisis de pureza / efectos colaterales en Java -------------
+% Verificadas (Springer LNCS; DOIs comprobados).
+@inproceedings{10.1007/978-3-540-30579-8_14,
+  author    = {S{\u{a}}lcianu, Alexandru and Rinard, Martin},
+  title     = {Purity and Side Effect Analysis for Java Programs},
+  booktitle = {Verification, Model Checking, and Abstract Interpretation (VMCAI 2005)},
+  series    = {LNCS},
+  volume    = {3385},
+  pages     = {199--215},
+  year      = {2005},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-540-30579-8_14}
+}
+
+@inproceedings{10.1007/978-3-642-19861-8_7,
+  author    = {Pearce, David J.},
+  title     = {{JPure}: A Modular Purity System for Java},
+  booktitle = {Compiler Construction (CC 2011)},
+  series    = {LNCS},
+  volume    = {6601},
+  pages     = {104--123},
+  year      = {2011},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-642-19861-8_7}
+}
+
+% Fuente complementaria (white paper de SonarSource). El año/versión es un
+% documento vivo: [PENDIENTE DE VERIFICACIÓN] confirmar versión exacta.
+% @techreport{campbell2018whitepaper,
+%   author      = {Campbell, G. Ann},
+%   title       = {Cognitive Complexity --- A new way of measuring understandability},
+%   institution = {SonarSource S.A.},
+%   year        = {2018},
+%   note        = {White paper}
+% }

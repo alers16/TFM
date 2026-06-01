@@ -1,0 +1,15 @@
+%% Fig. 4.7 — Árbol de decisión del detector (precondiciones P1–P5).
+%% Fuente de verdad: NestedIfDetector.java / DiscardReason.java
+%% Render:  mmdc -i fig-4.7-arbol-decision-p1-p5.mmd -o ../img/fig-4.7.svg
+flowchart TD
+    A[IfStmt candidato] --> P1{P1: ¿if externo<br/>sin else?}
+    P1 -- No --> R1[Descartar:<br/>OUTER_HAS_ELSE]
+    P1 -- Sí --> P2{P2: ¿bloque then<br/>con 1 sentencia?}
+    P2 -- No --> R2[Descartar:<br/>OUTER_BLOCK_MULTIPLE_STATEMENTS]
+    P2 -- Sí --> P3{P3: ¿esa sentencia<br/>es un if?}
+    P3 -- No --> R3[Descartar:<br/>SINGLE_STATEMENT_NOT_IF]
+    P3 -- Sí --> P4{P4: ¿if interno<br/>sin else?}
+    P4 -- No --> R4[Descartar:<br/>INNER_HAS_ELSE]
+    P4 -- Sí --> P5{P5: ¿condiciones sin<br/>efectos colaterales?}
+    P5 -- No --> R5[Descartar P5:<br/>METHOD_CALL / ASSIGNMENT /<br/>INCREMENT_OR_DECREMENT /<br/>LAMBDA / OBJECT_CREATION<br/>_IN_CONDITION]
+    P5 -- Sí --> OK[Elegible:<br/>combinar A &amp;&amp; B]

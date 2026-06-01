@@ -1,0 +1,23 @@
+%% Fig. 4.1 — Diagrama de paquetes del prototipo.
+%% Fuente de verdad: src/main/java/es/tfm/refactoring/
+%% Render:  mmdc -i fig-4.1-paquetes.mmd -o ../img/fig-4.1.svg
+flowchart TB
+    MAIN["es.tfm.refactoring<br/>(Main, ExperimentOrchestrator)"]
+    DET["detection<br/>NestedIfDetector, DiscardReason,<br/>DetectionResult, RefactoringOpportunity"]
+    TRA["transformation<br/>NestedIfTransformer"]
+    ANA["analysis<br/>CognitiveComplexityCalculator,<br/>RefactoringImpact(Analyzer)"]
+    EXP["experiment<br/>BatchRunner, Rq2BatchExecutor,<br/>corpus loaders, ResultExporter,<br/>SonarContrast*"]
+    SCN["scanner<br/>ProjectCorpusScanner,<br/>CorpusScanRunner"]
+    VAL["validation<br/>RefactoringValidator"]
+    LLM["llm<br/>LlmPromptBuilder, LlmResponseValidator,<br/>LlmCampaignRunner, LlmExperimentProtocol,<br/>providers, LlmVerdict, exporters"]
+
+    MAIN --> EXP
+    EXP --> DET
+    EXP --> TRA
+    EXP --> ANA
+    EXP --> LLM
+    SCN --> DET
+    DET --> VAL
+    TRA --> ANA
+    LLM --> ANA
+    LLM --> DET

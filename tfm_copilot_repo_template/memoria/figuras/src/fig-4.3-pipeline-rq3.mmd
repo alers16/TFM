@@ -1,0 +1,14 @@
+%% Fig. 4.3 — Pipeline experimental RQ3 (evaluación de LLMs).
+%% Fuente de verdad: LlmCampaignRunner / LlmResponseValidator
+%% Render:  mmdc -i fig-4.3-pipeline-rq3.mmd -o ../img/fig-4.3.svg
+flowchart LR
+    S[Subset RQ3<br/>6 casos] --> B[Baseline determinista<br/>BatchRunner]
+    S --> PB[LlmPromptBuilder<br/>prompt v1.0]
+    PB --> PR{LlmResponseProvider}
+    PR -- live --> API[OpenAI:<br/>gpt-4o, gpt-4.1]
+    PR -- dry-run --> REC[Respuestas grabadas]
+    API --> V[LlmResponseValidator<br/>oráculo · 8 pasos]
+    REC --> V
+    B --> V
+    V --> VE{LlmVerdict}
+    VE --> OUT["Artefactos:<br/>rq3-summary.csv · rq3-full-evidence.json<br/>rq3-aggregated.md · rq3-incidents.md<br/>rq3-run-metadata.json"]

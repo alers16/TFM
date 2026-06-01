@@ -1,0 +1,189 @@
+% =====================================================================
+%  4.5 Diseño experimental.  ESTADO: REDACTADO (estable).
+%  Migrado de memoria/cap4-experimento.md. Conserva los marcadores de
+%  pendiente sobre SonarQube y procedencia del corpus.
+% =====================================================================
+\section{Diseño experimental}
+\label{sec:experimento}
+
+En esta sección se explica cómo están montados los experimentos. Se describe primero
+el corpus; después, las métricas y el baseline con los que se mide; y, a continuación, los
+protocolos deliberadamente congelados de RQ2 y RQ3, junto con la validación comple-
+mentaria con SonarQube. La idea que recorre todo el apartado es la reproducibilidad: el
+procedimiento aquí descrito debería poder repetirse y conducir al mismo resultado
+
+\subsection{Corpus}
+\label{sec:corpus}
+El corpus se carga desde recursos del \emph{classpath} mediante
+\texttt{PilotCorpusLoader} y \texttt{RealDatasetLoader}. Su composición se
+resume en la \autoref{tab:corpus}.
+
+\begin{table}[ht]
+\centering
+\caption{Composición del corpus de los experimentos RQ1/RQ2. Fuente:
+\texttt{output/rq2-batch/rq2-run-metadata.json}.}
+\label{tab:corpus}
+\begin{tabular}{@{}lrl@{}}
+\toprule
+\textbf{Subconjunto} & \textbf{Casos} & \textbf{Finalidad} \\
+\midrule
+Piloto (sintético) & 8   & Casos canónicos y un rechazo por cada precondición \\
+Real (código abierto) & 118 & Validación sobre código real de proyectos OSS \\
+\midrule
+\textbf{Total} & \textbf{126} & 104 elegibles, 22 no elegibles \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Corpus piloto} (\texttt{src/main/resources/pilot-corpus/}):
+ficheros sintéticos que cubren los casos canónicos del patrón objetivo y
+sus rechazos típicos (casos válidos, inválidos por violación de cada
+precondición y un caso mixto con varias oportunidades). Su finalidad es
+servir de prueba controlada del pipeline.
+
+\paragraph{Corpus real} (\texttt{src/main/resources/real-corpus/})
+
+El corpus real está formado por fragmentos extraídos de proyectos Java de código abierto. Cada caso conserva metadatos que permiten trazar su procedencia y contexto original, incluyendo \lstinline|@project|, \lstinline|@file|, \lstinline|@method|, \lstinline|@license| y \lstinline|@sonarCCBefore|.
+
+Los proyectos fuente proceden de dos orígenes principales:
+
+\begin{enumerate}
+    \item \textbf{Proyectos \emph{open source} de uso general.} Apache Ant;
+    las bibliotecas Apache Commons \emph{Lang}, \emph{IO}, \emph{Collections}
+    y \emph{Math}; Apache POI; Jackson Core y Jackson Databind (FasterXML);
+    Bytecode Viewer; y jMetal. El escaneo se realizó en varias tandas (el
+    script \texttt{scan-open-source-projects.ps1} y los lotes de
+    \texttt{output/corpus-scan/}); otros proyectos escaneados —Guava, Log4j2
+    y Apache Commons Compress— no aportaron casos al corpus.
+
+    \item \textbf{Proyectos de evaluación de Saborido et
+    al.}~\cite{10.1109/ACCESS.2022.3144743}, clonados en
+    \texttt{tmp-tutor-projects/}: \texttt{cybercaptor-server},
+    \texttt{MOEAFramework}, \texttt{knowage-server}, \texttt{fastjson},
+    \texttt{iotbroker}, \texttt{fiware-commons}, \texttt{jedis} y
+    \texttt{aioteslake}. De ellos, el escáner extrajo del orden de 35
+    candidatos elegibles; \texttt{fiware-commons}, \texttt{jedis} y
+    \texttt{aioteslake} no aportaron casos.
+\end{enumerate}
+
+
+
+\paragraph{Subset RQ3} (definido en \texttt{LlmEvaluationSubset}): seis
+casos del corpus consolidado (\autoref{tab:subset-rq3}) que cubren los
+ejes de variación relevantes (elegibles, parciales, no elegibles) y los
+principales motivos de descarte (P1, P5).
+
+\begin{table}[ht]
+\centering
+\caption{Subset de evaluación RQ3 (\texttt{LlmEvaluationSubset}).}
+\label{tab:subset-rq3}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Identificador} & \textbf{Origen} & \textbf{Categoría} & \textbf{Justificación} \\
+\midrule
+\texttt{PILOT\_VALID\_SIMPLE} & Piloto & Elegible & Caso base \lstinline|if + if|. \\
+\texttt{PILOT\_VALID\_NESTED\_IN\_LOOP} & Piloto & Elegible & Anidamiento en \lstinline|for|. \\
+\texttt{REAL\_COMMONS\_MATH\_CONVERGED} & Real & Elegible & Doble condición numérica. \\
+\texttt{REAL\_ANT\_MATCH\_PATH} & Real & Elegible parcial & Triple \lstinline|if|; 3.\textsuperscript{er} nivel rechazado por P5. \\
+\texttt{REAL\_COMMONS\_MATH\_VALIDATE\_RANGE} & Real & No elegible (P1) & \lstinline|outer if| con \lstinline|else|. \\
+\texttt{REAL\_COMMONS\_COLLECTIONS\_GET} & Real & No elegible (P5) & Llamada a método en condición. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Métricas y baseline}
+\textbf{Métrica primaria:} complejidad cognitiva proxy (CC) calculada por
+\texttt{CognitiveComplexityCalculator} antes y después de la
+transformación; se reporta \emph{before}, \emph{after} y
+$\Delta = \text{after} - \text{before}$ (un $\Delta$ negativo indica
+reducción). Las limitaciones del proxy están en \autoref{sec:proxy}.
+\textbf{Métrica complementaria:} complejidad cognitiva medida por
+SonarQube Community Build sobre un subconjunto representativo
+(\autoref{sec:sonar-val}). \textbf{Baseline determinista:} para cada caso,
+el resultado del pipeline (\texttt{BatchRunner}) constituye el baseline
+contra el que se contrastan las salidas de los LLMs en RQ3; declara
+explícitamente la elegibilidad y, en su caso, el $\Delta$ aplicable.
+
+\subsection{Protocolo RQ2 — Batch determinista \emph{before/after}}
+\label{sec:exp-rq2}
+(1)~Cargar la totalidad del corpus piloto y real; (2)~para cada
+\texttt{ExperimentCase}, ejecutar \lstinline|BatchRunner.processCase| con
+el detector en modo \texttt{STRICT} (P1--P5 completas) y la política
+\emph{one-at-a-time}; (3)~recoger métricas \emph{before},
+\emph{after} y $\Delta$, y motivos de descarte para los no elegibles; y
+(4)~exportar a JSON y CSV bajo \texttt{output/rq2-batch/}. La parte
+\textbf{congelada} es la composición del corpus, el modo de detección
+(\texttt{STRICT}), el conjunto P1--P5 y la política \emph{one-at-a-time};
+cualquier cambio en \texttt{CognitiveComplexityCalculator} invalidaría las
+métricas y exigiría una nueva ejecución completa.
+
+\subsection{Validación complementaria con SonarQube}
+\label{sec:sonar-val}
+La validación complementaria contrasta los valores del proxy con los de
+SonarQube Community Build sobre un subset de cuatro casos representativos
+(\texttt{PILOT\_VALID\_NESTED\_IN\_LOOP},
+\texttt{REAL\_COMMONS\_LANG\_CONTAINS\_NONE}, \texttt{REAL\_ANT\_MATCH\_PATH}
+y \texttt{REAL\_COMMONS\_LANG\_CHOMP}), que cubren el mayor $\Delta$
+piloto, el mayor $\Delta$ real, un triple anidamiento de elegibilidad
+parcial y un caso no elegible por P5 (control de no divergencia). El
+procedimiento está en \texttt{docs/rq2-sonar-validation-procedure.md} y el
+arranque del servidor (vía \texttt{docker-compose}) en
+\texttt{docs/sonarqube-setup.md}; los artefactos se conservan en
+\texttt{output/rq2-sonar-validation/}.
+
+\pendienteverif{} \textbf{Estado de consolidación de la validación.} El
+archivo \texttt{output/rq2-sonar-validation/metadata.json} documenta que
+la versión exacta de SonarQube, los \emph{timestamps} de ejecución y el
+operador están sin registrar, y su nota interna declara que en esta
+entrega \emph{no se han ejecutado escaneos reales de SonarQube}. La tabla
+comparativa \texttt{rq2-sonar-validation.md} se encuentra en estado de
+plantilla, con valores prerellenos a partir del proxy. Hasta que se
+ejecute la corrida real y se completen \texttt{metadata.json} y los JSON
+de Sonar con valores independientes, los resultados correspondientes deben
+presentarse como \textbf{provisionales}. Esta incertidumbre afecta
+\emph{exclusivamente} a la validación complementaria; los resultados de
+RQ2 (proxy) son independientes de ella.
+
+\subsection{Protocolo RQ3 — Evaluación de LLMs}
+\label{sec:exp-rq3}
+El protocolo está congelado en
+\lstinline|LlmExperimentProtocol.defaultProtocol()|
+(\autoref{tab:protocolo-rq3}).
+
+\begin{table}[ht]
+\centering
+\caption{Protocolo congelado de RQ3.}
+\label{tab:protocolo-rq3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} & \textbf{Justificación} \\
+\midrule
+Modelos & \texttt{gpt-4o}, \texttt{gpt-4.1} & Comparativa intra-proveedor (OpenAI). \\
+Temperatura & \texttt{0.0} & Determinismo esperado. \\
+Intentos por caso & \texttt{3} & Detección de inconsistencia residual. \\
+Prompt & \texttt{v1.0} & Trazabilidad (texto literal en código). \\
+\emph{Max tokens} salida & \texttt{2048} & Métodos refactorizados completos. \\
+Subset & 6 casos & Elegibles/parciales/no elegibles. \\
+Total invocaciones & 36 & $6 \times 2 \times 3$. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pendientemetodo{} Justificar la decisión (fase 9.6) de restringir la
+comparación a un único proveedor. El procedimiento por caso es: cargar
+caso y baseline; construir el prompt \texttt{v1.0}; invocar el modelo;
+almacenar la respuesta cruda (\texttt{rq3-full-evidence.json}); aplicar el
+oráculo (\autoref{sec:oraculo}); registrar \texttt{LlmEvaluationResult}; y
+repetir para cada intento y modelo. La parte \textbf{congelada} incluye
+modelos, temperatura, intentos, versión del prompt, oráculo y composición
+del subset; el provider es intercambiable, siendo \lstinline|live| el modo
+oficial.
+
+\subsection{Reproducibilidad}
+Las garantías se sostienen sobre elementos verificables: configuración
+congelada impresa en \texttt{rq3-run-metadata.json}; exigencia explícita
+de \lstinline|OPENAI_API_KEY| en modo \lstinline|live| (cuya ausencia
+genera un incidente registrado, no un fallo silencioso); versionado del
+prompt propagado a cada artefacto; versiones fijadas en \texttt{pom.xml}
+(Java 17, JavaParser 3.26.4, JUnit 5.11.4, Gson 2.11.0); y artefactos
+persistentes auditables bajo \texttt{output/} sin ejecutar el código.

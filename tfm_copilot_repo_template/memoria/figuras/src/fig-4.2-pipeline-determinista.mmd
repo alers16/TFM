@@ -1,0 +1,15 @@
+%% Fig. 4.2 — Flujo de datos del pipeline determinista (RQ1, RQ2).
+%% Fuente de verdad: BatchRunner.processCase
+%% Render:  mmdc -i fig-4.2-pipeline-determinista.mmd -o ../img/fig-4.2.svg
+flowchart TD
+    C[Corpus<br/>pilot + real] --> L[PilotCorpusLoader<br/>RealDatasetLoader]
+    L --> P["StaticJavaParser.parse()<br/>(primer MethodDeclaration)"]
+    P --> D[NestedIfDetector<br/>detectWithReasons]
+    D --> M1[CC before<br/>CognitiveComplexityCalculator]
+    M1 --> T["Aplicación iterativa one-at-a-time<br/>(NestedIfTransformer, MAX_PASSES=10)"]
+    T --> M2[CC after]
+    M2 --> Δ["Δ = after − before"]
+    Δ --> R[ExperimentResult inmutable]
+    R --> E[ResultExporter]
+    E --> JSON[(JSON con código)]
+    E --> CSV[(CSV tabular)]

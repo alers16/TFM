@@ -1,0 +1,49 @@
+% =====================================================================
+%  4.7 Amenazas a la validez.  ESTADO: andamiaje.
+%  Sección sensible: redactar tras cerrar §4.6 (resultados).
+% =====================================================================
+\section{Amenazas a la validez}
+\label{cap:amenazas}
+
+\pendienteredaccion{} Redactar tras consolidar los resultados. Estructura
+prevista (por tipo de validez):
+
+\subsection{Validez de constructo.}
+Proxy de complejidad cognitiva $\neq$ SonarQube oficial; validación
+cruzada limitada a un subset (\autoref{sec:sonar-val}). El oráculo de RQ3
+se basa en la CC y en la comparación con el baseline determinista, no en
+revisión humana ni en ejecución de los tests del proyecto original.
+
+\subsection{Validez interna.}
+Determinismo del transformador validado por tests; los LLMs presentan
+no-determinismo residual aun con $T=0$ (mitigado con 3 intentos). La
+política \emph{one-at-a-time} limita interacciones inesperadas pero podría
+ocultar efectos compuestos.
+
+\subsection{Validez externa.}
+El corpus consolidado (126 casos, 104 elegibles) procede mayoritariamente
+de proyectos abiertos, pero su composición no es una muestra
+estadísticamente representativa del código Java «en general»: es una
+\emph{muestra intencional} de métodos con condicionales anidados (sesgo de
+selección). A ello se añade una limitación de reproducibilidad: parte de
+los proyectos fuente no tiene versión ni \emph{commit} anclados y el corpus
+mezcla versiones de un mismo proyecto (\autoref{sec:corpus}), por lo que
+reconstruirlo idéntico exigiría reanclar dichas versiones. El subset de
+RQ3 es deliberadamente pequeño ($n=6$), pensado para cubrir ejes de
+variación, no para sostener inferencia estadística. Además, la comparativa
+de RQ3 se restringe a dos modelos del mismo proveedor (OpenAI):
+\hipotesis{} su generalización a otras familias de modelos está por
+comprobar. Por último, el patrón objetivo se limita al caso base sin
+\lstinline|else|/\lstinline|else if|, por lo que los resultados no son
+extrapolables a refactorizaciones más complejas.
+
+\subsection{Validez de conclusión.}
+Muestra reducida (especialmente el subset RQ3, $n=6$) que impide
+afirmaciones estadísticas fuertes; métrica única (CC) que puede sesgar la
+valoración global de calidad.
+
+\subsection{Mitigaciones implementadas.}
+Congelación del protocolo (\texttt{LlmExperimentProtocol}); trazabilidad
+completa (evidencias JSON/CSV/MD por invocación); guarda de elegibilidad
+v1.1 en el oráculo. \pendientemetodo{} Decidir si se amplía a otro
+proveedor de LLM o se documenta la restricción de forma definitiva.

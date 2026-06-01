@@ -1,0 +1,228 @@
+% =====================================================================
+%  4.3 Arquitectura del prototipo.  ESTADO: REDACTADO (estable).
+%  Migrado de memoria/cap4-arquitectura.md. La lista de clases coincide
+%  con src/main/java/es/tfm/refactoring/.
+% =====================================================================
+\section{Arquitectura del prototipo}
+\label{sec:arquitectura}
+
+\subsection{Visión general}
+La organización del prototipo en paquetes responde a una idea sencilla:
+cada paquete asume una responsabilidad y solo una. La base son las tres
+responsabilidades clásicas de una herramienta de análisis y
+refactorización —detección, transformación y medición—, ampliadas
+con dos piezas propias de este trabajo: un pipeline experimental que
+orquesta los lotes y un subsistema dedicado a la evaluación de los LLMs
+(RQ3). Esta separación no es estética; es lo que permite cambiar una
+parte sin arrastrar a las demás y, sobre todo, razonar sobre cada etapa de
+forma aislada. Todas las operaciones sobre código se apoyan en el AST que
+proporciona la biblioteca \textbf{JavaParser}, declarada como dependencia
+en \texttt{pom.xml}. La \autoref{fig:paquetes} (diagrama de paquetes) y la
+\autoref{fig:pipeline-det} (flujo de datos del pipeline determinista)
+acompañan esta sección.
+
+\subsection{Paquetes y responsabilidades}
+\begin{longtable}{@{}p{0.30\linewidth}p{0.62\linewidth}@{}}
+\toprule
+\textbf{Paquete} & \textbf{Responsabilidad y clases principales} \\
+\midrule
+\endhead
+\texttt{es.tfm.refactoring} & Punto de entrada de línea de órdenes
+(\texttt{Main}). \\
+\texttt{\dots detection} & Análisis del AST y evaluación de P1--P5:
+\texttt{NestedIfDetector}, \texttt{RefactoringOpportunity},
+\texttt{DetectionResult}, \texttt{DiscardReason}, \texttt{DetectionMode},
+\texttt{MethodCallAllowlist}. \\
+\texttt{\dots transformation} & Aplicación de la transformación:
+\texttt{NestedIfTransformer}. \\
+\texttt{\dots analysis} & Cálculo proxy de complejidad cognitiva e impacto:
+\texttt{CognitiveComplexityCalculator}, \texttt{RefactoringImpact},
+\texttt{RefactoringImpactAnalyzer}, \texttt{CcAnalyzeCli}. \\
+\texttt{\dots validation} & Comprobación de precondiciones y validez de la
+transformación: \texttt{RefactoringValidator}, \texttt{ValidationResult}. \\
+\texttt{\dots scanner} & Escaneo masivo de proyectos de código abierto para
+construir el corpus real: \texttt{ProjectCorpusScanner},
+\texttt{CorpusScanRunner}, \texttt{CorpusFileGenerator}, \texttt{ScanFinding}. \\
+\texttt{\dots experiment} & Carga de corpus, ejecución por lotes,
+exportación y contraste con SonarQube: \texttt{BatchRunner},
+\texttt{Rq2BatchExecutor}, \texttt{ExperimentCase},
+\texttt{ExperimentResult}, \texttt{ResultExporter},
+\texttt{PilotCorpusLoader}, \texttt{RealDatasetLoader},
+\texttt{SonarContrastEntry}, \texttt{SonarContrastReport}. \\
+\texttt{\dots llm} & Protocolo, prompt, oráculo y campaña para RQ3:
+\texttt{LlmExperimentProtocol}, \texttt{LlmPromptBuilder},
+\texttt{LlmEvaluationSubset}, \texttt{LlmResponseValidator},
+\texttt{LlmCampaignRunner}, \texttt{LlmCampaignReport},
+\texttt{LlmCampaignExporter}, \texttt{LlmResponseProvider},
+\texttt{LiveLlmResponseProvider}, \texttt{PrerecordedResponseProvider},
+\texttt{LlmInvocationRecord}, \texttt{LlmEvaluationResult},
+\texttt{LlmVerdict}, \texttt{LlmApiConfig}, \texttt{CampaignExecutor}. \\
+\bottomrule
+\end{longtable}
+
+\noindent La tabla recoge las clases principales de cada paquete; se omiten
+por brevedad algunos ejecutores y variantes auxiliares (p.\,ej.\
+\texttt{Rq2ComparisonExecutor}, \texttt{Rq2ScannerBatchExecutor},
+\texttt{TutorCorpusLoader}, \texttt{TrapCorpusLoader} en
+\texttt{experiment}, o \texttt{Rq3PromptV2Executor} y
+\texttt{Rq3TrapCampaignExecutor} en \texttt{llm}), que dan soporte a
+experimentos secundarios y no alteran el flujo principal descrito.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=blue!5, align=center, font=\small},
+  orch/.style={box, fill=orange!12, text width=2.6cm, inner sep=4pt, font=\small\ttfamily},
+  mainbox/.style={box, fill=orange!12, text width=5.8cm, inner sep=4pt, font=\small\ttfamily},
+  core/.style={box, text width=9.4cm, inner sep=6pt},
+  supp/.style={box, text width=2.6cm, inner sep=4pt, font=\small\ttfamily},
+  arr/.style={-{Latex}, gray!70},
+]
+\node[mainbox] (main) at (4,0)      {Main / ExperimentOrchestrator};
+\node[orch]    (exp)  at (0.5,-2.3) {experiment};
+\node[orch]    (llm)  at (4,-2.3)   {llm};
+\node[orch]    (scan) at (7.5,-2.3) {scanner};
+\node[core]    (core) at (4,-4.7)
+  {Núcleo de análisis y transformación\\[2pt]
+   \ttfamily detection \quad transformation \quad analysis};
+\node[supp]    (val)  at (0.5,-6.7) {validation};
+% Entrada -> orquestación
+\draw[arr] (main) -- (exp);
+\draw[arr] (main) -- (llm);
+\draw[arr] (main) -- (scan);
+% Orquestación -> núcleo (verticales, sin cruces)
+\draw[arr] (exp)  -- (exp  |- core.north);
+\draw[arr] (llm)  -- (llm  |- core.north);
+\draw[arr] (scan) -- (scan |- core.north);
+% Núcleo -> validation
+\draw[arr] (core.south -| val) -- (val);
+\end{tikzpicture}
+\caption{Diagrama de paquetes del prototipo. La capa de entrada
+(\texttt{Main}) lanza los flujos de orquestación (\texttt{experiment} para
+RQ1/RQ2, \texttt{llm} para RQ3, \texttt{scanner} para construir el corpus),
+que se apoyan en el núcleo de análisis y transformación
+(\texttt{detection}, \texttt{transformation}, \texttt{analysis}) y en
+\texttt{validation}.}
+\label{fig:paquetes}
+\end{figure}
+
+\subsection{Flujo de datos del pipeline determinista (RQ1, RQ2)}
+
+El flujo extremo a extremo, implementado por \texttt{BatchRunner.processCase}, se organiza en las siguientes etapas:
+
+\begin{enumerate}
+    \item \textbf{Carga del corpus.}  
+    Los casos se cargan desde el \emph{classpath} y se construyen como instancias de \texttt{ExperimentCase}.
+
+    \item \textbf{Parseo a AST.}  
+    El código fuente se parsea mediante \lstinline|StaticJavaParser.parse(...)| y se selecciona el primer \lstinline|MethodDeclaration|. Si el parseo falla, el caso se marca como inelegible con un motivo explícito.
+
+    \item \textbf{Detección con motivos.}  
+    Se ejecuta \lstinline|detectWithReasons| para identificar oportunidades y registrar los \texttt{DiscardReason} asociados en \lstinline|discardCategories|.
+
+    \item \textbf{Medición \emph{before}.}  
+    Se calcula la complejidad cognitiva inicial del método antes de aplicar ninguna transformación.
+
+    \item \textbf{Aplicación iterativa de la transformación.}  
+    Sobre un clon del AST se aplica la política \emph{one-at-a-time} (véase \autoref{sec:one-at-a-time}), re-detectando tras cada cambio hasta alcanzar un punto fijo o el límite de seguridad.
+
+    \item \textbf{Medición \emph{after}.}  
+    Una vez finalizado el proceso iterativo, se vuelve a calcular la complejidad cognitiva y se obtiene $\Delta = \text{after} - \text{before}$.
+
+    \item \textbf{Construcción del resultado experimental.}  
+    Con la información anterior se construye una instancia inmutable de \texttt{ExperimentResult}.
+
+    \item \textbf{Exportación de resultados.}  
+    Finalmente, los resultados se exportan a JSON (incluyendo código fuente) y a CSV (formato tabular) (\autoref{fig:pipeline-det}).
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  term/.style={draw, rounded rectangle, fill=green!12, align=center,
+               text width=3cm, inner sep=4pt, font=\small},
+  endbad/.style={draw, rounded rectangle, fill=red!10, align=center,
+                 text width=3cm, inner sep=4pt, font=\small},
+  proc/.style={draw, fill=blue!5, align=center,
+               text width=3.8cm, inner sep=5pt, font=\small},
+  io/.style={draw, trapezium, trapezium left angle=70,
+             trapezium right angle=110, trapezium stretches=true,
+             fill=gray!15, align=center, text width=3.6cm, inner sep=4pt,
+             font=\small},
+  dec/.style={draw, diamond, aspect=2.2, fill=orange!12, align=center,
+              text width=2.2cm, inner sep=1pt, font=\scriptsize},
+  arr/.style={-{Latex}},
+  lbl/.style={font=\scriptsize, inner sep=1.5pt},
+]
+% Eje principal
+\node[term] (start) at (0,0)      {Inicio: \texttt{ExperimentCase}};
+\node[dec]  (dpar)  at (0,-2.3)   {\textquestiondown{}AST válido y con método?};
+\node[proc] (db)    at (0,-4.6)   {Detección con motivos\\+ CC \emph{before} (original)};
+\node[proc] (loop)  at (0,-6.2)   {Detectar oportunidades\\(sobre el clon)};
+\node[dec]  (dloop) at (0,-8.5)   {\textquestiondown{}oportunidad y pasadas $<$ \texttt{MAX}?};
+\node[proc] (ar)    at (0,-10.8)  {CC \emph{after}, $\Delta$\\y \texttt{ExperimentResult}};
+\node[io]   (exp)   at (0,-12.6)  {Exportar JSON + CSV};
+\node[term] (fin)   at (0,-14.2)  {Fin};
+% Ramas laterales
+\node[endbad] (inel) at (4.8,-2.3) {Inelegible\\(\texttt{CC before = -1})};
+\node[proc] (apply)  at (4.8,-8.5) {Aplicar la primera oportunidad};
+% Flechas del eje
+\draw[arr] (start) -- (dpar);
+\draw[arr] (dpar)  -- node[lbl,left]{sí} (db);
+\draw[arr] (db)    -- (loop);
+\draw[arr] (loop)  -- (dloop);
+\draw[arr] (dloop) -- node[lbl,left]{no} (ar);
+\draw[arr] (ar)    -- (exp);
+\draw[arr] (exp)   -- (fin);
+% Ramas
+\draw[arr] (dpar)  -- node[lbl,above]{no} (inel);
+\draw[arr] (dloop) -- node[lbl,above]{sí} (apply);
+\draw[arr] (apply) |- node[lbl,above]{re-detectar} (loop.east);
+\end{tikzpicture}
+\caption{Flujo de datos del pipeline determinista
+(\texttt{BatchRunner.processCase}). Se hacen explícitos la rama de
+inelegibilidad (fallo de parseo o ausencia de método $\rightarrow$
+\texttt{CC before = -1}; el resultado inelegible también se registra y
+exporta) y el bucle de la política \emph{one-at-a-time} (detectar
+$\rightarrow$ aplicar la primera oportunidad $\rightarrow$ re-detectar,
+hasta punto fijo o \texttt{MAX\_PASSES}). La CC \emph{before} se mide sobre
+el método original y la \emph{after} sobre el clon transformado.}
+\label{fig:pipeline-det}
+\end{figure}
+
+\subsection{Flujo del subsistema LLM (RQ3)}
+
+Para RQ3 se añade un flujo paralelo coordinado por \texttt{CampaignExecutor} y \texttt{LlmCampaignRunner}, que se organiza en las siguientes etapas:
+
+\begin{enumerate}
+    \item \textbf{Carga del subset de evaluación.}  
+    Se carga el subconjunto RQ3 definido en \texttt{LlmEvaluationSubset}, junto con sus correspondientes baselines deterministas.
+
+    \item \textbf{Construcción del prompt.}  
+    El mensaje enviado al modelo se genera mediante \texttt{LlmPromptBuilder}, utilizando la versión fijada del protocolo (\lstinline|PROMPT_VERSION = "v1.0"|).
+
+    \item \textbf{Invocación al modelo.}  
+    La ejecución del modelo se realiza a través de la interfaz \texttt{LlmResponseProvider}, con implementaciones específicas como \texttt{LiveLlmResponseProvider} y \texttt{PrerecordedResponseProvider}.
+
+    \item \textbf{Validación mediante el oráculo.}  
+    Cada respuesta se procesa con \texttt{LlmResponseValidator}, que aplica el oráculo experimental descrito en \autoref{sec:oraculo}.
+
+    \item \textbf{Agregación y exportación de resultados.}  
+    Finalmente, los resultados se consolidan y exportan en artefactos.
+\end{enumerate}
+
+\subsection{Decisiones estructurales}
+\begin{itemize}
+  \item \textbf{Inmutabilidad de los resultados.} \texttt{ExperimentResult}
+  y \texttt{LlmEvaluationResult} se construyen una sola vez y se exportan
+  sin mutación posterior, lo que facilita la trazabilidad.
+  \item \textbf{Provider intercambiable para LLM.}
+  \texttt{LlmResponseProvider} permite ejecutar la misma campaña con
+  respuestas reales o grabadas, desacoplando la lógica experimental del
+  coste y la variabilidad de las llamadas remotas.
+  \item \textbf{Exportadores múltiples.} CSV, JSON y Markdown cubren usos
+  distintos (tabla agregada, evidencia completa, lectura humana).
+  \item \textbf{Sin acoplamiento a SonarQube en el pipeline determinista.}
+  El prototipo \emph{no invoca} SonarQube en el flujo principal; la
+  validación cruzada se realiza fuera de banda (\autoref{sec:sonar-val}).
+\end{itemize}

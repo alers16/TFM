@@ -39,7 +39,68 @@ Catálogo de figuras y tablas previstas. Las fuentes editables (Mermaid, dot, et
 - Pie de figura siempre con fuente o referencia al archivo de evidencia.
 - Renderizar Mermaid a SVG para la versión final; mantener el `.mmd` fuente en `figuras/src/`.
 
+## 3a. Diagramas ya integrados como TikZ nativo (sin imagen externa)
+
+- **Fig. 4.7 — Árbol de decisión P1–P5** (`fig:arbol-p1-p5`): integrada en
+  `secciones/04a-diseno.tex` (§4.2.3) como `tikzpicture`. Sustituye al
+  borrador Mermaid `figuras/src/fig-4.7-arbol-decision-p1-p5.mmd`, que se
+  conserva solo como referencia. Compila sin `mmdc` ni PNG.
+- **Fig. 4.4 — Esquema before/after canónico** (`fig:before-after`):
+  integrada en `secciones/04a-diseno.tex` (§4.2.2) como dos snippets
+  `lstlisting` lado a lado (Antes $\Longrightarrow$ Después). Nativo, sin
+  imagen externa.
+- **Fig. 4.1 — Diagrama de paquetes** (`fig:paquetes`): integrada en
+  `secciones/04b-arquitectura.tex` (§4.3) como `tikzpicture` por capas
+  (entrada → orquestación → núcleo + validation). Sustituye al borrador
+  `figuras/src/fig-4.1-paquetes.mmd`.
+- **Fig. — Secuencia de evaluación RQ3** (`fig:secuencia-rq3`): diagrama de
+  secuencia UML en `secciones/04c-implementacion.tex` (§4.4.5). Fuente en
+  `figuras/src/fig-secuencia-rq3.mmd`; **pendiente de renderizar** a
+  `figuras/img/fig-secuencia-rq3.pdf` (mmdc o mermaid.live). El `figure` ya
+  está colocado con `\IfFileExists` (muestra placeholder hasta que exista el PDF).
+- **Tabla — Composición del corpus** (`tab:corpus`): en
+  `secciones/04d-experimento.tex` (§4.5.1), piloto 8 + real 118 = 126
+  (104 elegibles). Datos de `output/rq2-batch/rq2-run-metadata.json`.
+- **Listado 4.x — Cálculo de CC** (`lst:cc-ejemplo`): en
+  `secciones/04c-implementacion.tex` (§4.4.3), ejemplo anotado de cálculo de
+  complejidad cognitiva sobre un caso validado contra SonarSource (CC=9).
+- **Fig. 4.8 — Oráculo de RQ3** (`fig:oraculo`): integrada en
+  `secciones/04c-implementacion.tex` (§4.4.5) como diagrama de flujo TikZ de
+  la cadena de validación (rechazo / salida inválida / asignación de
+  veredicto), acompañada de la **tabla de decisión** `tab:oraculo` con las
+  reglas exactas de veredicto (fiel a `LlmResponseValidator.evaluate`).
+  Sustituye al borrador `figuras/src/fig-4.8-oraculo-rq3.mmd`.
+- **Fig. 4.2 — Flujo del pipeline determinista** (`fig:pipeline-det`):
+  integrada en `secciones/04b-arquitectura.tex` (§4.3) como **diagrama de
+  flujo** TikZ (rombos de decisión) que hace explícitas la rama de
+  inelegibilidad y el bucle \emph{one-at-a-time}. Sustituye al borrador
+  `figuras/src/fig-4.2-pipeline-determinista.mmd`.
+
+## 3b. Figuras y tablas ya integradas (datos reales)
+
+Generadas a partir de `output/rq2-batch/rq2-summary.md` y embebidas en
+`secciones/04e-resultados.tex` (no requieren imagen externa):
+
+- **Fig. boxplots** (`fig:boxplots`, pgfplots): CC antes vs. después (escala
+  log, bigotes de Tukey + outliers) y distribución de Δ.
+- **Tabla cinco números** (`tab:rq2-cinco`): mín/Q1/mediana/Q3/máx/media de
+  CC antes, después y Δ (n=104 elegibles).
+- **Tabla issues SonarQube** (`tab:issues-sonar`): cruce del umbral CC=15
+  (41 con issue → 6 eliminados, 35 persisten; 63 sin issue).
+- **Tabla validación humana** (`tab:validacion-humana`): plantilla N=30,
+  pendiente de rellenar (ver `docs/human-validation-protocol.md`).
+
 ## 4. Estado
 
-- [PENDIENTE DE REDACCIÓN] Aún no se ha generado ninguna figura.
-- Próximo paso: crear los esqueletos `.mmd` para Fig. 4.1, Fig. 4.2, Fig. 4.3, Fig. 4.7 y Fig. 4.8 cuando se inicie el capítulo 4.
+- **Fuentes Mermaid creadas** en `figuras/src/` (pendientes de renderizar a SVG en `figuras/img/`):
+  - `fig-4.1-paquetes.mmd` — diagrama de paquetes del prototipo.
+  - `fig-4.2-pipeline-determinista.mmd` — flujo RQ1/RQ2.
+  - `fig-4.3-pipeline-rq3.mmd` — pipeline experimental RQ3.
+  - `fig-4.7-arbol-decision-p1-p5.mmd` — árbol de decisión del detector.
+  - `fig-4.8-oraculo-rq3.mmd` — oráculo `LlmResponseValidator` (8 pasos).
+- Renderizado sugerido: `mmdc -i figuras/src/<fichero>.mmd -o figuras/img/<fig>.svg`.
+- **Pendientes de fuente:** Fig. 2.1, 2.2, 4.0, 4.4, 4.5, 4.6, 4.9, 4.10b, 4.11, 4.12.
+- ⚠️ **Aviso de datos (Fig. 4.9 / Tabla 4.3):** las cifras de RQ2 del borrador
+  Markdown previo (`n=18`, `Δ=−18`) están **obsoletas**. Los artefactos vigentes
+  (`output/rq2-batch/rq2-run-metadata.json`) reportan `126` casos y `Δ=−278`.
+  Re-extraer antes de generar cualquier gráfico de resultados.

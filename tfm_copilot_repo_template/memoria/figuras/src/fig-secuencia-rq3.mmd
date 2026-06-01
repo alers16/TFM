@@ -1,0 +1,24 @@
+%% Fig. — Diagrama de secuencia de una evaluación RQ3.
+%% Render:  mmdc -i fig-secuencia-rq3.mmd -o ../img/fig-secuencia-rq3.pdf
+%% (o pegar en https://mermaid.live y exportar a PDF/PNG)
+sequenceDiagram
+    autonumber
+    participant R as LlmCampaignRunner
+    participant P as LlmPromptBuilder
+    participant Pr as LlmResponseProvider
+    participant API as API OpenAI
+    participant V as LlmResponseValidator
+
+    Note over R: parte del baseline determinista<br/>del caso (BatchRunner)
+    loop por cada modelo e intento (1..3)
+        R->>P: construir prompt v1.0 (caso)
+        P-->>R: prompt (system + user)
+        R->>Pr: invocar modelo (T=0)
+        Pr->>API: peticion (chat completions)
+        API-->>Pr: respuesta cruda
+        Pr-->>R: rawOutput
+        R->>V: evaluate(rawOutput, original, baseline)
+        Note over V: extraer bloque java, parsear,<br/>firma, medir CC after, delta,<br/>comparar con baseline
+        V-->>R: LlmEvaluationResult (veredicto)
+        R->>R: registrar LlmInvocationRecord
+    end

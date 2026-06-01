@@ -1,0 +1,243 @@
+
+\chapter{Antecedentes}
+\label{cap:antecedentes}
+
+
+\section{Complejidad cognitiva}
+\label{sec:cc-antecedentes}
+
+La medición de la complejidad del software tiene un antecedente clásico en la
+\emph{complejidad ciclomática} de McCabe~\cite{10.1109/TSE.1976.233837}, que
+cuenta el número de caminos linealmente independientes del grafo de control de
+un método. Se trata de una métrica útil para estimar el esfuerzo de prueba, pero
+no fue concebida para medir lo difícil que resulta comprender el código. En
+particular, trata de forma similar estructuras que un lector humano percibe de
+manera muy distinta y no penaliza de forma explícita el anidamiento, que suele
+ser uno de los factores más costosos de seguir mentalmente.
+
+Para cubrir esa carencia, SonarSource propuso la \emph{complejidad
+cognitiva}~\cite{10.1145/3194164.3194186}, una métrica diseñada
+específicamente para aproximar el esfuerzo de comprensión. Su modelo se apoya
+en tres tipos de incremento: un incremento estructural por cada ruptura del flujo
+lineal de lectura, un incremento por anidamiento que penaliza más las
+estructuras cuanto más profundas están y un incremento asociado a ciertas
+secuencias de operadores lógicos. Es precisamente este componente de
+anidamiento el que convierte a los condicionales anidados en uno de los
+principales contribuyentes a la complejidad cognitiva y el que motiva el patrón
+objetivo de este trabajo.
+
+El uso de la complejidad cognitiva como aproximación a la comprensibilidad
+cuenta además con respaldo empírico. Muñoz Barón et
+al.~\cite{10.1145/3382494.3410636} encuentran, sobre un conjunto amplio de
+datos de comprensión, una correlación significativa entre esta métrica y el
+tiempo que tardan los desarrolladores en entender el código. Esto respalda su
+uso como criterio de mejora en RQ2.
+
+Conviene matizar, no obstante, que la métrica empleada en este trabajo no es la
+implementación oficial de SonarQube, sino una implementación \emph{proxy} del
+modelo (\autoref{sec:proxy}). Su validez de constructo se acota mediante el
+contraste descrito en la \autoref{sec:sonar-val}.
+
+\section{Refactorización y preservación semántica}
+\label{sec:refactor-antecedentes}
+
+Se entiende por refactorización el conjunto de transformaciones que mejoran
+la estructura interna del código sin alterar su comportamiento observable.
+El catálogo de referencia es el de Fowler~\cite{fowler2018refactoring}, que
+sistematiza el campo en torno a un repertorio de transformaciones pequeñas
+y con nombre propio, aplicadas en pasos sucesivos. Entre ellas figura la
+consolidación de expresiones condicionales, que es exactamente la familia a
+la que pertenece el patrón objetivo de este trabajo: fundir condicionales
+anidados en una única condición conjuntiva.
+
+La noción de que una refactorización debe preservar el comportamiento se
+remonta a la tesis de Opdyke~\cite{opdyke1992refactoring}, donde las
+transformaciones se definen como operaciones que conservan el comportamiento
+del programa \emph{siempre que se cumplan sus precondiciones}. Este es el
+principio que vertebra el enfoque del prototipo: en lugar de confiar en que
+una transformación sea segura en abstracto, se acota su aplicación a los
+casos en los que un conjunto de precondiciones verificables —las condiciones
+P1--P5 de la \autoref{sec:precondiciones}— garantiza la equivalencia. La idea
+de equivalencia que se maneja es la de equivalencia observable: el código
+refactorizado debe producir el mismo efecto que el original para toda
+entrada, lo que en el caso del patrón \lstinline|if(A){if(B)}| frente a
+\lstinline|if(A && B)| depende de manera crítica de que las condiciones no
+tengan efectos colaterales ni alteren la semántica de cortocircuito.
+
+El estudio de Mens y Tourwé~\cite{10.1109/TSE.2004.1265817} ofrece una
+panorámica de la disciplina y distingue las actividades implicadas:
+identificar dónde refactorizar, garantizar que la transformación preserva el
+comportamiento, aplicarla y evaluar su efecto sobre la calidad. Esta
+descomposición se corresponde con la estructura del prototipo —detección,
+verificación de precondiciones, transformación y medición del impacto— y
+sitúa el trabajo dentro de la línea de las refactorizaciones automáticas
+basadas en condiciones de aplicabilidad comprobables sobre el código. La
+\autoref{tab:actividades-pipeline} hace explícita esta correspondencia.
+
+\begin{table}[ht]
+\centering
+\caption{Correspondencia entre las actividades de refactorización descritas
+por Mens y Tourwé~\cite{10.1109/TSE.2004.1265817} y las etapas del prototipo.}
+\label{tab:actividades-pipeline}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Actividad (Mens y Tourwé)} & \textbf{Etapa del prototipo} & \textbf{Componente} \\
+\midrule
+Identificar dónde refactorizar   & Detección del patrón      & \texttt{NestedIfDetector} \\
+Garantizar la preservación       & Verificación de P1--P5    & Precondiciones \\
+Aplicar la transformación        & Refactorización           & \texttt{NestedIfTransformer} \\
+Evaluar el efecto                & Medición del impacto      & CC \emph{proxy} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Análisis estático sobre AST con JavaParser}
+\label{sec:ast-antecedentes}
+
+Detectar y transformar el patrón objetivo exige operar sobre la estructura
+sintáctica del código, no sobre su texto. La representación habitual para
+esta tarea es el árbol de sintaxis abstracta (AST), en el que cada
+construcción del lenguaje —una sentencia \lstinline|if|, una expresión
+binaria, un bloque— corresponde a un nodo con una posición bien definida en
+la jerarquía. Trabajar sobre el AST evita la fragilidad del tratamiento
+basado en texto y permite razonar sobre relaciones estructurales como el
+anidamiento.
+
+El prototipo se apoya en JavaParser~\cite{smith2023javaparser}, una
+biblioteca que construye el AST de código fuente Java y permite recorrerlo y
+modificarlo programáticamente; la versión concreta se fija en
+\texttt{pom.xml} (\autoref{sec:experimento}). La detección recorre el árbol
+en busca de sentencias \lstinline|if| anidadas que cumplan el patrón, y la
+transformación reescribe el árbol \emph{in situ}: combina las dos
+condiciones en una conjunción y reubica el cuerpo bajo el nuevo nodo. La
+manipulación es deliberadamente conservadora —no se reordenan ni simplifican
+expresiones— y preserva la semántica de precedencia envolviendo en
+paréntesis las condiciones cuando es necesario (por ejemplo, una disyunción
+que pasa a formar parte de una conjunción).
+
+La limitación relevante para este trabajo es que el análisis es
+esencialmente sintáctico: el AST describe la forma del programa, pero no
+resuelve por defecto información semántica como los tipos, los alias o el
+flujo de datos. En consecuencia, no es posible decidir sobre el árbol si una
+llamada a un método tiene efectos colaterales o si dos expresiones son
+equivalentes. Esta frontera es la que justifica la estrategia conservadora
+del prototipo: en lugar de intentar un análisis semántico completo, se
+restringe la aplicabilidad mediante precondiciones comprobables sobre la
+estructura y una lista explícita de construcciones admitidas
+(\autoref{sec:precondiciones}), descartando todo lo que no pueda verificarse
+con garantías.
+
+\section{Grandes modelos de lenguaje aplicados a tareas de código}
+\label{sec:llm-antecedentes}
+
+La aplicación de grandes modelos de lenguaje (LLM) a tareas de programación
+se consolidó con Codex~\cite{chen2021codex}, un modelo entrenado sobre código
+público que demostró una capacidad notable para sintetizar programas a partir
+de descripciones en lenguaje natural y que dio lugar a asistentes de
+programación de uso masivo. Desde entonces, el interés se ha desplazado desde
+la generación de código nuevo hacia tareas sobre código existente, entre ellas
+la refactorización, que es precisamente el escenario abordado en RQ3.
+
+La evidencia empírica sobre refactorización con LLM es prometedora, aunque
+todavía debe interpretarse con cautela. DePalma
+et al.~\cite{10.1016/j.eswa.2024.123602} observan, sobre un conjunto de
+fragmentos de código Java, que ChatGPT propone mejoras útiles en la mayoría de
+los casos, si bien con resultados desiguales según el atributo de calidad
+considerado y sin una garantía sistemática de preservación del comportamiento.
+Liu et al.~\cite{liu2024llmrefactoring}, por su parte, encuentran que los
+modelos identifican por sí solos una fracción reducida de las oportunidades
+reales de refactorización y que su rendimiento depende en gran medida del modo
+en que la tarea se formule y acote mediante el \emph{prompt}.
+
+De este panorama se derivan dos implicaciones que condicionan el diseño de
+RQ3. La primera es que la corrección de una refactorización generada por un
+LLM no puede darse por supuesta, sino que debe comprobarse frente a una
+referencia fiable. En este trabajo, esa referencia la proporcionan el
+\emph{baseline} determinista del prototipo y el oráculo automático
+(\autoref{sec:oraculo}). La segunda es que la salida de estos modelos puede
+variar entre ejecuciones, lo que obliga a fijar un protocolo reproducible
+---modelos, temperatura, versión del \emph{prompt} y número de intentos por
+caso--- para que la evaluación resulte interpretable
+(\autoref{sec:exp-rq3}).
+
+\section{Metodología Design Science Research}
+\label{sec:dsr-antecedentes}
+
+El trabajo se encuadra metodológicamente en el paradigma de \emph{Design
+Science Research} (DSR), orientado a generar conocimiento mediante la
+construcción y evaluación de artefactos que resuelven un problema. Hevner et
+al.~\cite{10.2307/25148625} establecen como núcleo de este paradigma el ciclo
+entre construir un artefacto y evaluarlo con rigor frente al problema que
+pretende resolver, y Peffers et al.~\cite{10.2753/MIS0742-1222240302} lo
+concretan en una secuencia de actividades —identificar el problema, fijar los
+objetivos, diseñar y desarrollar el artefacto, demostrarlo, evaluarlo y
+comunicarlo— que ofrece una estructura reconocible para presentar este tipo
+de investigación.
+
+Este encuadre es natural para el presente trabajo. El artefacto es el
+prototipo determinista de detección y refactorización; su evaluación consiste
+en medir cómo responde a cada pregunta de investigación: qué casos son
+combinables y con qué resultado (RQ1), qué efecto tiene la transformación
+sobre la complejidad cognitiva (RQ2) y en qué medida un LLM reproduce la
+transformación de forma correcta y automática (RQ3). La doble naturaleza de
+construir y comprobar, propia de DSR, recorre así la propuesta y articula su
+desarrollo (\autoref{cap:propuesta}).
+
+\section{Síntesis crítica orientada al problema}
+\label{sec:sintesis-antecedentes}
+
+Los antecedentes anteriores convergen en el problema de este trabajo, pero
+ninguno lo cubre por completo. La complejidad cognitiva
+(\autoref{sec:cc-antecedentes}) proporciona la métrica y su justificación
+empírica; la teoría de la refactorización (\autoref{sec:refactor-antecedentes})
+aporta el principio de preservación condicionada a precondiciones; el análisis
+sobre AST (\autoref{sec:ast-antecedentes}) ofrece la tecnología, con su
+frontera sintáctica; y la literatura sobre LLM (\autoref{sec:llm-antecedentes})
+delimita lo que cabe esperar de estos modelos y por qué su salida debe
+verificarse.
+
+El trabajo más cercano es el de Saborido et
+al.~\cite{10.1109/ACCESS.2022.3144743}, que aborda exactamente la reducción
+automática de la complejidad cognitiva. Su enfoque modela el problema como una
+búsqueda sobre secuencias de extracción de método (\emph{Extract Method}) y lo
+evalúa sobre diez proyectos de código abierto, resolviendo una fracción
+elevada de las incidencias de complejidad cognitiva detectadas por SonarQube.
+Este trabajo comparte con él tanto el objetivo —reducir la complejidad
+cognitiva mediante refactorización automática— como parte del banco de
+pruebas, ya que reutiliza esos mismos proyectos en el corpus
+(\autoref{sec:corpus}). La diferencia está en el tipo de transformación y en
+el alcance: mientras que Saborido et al. \emph{descomponen} métodos extrayendo
+fragmentos a nuevos métodos, el presente trabajo \emph{funde} condicionales
+anidados en una única condición; son operaciones complementarias sobre la
+misma métrica. Además, ese trabajo no examina si un modelo de lenguaje puede
+realizar la transformación, que es precisamente el objeto de RQ3.
+
+La \autoref{tab:comparativa} resume el posicionamiento frente a las
+alternativas. El hueco que cubre este trabajo se sitúa en la intersección de
+tres rasgos que, por separado, sí aparecen en la literatura: una
+transformación concreta acotada por precondiciones \emph{verificables} (frente
+a la seguridad heurística de los refactors de entorno de desarrollo o a la
+ausencia de garantías de los LLM), el uso de la complejidad cognitiva como
+criterio de impacto, y una evaluación explícita de la capacidad de los LLM
+para reproducirla frente a un \emph{baseline} determinista.
+
+\begin{table}[ht]
+\centering
+\caption{Posicionamiento del trabajo frente a enfoques previos de
+refactorización y de reducción de complejidad.}
+\label{tab:comparativa}
+\begin{tabular}{@{}p{3.1cm}p{2.7cm}p{2.7cm}p{2.4cm}@{}}
+\toprule
+\textbf{Enfoque} & \textbf{Transformación} & \textbf{Garantía de seguridad} & \textbf{Dimensión LLM} \\
+\midrule
+Refactors de IDE / catálogo de Fowler~\cite{fowler2018refactoring}
+  & Repertorio amplio & Heurística de la herramienta & No \\
+Saborido et al.~\cite{10.1109/ACCESS.2022.3144743}
+  & Extracción de método (búsqueda) & Refactor que preserva el comportamiento & No \\
+LLM para refactor~\cite{10.1016/j.eswa.2024.123602, liu2024llmrefactoring}
+  & Abierta & Sin garantía formal & Es el objeto de estudio \\
+\textbf{Este trabajo}
+  & Combinación de condicionales anidados & Precondiciones P1--P5 verificables & Evaluada (RQ3) \\
+\bottomrule
+\end{tabular}
+\end{table}

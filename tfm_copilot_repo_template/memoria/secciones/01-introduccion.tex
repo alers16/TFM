@@ -1,0 +1,90 @@
+% =====================================================================
+%  Capítulo 1. Introducción  (Bloque UMA obligatorio)
+%  ESTADO: andamiaje + objetivos/contribuciones estables. La redacción
+%  definitiva de §1.1 y §1.6 se cerrará tras consolidar resultados.
+% =====================================================================
+\chapter{Introducción}
+\label{cap:introduccion}
+
+% --- Objetivo del capítulo ------------------------------------------
+% Presentar contexto, motivación, objetivos, preguntas de investigación
+% y estructura del documento.
+
+\section{Contexto y motivación}
+\label{sec:contexto}
+\pendienteredaccion{} La complejidad cognitiva es una métrica de
+mantenibilidad que estima el esfuerzo humano necesario para comprender un
+fragmento de código \pendientecita{}. A diferencia de la complejidad
+ciclomática, penaliza especialmente el anidamiento de estructuras de
+control, lo que convierte a los condicionales anidados en uno de sus
+principales contribuyentes \pendientecita{}. Esta sección situará la
+frecuencia de dichos condicionales en código real (apoyándose en el
+escaneo masivo descrito en la \autoref{sec:corpus}) y motivará por qué
+su simplificación es relevante para la calidad del software.
+
+\section{Problema abordado}
+\label{sec:problema-intro}
+El trabajo aborda la \emph{combinación segura de sentencias condicionales
+anidadas} en Java, con foco en el patrón canónico
+\lstinline|if (A) { if (B) { S } }| $\rightarrow$ \lstinline|if (A && B) { S }|.
+La descripción detallada del problema se ofrece en el
+\autoref{cap:problema}.
+
+\section{Objetivos}
+\label{sec:objetivos-intro}
+\paragraph{Objetivo general.}
+Diseñar, implementar y evaluar un enfoque para detectar y refactorizar
+sentencias condicionales anidadas en Java con el fin de reducir la
+complejidad cognitiva del código, preservando su semántica cuando
+corresponda; y comparar este enfoque con refactorizaciones generadas por
+grandes modelos de lenguaje bajo un protocolo experimental controlado.
+
+\paragraph{Objetivos específicos.}
+\begin{enumerate}
+  \item Identificar y formalizar los casos en que es posible combinar
+  condicionales anidados de forma segura, documentando precondiciones de
+  aplicabilidad y resultado de la transformación.
+  \item Diseñar e implementar un prototipo determinista que detecte dichas
+  oportunidades sobre el árbol de sintaxis abstracta (AST) y aplique la
+  transformación.
+  \item Medir el impacto de las refactorizaciones sobre la complejidad
+  cognitiva con una métrica definida y reproducible.
+  \item Comparar las refactorizaciones del prototipo con las producidas por
+  grandes modelos de lenguaje, bajo protocolo controlado, en términos de
+  corrección, completitud y calidad.
+\end{enumerate}
+
+\section{Preguntas de investigación}
+\label{sec:rq-intro}
+% IMPORTANTE: RQ oficiales. Reproducir SIEMPRE literalmente. No reformular.
+\begin{description}
+  \item[RQ1.] ¿En qué casos se pueden combinar sentencias condicionales anidadas y cuál sería el resultado?
+  \item[RQ2.] ¿Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?
+  \item[RQ3.] ¿Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?
+\end{description}
+Su operacionalización (sin reformular el texto oficial) se detalla en la
+\autoref{sec:operacionalizacion}.
+
+\section{Contribuciones del TFM}
+\label{sec:contribuciones}
+\begin{enumerate}
+  \item La formalización de un conjunto cerrado de precondiciones
+  (P1--P5) para la combinación segura de \lstinline|if| anidados, con su
+  catálogo de motivos de descarte trazable.
+  \item Un prototipo determinista basado en AST con un pipeline
+  experimental reproducible (carga de corpus, detección, transformación,
+  medición y exportación de artefactos).
+  \item Una comparación controlada del prototipo frente a LLMs bajo un
+  protocolo congelado y un oráculo de validación automático.
+  \item Un paquete de replicación con corpus, scripts y artefactos
+  versionados.
+\end{enumerate}
+
+\section{Estructura del documento}
+\label{sec:estructura}
+\pendienteredaccion{} El \autoref{cap:antecedentes} presenta los
+antecedentes; el \autoref{cap:problema} describe el problema y
+operacionaliza las RQ; el \autoref{cap:propuesta} detalla la propuesta
+(diseño, arquitectura, implementación, diseño experimental, resultados y
+amenazas a la validez); y el \autoref{cap:conclusiones} recoge
+conclusiones y trabajo futuro. (Texto a afinar al cierre.)
