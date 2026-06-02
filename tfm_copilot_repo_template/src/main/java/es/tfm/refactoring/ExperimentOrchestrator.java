@@ -92,6 +92,7 @@ public class ExperimentOrchestrator {
         boolean runRq3Campaign   = false;
         boolean runRq3Trap       = false;
         boolean runRq3Promptv2   = false;
+        boolean useAllCasesInRq3 = false;
         boolean dryRun           = false;
         String  outputBase       = "output";
 
@@ -99,7 +100,8 @@ public class ExperimentOrchestrator {
             switch (arg) {
                 case "--all"            -> { runScanReal = runScanTutor = true;
                                              runRq2Batch = runRq2Tutor = runRq2Comparison = runRq2Scan = true;
-                                             runRq3Campaign = runRq3Trap = runRq3Promptv2 = true; }
+                                             runRq3Campaign = runRq3Trap = runRq3Promptv2 = true;
+                                             useAllCasesInRq3 = true; }
                 case STEP_SCAN         -> { runScanReal = runScanTutor = true; }
                 case STEP_SCAN_REAL    -> runScanReal      = true;
                 case STEP_SCAN_TUTOR   -> runScanTutor     = true;
@@ -200,8 +202,14 @@ public class ExperimentOrchestrator {
         }
         if (runRq3Campaign) {
             String outDir = outputBase + "/rq3-campaign-real-phase9";
+            List<String> campaignArgs = new ArrayList<>();
+            campaignArgs.add("--mode=" + rq3Mode);
+            if (useAllCasesInRq3) {
+                campaignArgs.add("--cases=all");
+            }
+            campaignArgs.add(outDir);
             results.add(run("RQ3 - Campana principal (" + rq3Mode + ")",
-                    () -> CampaignExecutor.main(new String[]{"--mode=" + rq3Mode, outDir})));
+                    () -> CampaignExecutor.main(campaignArgs.toArray(new String[0]))));
         }
         if (runRq3Trap) {
             results.add(run("RQ3 - Campana trampa / falsos positivos",
@@ -286,7 +294,7 @@ public class ExperimentOrchestrator {
         System.out.println("Uso: java es.tfm.refactoring.ExperimentOrchestrator [opciones]");
         System.out.println();
         System.out.println("Grupos de pasos:");
-        System.out.println("  --all             Scan + RQ2 completo + RQ3 completo");
+        System.out.println("  --all             Scan + RQ2 completo + RQ3 completo (RQ3 sobre todos los casos)");
         System.out.println("  --scan            Escanear todos los proyectos disponibles (real + tutor)");
         System.out.println("  --rq2             Scan + genera corpus + RQ2 (batch + tutor + comparison + scan)");
         System.out.println("  --rq3             Ejecuta los 3 pasos de RQ3 (campaign + trap + promptv2)");

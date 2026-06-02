@@ -1,4 +1,4 @@
-﻿package es.tfm.refactoring.experiment;
+package es.tfm.refactoring.experiment;
 
 import java.io.IOException;
 import java.io.InputStream;

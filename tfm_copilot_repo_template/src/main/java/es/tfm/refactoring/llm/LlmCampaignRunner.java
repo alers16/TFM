@@ -169,6 +169,25 @@ public class LlmCampaignRunner {
         return result;
     }
 
+    public Map<String, CaseWithBaseline> loadAllCasesWithBaselines() throws IOException {
+        PilotCorpusLoader pilotLoader = new PilotCorpusLoader();
+        RealDatasetLoader realLoader = new RealDatasetLoader();
+
+        List<ExperimentCase> pilotCases = pilotLoader.load(PilotCorpusLoader.standardPilotFiles());
+        List<ExperimentCase> realCases = realLoader.load(RealDatasetLoader.standardRealFiles());
+
+        List<ExperimentCase> allCases = new ArrayList<>();
+        allCases.addAll(pilotCases);
+        allCases.addAll(realCases);
+
+        Map<String, CaseWithBaseline> result = new LinkedHashMap<>();
+        for (ExperimentCase ec : allCases) {
+            ExperimentResult baseline = batchRunner.run(List.of(ec)).get(0);
+            result.put(ec.getCaseId(), new CaseWithBaseline(ec, baseline));
+        }
+        return result;
+    }
+
     private LlmEvaluationResult buildErrorResult(String caseId, String model,
                                                   String promptVersion,
                                                   int attemptNumber,

@@ -3,23 +3,23 @@
   "campaignType": "trap-cases-rq3",
   "status": "completed",
   "statusDetail": "technicalErrors=0",
-  "startedAt": "2026-05-18T18:17:10.167012700Z",
+  "startedAt": "2026-06-02T14:36:19.628751700Z",
   "protocolFrozen": true,
   "protocol": {
-    "subsetSize": 3,
-    "temperature": 0.0,
+    "maxOutputTokens": 2048,
+    "promptVersion": "v1.0",
     "models": [
       "gpt-4o",
       "gpt-4.1"
     ],
-    "promptVersion": "v1.0",
-    "maxOutputTokens": 2048,
-    "attemptsPerCase": 3,
-    "expectedInvocations": 18
+    "temperature": 0.0,
+    "subsetSize": 3,
+    "expectedInvocations": 18,
+    "attemptsPerCase": 3
   },
   "modelVersions": {
-    "gpt-4o": "gpt-4o",
-    "gpt-4.1": "gpt-4.1"
+    "gpt-4.1": "gpt-4.1",
+    "gpt-4o": "gpt-4o"
   },
   "completedInvocations": 18,
   "trapCases": [

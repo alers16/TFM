@@ -32,6 +32,7 @@ import java.util.Map;
  *   <li>{@code java es.tfm.refactoring.llm.CampaignExecutor}</li>
  *   <li>{@code java es.tfm.refactoring.llm.CampaignExecutor output/rq3-campaign-real}</li>
  *   <li>{@code java es.tfm.refactoring.llm.CampaignExecutor --mode=dry-run output/rq3-campaign-dry}</li>
+ *   <li>{@code java es.tfm.refactoring.llm.CampaignExecutor --cases=30 output/rq3-campaign-limited}</li>
  * </ul>
  */
 public class CampaignExecutor {
@@ -39,6 +40,8 @@ public class CampaignExecutor {
         private static final String MODE_LIVE = "live";
         private static final String MODE_DRY_RUN = "dry-run";
         private static final String MODE_OPENAI_ONLY = "openai-only";
+        private static final String OPTION_CASES_ALL = "--cases=all";
+        private static final String OPTION_CASES_PREFIX = "--cases=";
         private static final Gson GSON = new GsonBuilder()
                         .setPrettyPrinting()
                         .disableHtmlEscaping()
@@ -46,10 +49,21 @@ public class CampaignExecutor {
 
     public static void main(String[] args) throws IOException {
                 String mode = MODE_LIVE;
+                boolean useAllCases = false;
+                int caseLimit = -1;
                 String outputDir = null;
                 for (String arg : args) {
                         if (arg.startsWith("--mode=")) {
                                 mode = arg.substring("--mode=".length()).strip();
+                        } else if (OPTION_CASES_ALL.equals(arg)) {
+                                useAllCases = true;
+                        } else if (arg.startsWith(OPTION_CASES_PREFIX)) {
+                                String value = arg.substring(OPTION_CASES_PREFIX.length()).strip();
+                                if ("all".equalsIgnoreCase(value)) {
+                                        useAllCases = true;
+                                } else {
+                                        caseLimit = Integer.parseInt(value);
+                                }
                         } else if (!arg.isBlank()) {
                                 outputDir = arg;
                         }
@@ -93,9 +107,6 @@ public class CampaignExecutor {
                         ? LlmExperimentProtocol.openAiOnlyExploratoryProtocol()
                         : LlmExperimentProtocol.defaultProtocol();
         System.out.println("Protocol: " + protocol);
-        System.out.println("Expected invocations: "
-                + protocol.totalInvocations(LlmEvaluationSubset.size()));
-        System.out.println();
 
         // 2. Execute campaign
         LlmCampaignRunner runner = new LlmCampaignRunner();
@@ -121,7 +132,7 @@ public class CampaignExecutor {
                                         outputPath.resolve(filePrefix + "aggregated.md"));
                                 exportRunMetadata(outputPath, filePrefix, campaignType,
                                                 startedAt, mode, protocol,
-                                                Map.of(), 0, "blocked", incident);
+                                                Map.of(), 0, "blocked", incident, 0);
                                 exportStartupIncident(outputPath, filePrefix, incident);
                                 System.err.println(incident);
                                 System.err.println("Se registraron artefactos de incidente en: "
@@ -143,8 +154,32 @@ public class CampaignExecutor {
         }
         System.out.println();
 
-        List<LlmInvocationRecord> results = runner.executeCampaign(
-                protocol, provider, modelVersions);
+        List<LlmInvocationRecord> results;
+        int caseCount;
+        if (useAllCases || caseLimit > 0) {
+            Map<String, LlmCampaignRunner.CaseWithBaseline> allCases = runner.loadAllCasesWithBaselines();
+            Map<String, LlmCampaignRunner.CaseWithBaseline> selectedCases;
+            if (caseLimit > 0 && caseLimit < allCases.size()) {
+                selectedCases = new LinkedHashMap<>();
+                int count = 0;
+                for (Map.Entry<String, LlmCampaignRunner.CaseWithBaseline> entry : allCases.entrySet()) {
+                    if (count++ >= caseLimit) break;
+                    selectedCases.put(entry.getKey(), entry.getValue());
+                }
+                System.out.println("Using first " + selectedCases.size() + " cases from the full RQ3 corpus.");
+            } else {
+                selectedCases = allCases;
+                System.out.println("Using all available cases for RQ3 campaign.");
+            }
+            caseCount = selectedCases.size();
+            System.out.println("Expected invocations: " + protocol.totalInvocations(caseCount));
+            results = runner.executeCampaign(protocol, provider, modelVersions, selectedCases);
+        } else {
+            caseCount = LlmEvaluationSubset.size();
+            System.out.println("Using standard RQ3 evaluation subset.");
+            System.out.println("Expected invocations: " + protocol.totalInvocations(caseCount));
+            results = runner.executeCampaign(protocol, provider, modelVersions);
+        }
 
         System.out.println("Invocations completed: " + results.size());
         System.out.println();
@@ -169,7 +204,8 @@ public class CampaignExecutor {
                 outputPath.resolve(filePrefix + "aggregated.md"));
         exportRunMetadata(outputPath, filePrefix, campaignType,
                 startedAt, mode, protocol,
-                modelVersions, results.size(), status, statusDetail);
+                modelVersions, results.size(), status, statusDetail,
+                caseCount);
         exportTechnicalIncidents(outputPath, filePrefix, results);
 
         System.out.println("\nExported to: " + outputPath.toAbsolutePath());
@@ -189,7 +225,8 @@ public class CampaignExecutor {
                                           Map<String, String> modelVersions,
                                                                                   int completedInvocations,
                                                                                   String status,
-                                                                                  String statusDetail)
+                                                                                  String statusDetail,
+                                                                                  int caseCount)
             throws IOException {
         Map<String, Object> metadata = new LinkedHashMap<>();
         metadata.put("campaignPhase", "Phase 9");
@@ -205,8 +242,8 @@ public class CampaignExecutor {
                 "attemptsPerCase", protocol.getAttemptsPerCase(),
                 "promptVersion", protocol.getPromptVersion(),
                 "maxOutputTokens", protocol.getMaxOutputTokens(),
-                "subsetSize", LlmEvaluationSubset.size(),
-                "expectedInvocations", protocol.totalInvocations(LlmEvaluationSubset.size())
+                "caseCount", caseCount,
+                "expectedInvocations", protocol.totalInvocations(caseCount)
         ));
         metadata.put("modelVersions", modelVersions);
         metadata.put("completedInvocations", completedInvocations);

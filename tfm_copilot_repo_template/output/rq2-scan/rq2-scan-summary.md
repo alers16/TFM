@@ -1,6 +1,6 @@
 # RQ2 - Corpus generado por escaner
 
-> Fuente: `C:\Users\Ale Roman\Downloads\tfm_copilot_repo_template\tfm_copilot_repo_template\output\corpus-scan\generated-corpus`
+> Fuente: `C:\Users\Ale Roman\Documents\GitHub\TFM\tfm_copilot_repo_template\output\corpus-scan\generated-corpus`
 
 **Total casos:** 46
 
