@@ -1,0 +1,18 @@
+%% Figura — Ciclo Design Science Research (DSR) seguido en el TFM.
+%% Actividades de Peffers et al. + articulación construir/evaluar (Hevner).
+%% Render sugerido: PNG/PDF a figuras/img/fig-dsr-ciclo.png
+flowchart TD
+    P["Identificar el problema y motivarlo"] --> O["Definir los objetivos de la solución"]
+    O --> D["Diseñar y desarrollar el artefacto<br/>(prototipo determinista)"]
+    D --> DEM["Demostrar<br/>(corpus piloto y real)"]
+    DEM --> EV["Evaluar<br/>(impacto en CC y comparación con LLM)"]
+    EV --> C["Comunicar<br/>(memoria y paquete de replicación)"]
+    EV -. "refinar el artefacto" .-> D
+
+    subgraph CONS ["Construcción"]
+        D
+    end
+    subgraph EVAL ["Evaluación"]
+        DEM
+        EV
+    end

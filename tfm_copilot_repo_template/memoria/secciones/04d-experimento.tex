@@ -68,14 +68,18 @@ Los proyectos fuente proceden de dos orígenes principales:
 
 
 
-\paragraph{Subset RQ3} (definido en \texttt{LlmEvaluationSubset}): seis
-casos del corpus consolidado (\autoref{tab:subset-rq3}) que cubren los
-ejes de variación relevantes (elegibles, parciales, no elegibles) y los
-principales motivos de descarte (P1, P5).
+\paragraph{Subset RQ3} (definido en \texttt{LlmEvaluationSubset}): 50 casos
+del corpus consolidado (8 piloto y 42 reales; 36 elegibles y 14 no elegibles)
+que cubren los ejes de variación relevantes —casos elegibles, parciales y no
+elegibles— y los principales motivos de descarte (P1, P5). La
+\autoref{tab:subset-rq3} recoge una selección representativa de estos casos;
+el subset completo y su veredicto por intento están en
+\texttt{output/rq3-campaign-limited/rq3-summary.csv}.
 
 \begin{table}[ht]
 \centering
-\caption{Subset de evaluación RQ3 (\texttt{LlmEvaluationSubset}).}
+\caption{Ejemplos representativos del subset de evaluación RQ3
+(\texttt{LlmEvaluationSubset}, 50 casos en total).}
 \label{tab:subset-rq3}
 \begin{tabular}{@{}llll@{}}
 \toprule
@@ -163,8 +167,8 @@ Temperatura & \texttt{0.0} & Determinismo esperado. \\
 Intentos por caso & \texttt{3} & Detección de inconsistencia residual. \\
 Prompt & \texttt{v1.0} & Trazabilidad (texto literal en código). \\
 \emph{Max tokens} salida & \texttt{2048} & Métodos refactorizados completos. \\
-Subset & 6 casos & Elegibles/parciales/no elegibles. \\
-Total invocaciones & 36 & $6 \times 2 \times 3$. \\
+Subset & 50 casos & Elegibles/parciales/no elegibles. \\
+Total invocaciones & 300 & $50 \times 2 \times 3$. \\
 \bottomrule
 \end{tabular}
 \end{table}

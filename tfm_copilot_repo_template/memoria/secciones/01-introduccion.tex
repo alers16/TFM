@@ -1,90 +1,141 @@
-% =====================================================================
-%  Capítulo 1. Introducción  (Bloque UMA obligatorio)
-%  ESTADO: andamiaje + objetivos/contribuciones estables. La redacción
-%  definitiva de §1.1 y §1.6 se cerrará tras consolidar resultados.
-% =====================================================================
 \chapter{Introducción}
 \label{cap:introduccion}
 
-% --- Objetivo del capítulo ------------------------------------------
-% Presentar contexto, motivación, objetivos, preguntas de investigación
-% y estructura del documento.
-
 \section{Contexto y motivación}
 \label{sec:contexto}
-\pendienteredaccion{} La complejidad cognitiva es una métrica de
-mantenibilidad que estima el esfuerzo humano necesario para comprender un
-fragmento de código \pendientecita{}. A diferencia de la complejidad
-ciclomática, penaliza especialmente el anidamiento de estructuras de
-control, lo que convierte a los condicionales anidados en uno de sus
-principales contribuyentes \pendientecita{}. Esta sección situará la
-frecuencia de dichos condicionales en código real (apoyándose en el
-escaneo masivo descrito en la \autoref{sec:corpus}) y motivará por qué
-su simplificación es relevante para la calidad del software.
 
-\section{Problema abordado}
-\label{sec:problema-intro}
-El trabajo aborda la \emph{combinación segura de sentencias condicionales
-anidadas} en Java, con foco en el patrón canónico
+El mantenimiento ocupa una parte muy importante del ciclo de vida del
+software y, dentro de él, la actividad dominante no suele ser escribir código
+nuevo, sino entender el que ya existe. Un estudio de campo a gran escala con
+desarrolladores profesionales sitúa en torno al 58\,\% el tiempo dedicado a
+tareas de comprensión de programas~\cite{10.1109/TSE.2017.2734091}. Esto hace
+que cualquier característica del código que dificulte su lectura tenga un
+coste directo y recurrente sobre el esfuerzo de desarrollo. La legibilidad
+deja así de ser solo una cuestión estética y pasa a convertirse en un factor
+práctico de calidad del software.
+
+Para señalar de forma operativa ese código difícil de mantener, las
+herramientas de análisis estático utilizan la \emph{complejidad
+cognitiva}~\cite{10.1145/3194164.3194186}, una métrica definida por SonarSource
+---la empresa tras SonarQube, hoy un estándar de facto del análisis de calidad
+del código--- que estima a nivel de método el esfuerzo necesario para
+comprenderlo y que, a diferencia de métricas más clásicas, penaliza
+especialmente el anidamiento de estructuras de control. SonarSource recomienda,
+de hecho, que el valor de esta métrica no supere 15 en ningún método. Sus fundamentos, su validación empírica y su relación con otras
+métricas se desarrollan en el \autoref{cap:antecedentes}; aquí basta con
+retener dos ideas: que existe una medida ampliamente adoptada del coste de
+comprender el código y que el anidamiento es uno de los factores que más la
+penalizan.
+
+Ese mecanismo de penalización convierte a los condicionales anidados en uno de
+los principales contribuyentes a la complejidad cognitiva de un método, y se
+trata además de un patrón frecuente en código real. El escaneo de proyectos
+Java de código abierto realizado en este trabajo
+localizó numerosas instancias del patrón objetivo, lo que confirma que no se
+trata de una construcción marginal. La técnica habitual para reducir la
+complejidad cognitiva es la extracción de
+método~\cite{10.1109/ACCESS.2022.3144743}, que descompone un método en otros
+más pequeños; frente a ella, este trabajo parte de una observación más
+específica del grupo de investigación en el que se enmarca: ciertos
+condicionales anidados pueden simplificarse de forma más directa,
+combinándolos en uno solo mediante la fusión de sus expresiones lógicas. En
+muchos de esos casos, dos condicionales anidados sin cláusula \lstinline|else|
+equivalen a una única condición conjuntiva. Combinarlos reduce la complejidad cognitiva sin alterar
+el comportamiento del programa. La dificultad no está en la idea, sino en
+decidir \emph{con garantías} cuándo esa combinación es segura, ya que la
+presencia de un \lstinline|else|, de efectos colaterales en las condiciones o
+de cambios en la semántica de cortocircuito puede invalidarla.
+
+A esta motivación se añade un tercer factor de actualidad. Los grandes
+modelos de lenguaje se han incorporado al desarrollo de software y ya se
+utilizan para generar y transformar código, pero la corrección de sus salidas
+no está garantizada y debe verificarse. Surge así una pregunta natural: si
+una tarea de refactorización bien delimitada como esta puede confiarse a un
+modelo de lenguaje de forma correcta y automática, o si sigue requiriendo un
+procedimiento determinista y verificable. La confluencia de estos tres
+elementos ---el coste de la baja comprensibilidad, la existencia de un patrón
+frecuente con una transformación potencialmente útil pero de aplicabilidad
+delicada, y la aparición de los modelos de lenguaje como agentes de
+refactorización--- es la que motiva este trabajo y da sentido a sus tres
+preguntas de investigación.
+
+Este trabajo estudia la combinación segura de sentencias condicionales
+anidadas en Java, con especial atención al patrón canónico
 \lstinline|if (A) { if (B) { S } }| $\rightarrow$ \lstinline|if (A && B) { S }|.
-La descripción detallada del problema se ofrece en el
+
+La cuestión central no es solo si la transformación reduce la complejidad
+cognitiva, sino también en qué condiciones puede aplicarse sin alterar el
+comportamiento observable del programa. A partir de este problema, el trabajo
+plantea un enfoque determinista basado en precondiciones explícitas y lo
+contrasta posteriormente con el comportamiento de grandes modelos de lenguaje.
+La descripción detallada del problema se desarrolla en el
 \autoref{cap:problema}.
 
 \section{Objetivos}
 \label{sec:objetivos-intro}
-\paragraph{Objetivo general.}
-Diseñar, implementar y evaluar un enfoque para detectar y refactorizar
-sentencias condicionales anidadas en Java con el fin de reducir la
-complejidad cognitiva del código, preservando su semántica cuando
-corresponda; y comparar este enfoque con refactorizaciones generadas por
-grandes modelos de lenguaje bajo un protocolo experimental controlado.
 
-\paragraph{Objetivos específicos.}
+\subsection*{Objetivo general}
+
+Diseñar, implementar y evaluar un enfoque para detectar y refactorizar de
+forma automática sentencias condicionales anidadas en Java, con el fin de
+reducir su complejidad cognitiva preservando el comportamiento observable del
+código. Como parte de la evaluación, el enfoque se contrasta con las
+refactorizaciones generadas por grandes modelos de lenguaje bajo un protocolo
+experimental controlado.
+
+\subsection*{Objetivos específicos}
+
 \begin{enumerate}
-  \item Identificar y formalizar los casos en que es posible combinar
-  condicionales anidados de forma segura, documentando precondiciones de
-  aplicabilidad y resultado de la transformación.
+  \item Identificar y formalizar los casos en los que es posible combinar
+  condicionales anidados de forma segura, documentando las precondiciones de
+  aplicabilidad y el resultado de la transformación~(RQ1).
   \item Diseñar e implementar un prototipo determinista que detecte dichas
   oportunidades sobre el árbol de sintaxis abstracta (AST) y aplique la
-  transformación.
+  transformación, sirviendo de artefacto y de \emph{baseline} verificable para
+  el resto de objetivos.
   \item Medir el impacto de las refactorizaciones sobre la complejidad
-  cognitiva con una métrica definida y reproducible.
+  cognitiva mediante una métrica definida y reproducible~(RQ2).
   \item Comparar las refactorizaciones del prototipo con las producidas por
-  grandes modelos de lenguaje, bajo protocolo controlado, en términos de
-  corrección, completitud y calidad.
+  grandes modelos de lenguaje, bajo un protocolo controlado, en términos de
+  corrección, completitud y calidad~(RQ3).
 \end{enumerate}
 
 \section{Preguntas de investigación}
 \label{sec:rq-intro}
-% IMPORTANTE: RQ oficiales. Reproducir SIEMPRE literalmente. No reformular.
+
 \begin{description}
-  \item[RQ1.] ¿En qué casos se pueden combinar sentencias condicionales anidadas y cuál sería el resultado?
-  \item[RQ2.] ¿Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?
-  \item[RQ3.] ¿Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?
+  \item[RQ1.] \textquestiondown{}En qué casos se pueden combinar sentencias condicionales anidadas y cuál sería el resultado?
+  \item[RQ2.] \textquestiondown{}Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?
+  \item[RQ3.] \textquestiondown{}Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?
 \end{description}
-Su operacionalización (sin reformular el texto oficial) se detalla en la
-\autoref{sec:operacionalizacion}.
+
+Su operacionalización, manteniendo literalmente el enunciado oficial, se
+detalla en la \autoref{sec:operacionalizacion}.
 
 \section{Contribuciones del TFM}
 \label{sec:contribuciones}
+
 \begin{enumerate}
   \item La formalización de un conjunto cerrado de precondiciones
-  (P1--P5) para la combinación segura de \lstinline|if| anidados, con su
-  catálogo de motivos de descarte trazable.
-  \item Un prototipo determinista basado en AST con un pipeline
-  experimental reproducible (carga de corpus, detección, transformación,
-  medición y exportación de artefactos).
-  \item Una comparación controlada del prototipo frente a LLMs bajo un
+  (P1--P5) para la combinación segura de sentencias \lstinline|if| anidadas,
+  junto con un catálogo trazable de motivos de descarte.
+  \item Un prototipo determinista basado en AST con un pipeline experimental
+  reproducible que cubre carga de corpus, detección, transformación, medición
+  y exportación de artefactos.
+  \item Una comparación controlada entre el prototipo y varios LLMs bajo un
   protocolo congelado y un oráculo de validación automático.
-  \item Un paquete de replicación con corpus, scripts y artefactos
+  \item Un paquete de replicación que incluye corpus, scripts y artefactos
   versionados.
 \end{enumerate}
 
 \section{Estructura del documento}
 \label{sec:estructura}
-\pendienteredaccion{} El \autoref{cap:antecedentes} presenta los
-antecedentes; el \autoref{cap:problema} describe el problema y
-operacionaliza las RQ; el \autoref{cap:propuesta} detalla la propuesta
-(diseño, arquitectura, implementación, diseño experimental, resultados y
-amenazas a la validez); y el \autoref{cap:conclusiones} recoge
-conclusiones y trabajo futuro. (Texto a afinar al cierre.)
+
+El \autoref{cap:antecedentes} presenta los antecedentes y el estado del arte.
+El \autoref{cap:problema} describe el problema y operacionaliza las
+preguntas de investigación. El \autoref{cap:metodologia} expone la
+metodología \emph{Design Science Research} seguida en el trabajo. El
+\autoref{cap:propuesta} desarrolla la propuesta, incluyendo diseño,
+arquitectura, implementación, diseño experimental, resultados y amenazas a la
+validez. Finalmente, el \autoref{cap:conclusiones} recoge las conclusiones y
+las principales líneas de trabajo futuro.

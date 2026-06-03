@@ -1,0 +1,12 @@
+%% Figura 2.1 — AST del patrón objetivo (dos if anidados).
+%% Render sugerido: PNG/PDF a figuras/img/fig-2.1-ast-anidado.png
+flowchart TD
+    M["MethodDeclaration"] --> OUT["IfStmt (externo)"]
+    OUT --> CA["Condition: A"]
+    OUT --> OT["Then branch"]
+    OT --> OB["BlockStmt"]
+    OB --> IN["IfStmt (interno)"]
+    IN --> CB["Condition: B"]
+    IN --> IT["Then branch"]
+    IT --> IB["BlockStmt"]
+    IB --> S["Statement(s): S"]

@@ -29,18 +29,19 @@ selección). A ello se añade una limitación de reproducibilidad: parte de
 los proyectos fuente no tiene versión ni \emph{commit} anclados y el corpus
 mezcla versiones de un mismo proyecto (\autoref{sec:corpus}), por lo que
 reconstruirlo idéntico exigiría reanclar dichas versiones. El subset de
-RQ3 es deliberadamente pequeño ($n=6$), pensado para cubrir ejes de
-variación, no para sostener inferencia estadística. Además, la comparativa
-de RQ3 se restringe a dos modelos del mismo proveedor (OpenAI):
+RQ3 ($n=50$) cubre los ejes de variación del corpus, pero sigue siendo una
+muestra intencional y no una muestra aleatoria representativa del código Java
+en general. Además, la comparativa de RQ3 se restringe a dos modelos del mismo
+proveedor (OpenAI):
 \hipotesis{} su generalización a otras familias de modelos está por
 comprobar. Por último, el patrón objetivo se limita al caso base sin
 \lstinline|else|/\lstinline|else if|, por lo que los resultados no son
 extrapolables a refactorizaciones más complejas.
 
 \subsection{Validez de conclusión.}
-Muestra reducida (especialmente el subset RQ3, $n=6$) que impide
-afirmaciones estadísticas fuertes; métrica única (CC) que puede sesgar la
-valoración global de calidad.
+Aunque el subset de RQ3 se ha ampliado a $n=50$ casos, sigue sin sostener
+inferencia estadística fuerte sobre poblaciones de código; métrica única (CC)
+que puede sesgar la valoración global de calidad.
 
 \subsection{Mitigaciones implementadas.}
 Congelación del protocolo (\texttt{LlmExperimentProtocol}); trazabilidad

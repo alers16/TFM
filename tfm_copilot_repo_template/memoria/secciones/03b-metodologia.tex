@@ -1,0 +1,152 @@
+% =====================================================================
+%  Capítulo. Metodología (Design Science Research).
+%  Trasladado desde Antecedentes por observación metodológica: DSR es el
+%  método de investigación empleado, no un antecedente del problema.
+%  ESTADO: REDACTADO.
+% =====================================================================
+\chapter{Metodología}
+\label{cap:metodologia}
+
+Este capítulo describe el enfoque metodológico que vertebra el trabajo. La
+naturaleza del problema —proponer una transformación de código, construir un
+prototipo que la realice y comprobar empíricamente sus efectos— encaja de
+forma natural con el paradigma de \emph{Design Science Research} (DSR),
+orientado a generar conocimiento mediante la construcción y evaluación de
+artefactos.
+
+\section{Design Science Research}
+\label{sec:dsr-metodo}
+
+DSR aborda la investigación a través de un artefacto que resuelve un problema
+relevante y cuya utilidad se demuestra mediante evaluación rigurosa. Hevner et
+al.~\cite{10.2307/25148625} sitúan en el núcleo de este paradigma la
+articulación entre construir el artefacto y evaluarlo frente al problema que
+pretende resolver. Peffers et al.~\cite{10.2753/MIS0742-1222240302} concretan
+ese principio en una secuencia de actividades —identificar el problema y
+motivarlo, fijar los objetivos de la solución, diseñar y desarrollar el
+artefacto, demostrarlo, evaluarlo y comunicarlo— que proporciona una
+estructura reconocible para presentar este tipo de investigación. La
+\autoref{fig:dsr-ciclo} representa ese ciclo y la realimentación entre
+construcción y evaluación que lo caracteriza.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\linewidth]{fig-dsr-ciclo}
+\caption{Ciclo de \emph{Design Science Research} seguido en el trabajo, según
+las actividades de Peffers et al.~\cite{10.2753/MIS0742-1222240302}. La
+construcción del artefacto y su evaluación se articulan en un ciclo con
+realimentación; las anotaciones indican su materialización en este TFM.}
+\label{fig:dsr-ciclo}
+\end{figure}
+
+El artefacto de este trabajo es un prototipo determinista de detección y
+refactorización de condicionales anidados. Su carácter determinista cumple
+además una función metodológica de segundo orden: actúa como \emph{baseline}
+verificable, es decir, como la referencia fiable contra la que se contrastan
+después las refactorizaciones producidas por los grandes modelos de lenguaje
+en RQ3. De este modo, la doble naturaleza de construir y comprobar, propia de
+DSR, no solo organiza la propuesta, sino que sostiene el diseño experimental.
+
+\section{Operacionalización en el TFM}
+\label{sec:dsr-operacion}
+\label{sec:operacionalizacion}
+
+La evaluación del artefacto se articula en torno a las tres preguntas de
+investigación: qué casos de condicionales anidados son combinables y con qué
+resultado (RQ1), qué efecto tiene la transformación sobre la complejidad
+cognitiva (RQ2) y en qué medida un modelo de lenguaje reproduce la
+transformación de forma correcta y automática (RQ3). La
+\autoref{tab:dsrm-tfm} relaciona las actividades de la metodología de Peffers
+et al. con su materialización concreta en este trabajo y con los capítulos que
+las desarrollan.
+
+\begin{table}[ht]
+\centering
+\caption{Actividades de la metodología DSR de Peffers et
+al.~\cite{10.2753/MIS0742-1222240302} y su materialización en el trabajo.}
+\label{tab:dsrm-tfm}
+\begin{tabular}{@{}p{4.2cm}p{5.2cm}p{2.6cm}@{}}
+\toprule
+\textbf{Actividad (Peffers et al.)} & \textbf{Materialización en el trabajo} & \textbf{Capítulo} \\
+\midrule
+Identificar el problema y motivarlo & Coste cognitivo del anidamiento de condicionales & \ref{cap:problema} \\
+Fijar los objetivos de la solución  & Objetivos y preguntas de investigación RQ1--RQ3 & \ref{cap:introduccion} \\
+Diseñar y desarrollar el artefacto  & Precondiciones P1--P5, prototipo basado en AST y oráculo & \ref{cap:propuesta} \\
+Demostrar el artefacto              & Ejecución sobre el corpus piloto y real & \ref{sec:experimento} \\
+Evaluar                             & Medición de $\Delta$ de complejidad y evaluación de los LLM & \ref{sec:resultados} \\
+Comunicar                           & La presente memoria y el paquete de replicación & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La parte de \emph{construcción} comprende la formalización de las
+precondiciones de aplicabilidad y el desarrollo del prototipo
+(\autoref{cap:propuesta}). La parte de \emph{evaluación} se apoya en
+protocolos deliberadamente congelados y en artefactos persistentes y
+auditables, de modo que el procedimiento pueda repetirse y conducir al mismo
+resultado; sus detalles se describen en el diseño experimental
+(\autoref{sec:experimento}).
+
+Con ese marco, cada pregunta se operacionaliza ---sin alterar su enunciado
+oficial (\autoref{sec:rq-intro})--- en los términos siguientes.
+
+\paragraph{RQ1 — Alcance operativo.}
+\begin{itemize}
+  \item Se estudian condicionales anidados de tipo \lstinline|if| en Java.
+  \item Foco inicial: un \lstinline|if| que contiene exactamente otro
+  \lstinline|if|, sin ramas \lstinline|else| ni \lstinline|else if|, y sin
+  sentencias adicionales en el bloque externo.
+  \item El resultado es la transformación
+  \lstinline|if (A) { if (B) { S } }| $\rightarrow$ \lstinline|if (A && B) { S }|.
+  \item Se documentan las precondiciones de aplicabilidad
+  (\autoref{sec:precondiciones}).
+\end{itemize}
+
+\paragraph{RQ2 — Criterio de medición.}
+\begin{itemize}
+  \item La complejidad cognitiva se mide siguiendo el modelo de
+  SonarSource~\cite{10.1145/3194164.3194186}, mediante una implementación
+  \emph{proxy} cuyas limitaciones se declaran en la \autoref{sec:proxy}.
+  \item Se compara el valor antes y después de la refactorización en cada caso.
+  \item Se reporta la reducción absoluta y relativa, por caso y agregada.
+\end{itemize}
+
+\paragraph{RQ3 — Protocolo de comparación.}
+\begin{itemize}
+  \item Se selecciona un subconjunto del corpus de evaluación
+  (\autoref{sec:corpus}).
+  \item Se solicita a uno o más LLM la misma refactorización bajo un
+  \emph{prompt} estandarizado y un protocolo congelado.
+  \item Se comparan los resultados en corrección semántica, completitud de
+  detección y calidad del código, mediante un oráculo automático
+  (\autoref{sec:oraculo}).
+\end{itemize}
+
+\paragraph{Criterio de corrección.}
+Una transformación se considera correcta si preserva el comportamiento
+observable del método. Esa corrección se sostiene en dos niveles. Por
+construcción: bajo las precondiciones de aplicabilidad
+(\autoref{sec:precondiciones}), el operador \lstinline|&&| respeta el orden y
+el cortocircuito de la evaluación original, de modo que ambas versiones
+producen el mismo efecto para toda entrada. Y de forma dinámica: el resultado
+de cada caso elegible se compila con el compilador de Java para comprobar que
+la transformación no genera código inválido. La ejecución de las pruebas de
+comportamiento de los proyectos de origen excede el alcance del prototipo
+---requeriría reconstruir y configurar cada proyecto--- y se señala como
+trabajo futuro (\autoref{cap:conclusiones}).
+
+\section{Hipótesis de trabajo}
+\label{sec:hipotesis}
+El trabajo se guía por tres hipótesis que se contrastan con los resultados y
+que, deliberadamente, no anticipan cifras.
+
+\begin{description}
+  \item[H1.] Existe un subconjunto no trivial de condicionales anidados en
+  código Java real para los que la combinación es segura bajo las
+  precondiciones de aplicabilidad.
+  \item[H2.] La combinación reduce la complejidad cognitiva (proxy) de forma
+  medible en los casos elegibles.
+  \item[H3.] Los LLM pueden reproducir la transformación con tasas de acierto
+  elevadas en casos elegibles, pero pueden fallar en el rechazo de casos no
+  elegibles.
+\end{description}
