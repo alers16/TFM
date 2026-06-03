@@ -28,10 +28,10 @@
   1) SonarQube Community en marcha (ver docs/sonarqube-setup.md):
         docker compose -f docker-compose.sonarqube.yml up -d
   2) Token de usuario en $env:SONAR_TOKEN  (o parámetro -SonarToken).
-  3) sonar-scanner CLI accesible (en PATH, o vía -ScannerCmd).
-  4) Proyecto compilado una vez (genera target/classes, requerido por
-     sonar.java.binaries):
-        mvn -DskipTests compile
+  3) Maven (mvn) accesible en el PATH. El análisis usa el goal
+     'mvn -DskipTests compile sonar:sonar' (NO requiere sonar-scanner CLI);
+     el propio goal compila el proyecto y genera target/classes para
+     sonar.java.binaries.
 
 .EJEMPLO
   $env:SONAR_TOKEN = "sqa_xxxxx"
@@ -47,7 +47,7 @@ param(
   [string]$ResultsJson  = "output/rq2-batch/rq2-all-results.json",
   [string]$JavaBinaries = "target/classes",
   [string]$WorkDir      = "output/rq2-sonar-validation/fullcorpus",
-  [string]$ScannerCmd   = "sonar-scanner",
+  [string]$MavenCmd     = "mvn",
   [string]$KeyPrefix    = "tfm-rq2-fullcorpus",
   [int]$PollSeconds     = 8,
   [int]$PollRetries     = 40,
@@ -99,16 +99,17 @@ Write-Host "      $nWritten casos materializados en $WorkDir" -ForegroundColor D
 
 # --- 2) Escaneos SonarQube (before y after) ----------------------------------
 function Invoke-SonarScan([string]$key, [string]$name, [string]$src) {
-  Write-Host "      sonar-scanner -> $key ($src)" -ForegroundColor DarkGray
-  & $ScannerCmd `
+  Write-Host "      mvn sonar:sonar -> $key ($src)" -ForegroundColor DarkGray
+  & $MavenCmd -DskipTests compile sonar:sonar `
     "-Dsonar.host.url=$SonarHostUrl" `
     "-Dsonar.token=$SonarToken" `
     "-Dsonar.projectKey=$key" `
     "-Dsonar.projectName=$name" `
     "-Dsonar.sources=$src" `
     "-Dsonar.java.binaries=$JavaBinaries" `
+    "-Dsonar.exclusions=src/main/java/**,src/test/**" `
     "-Dsonar.scm.disabled=true"
-  if ($LASTEXITCODE -ne 0) { throw "sonar-scanner devolvió código $LASTEXITCODE para $key" }
+  if ($LASTEXITCODE -ne 0) { throw "mvn sonar:sonar devolvió código $LASTEXITCODE para $key" }
 }
 
 $keyBefore = "$KeyPrefix-before"

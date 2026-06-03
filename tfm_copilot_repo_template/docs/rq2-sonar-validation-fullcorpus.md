@@ -16,15 +16,11 @@ citables en la memoria.
 | Requisito | Comprobación |
 |---|---|
 | Docker Desktop en ejecución | `docker version` |
-| `sonar-scanner` CLI en el PATH | `sonar-scanner -v` |
 | JDK 17 + Maven | `java -version`, `mvn -version` |
 | Puertos 9000 libres | — |
 
-Instalar `sonar-scanner` (si falta), p. ej. con Scoop o Chocolatey:
-
-```powershell
-scoop install sonar-scanner    # o:  choco install sonarscanner-msbuild-net46 -y
-```
+> El análisis se realiza con el goal **`mvn sonar:sonar`** (plugin
+> `sonar-maven-plugin`); **no se necesita el CLI `sonar-scanner`**.
 
 ## 2. Arrancar SonarQube y obtener token
 
@@ -44,17 +40,7 @@ En <http://localhost:9000> (credenciales iniciales `admin`/`admin`):
 $env:SONAR_TOKEN = "sqa_xxxxxxxxxxxxxxxx"
 ```
 
-## 3. Compilar el proyecto (una vez)
-
-`sonar.java.binaries` exige clases compiladas; basta con compilar el proyecto
-principal (el escáner las usa para activar el analizador Java, aunque el corpus
-no dependa de ellas):
-
-```powershell
-mvn -DskipTests compile
-```
-
-## 4. Ejecutar la validación de todo el corpus
+## 3. Ejecutar la validación de todo el corpus
 
 ```powershell
 ./sonar-fullcorpus-validation.ps1
@@ -65,16 +51,21 @@ El script (`sonar-fullcorpus-validation.ps1`):
 1. Lee `output/rq2-batch/rq2-all-results.json` y materializa, por cada caso, el
    método `before` y el `after` (campos `sourceBefore`/`sourceAfter`) envueltos
    en una clase mínima nombrada por `caseId`.
-2. Escanea dos proyectos SonarQube separados (`tfm-rq2-fullcorpus-before` y
-   `-after`).
+2. Analiza dos proyectos SonarQube separados (`tfm-rq2-fullcorpus-before` y
+   `-after`) ejecutando, para cada uno,
+   `mvn -DskipTests compile sonar:sonar` con `sonar.sources` apuntando a la
+   carpeta materializada y `sonar.java.binaries=target/classes`. El propio goal
+   compila el proyecto, de modo que **no hace falta un paso de compilación
+   aparte** ni el CLI `sonar-scanner`.
 3. Recupera la métrica oficial `cognitive_complexity` por fichero vía la API
    `api/measures/component_tree`.
 4. Cruza la CC oficial con la del proxy (`complexityBefore`/`After`) por caso.
 
-Parámetros útiles: `-SonarHostUrl`, `-SonarToken`, `-ScannerCmd`,
-`-SkipScan` (rehacer solo la comparación a partir de los JSON ya descargados).
+Parámetros útiles: `-SonarHostUrl`, `-SonarToken`, `-MavenCmd` (por defecto
+`mvn`), `-JavaBinaries`, `-SkipScan` (rehacer solo la comparación a partir de
+los JSON ya descargados).
 
-## 5. Artefactos generados (citables en la memoria)
+## 4. Artefactos generados (citables en la memoria)
 
 Se escriben en `output/rq2-sonar-validation/fullcorpus/`:
 
@@ -90,7 +81,7 @@ El `metadata.json` registra **versión, fecha y operador** —los campos que
 quedaron sin cumplimentar en la validación previa del subset—, de modo que la
 corrida queda trazable.
 
-## 6. Cómo incorporarlo a la memoria
+## 5. Cómo incorporarlo a la memoria
 
 Tras una ejecución real:
 
@@ -104,7 +95,7 @@ Tras una ejecución real:
    validez, indicando la regla del modelo SonarSource implicada (p. ej.
    ternario, recursión o lambdas, no cubiertas por el proxy).
 
-## 7. Limitaciones declaradas
+## 6. Limitaciones declaradas
 
 - La CC es **sintáctica**: SonarQube la calcula sobre el AST aunque no resuelva
   todos los símbolos, por lo que envolver el método en una clase mínima es
@@ -116,7 +107,7 @@ Tras una ejecución real:
   lambdas/clases anónimas como anidamiento); las divergencias se concentrarán,
   previsiblemente, en casos que usen esas construcciones.
 
-## 8. Limpieza
+## 7. Limpieza
 
 ```powershell
 docker compose -f docker-compose.sonarqube.yml down       # conserva volúmenes
