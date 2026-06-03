@@ -1,0 +1,15 @@
+﻿{
+    "artifactType":  "rq2-sonar-validation-fullcorpus",
+    "generatedAt":  "2026-06-03T15:07:08.2021252Z",
+    "operator":  "Ale Roman",
+    "host":  "DESKTOP-7E8R1FA",
+    "sonarHostUrl":  "http://localhost:9000",
+    "sonarVersion":  "26.4.0.121862",
+    "projectBefore":  "tfm-rq2-fullcorpus-before",
+    "projectAfter":  "tfm-rq2-fullcorpus-after",
+    "casesTotal":  126,
+    "casesMeasured":  122,
+    "casesMissing":  4,
+    "matchBefore":  109,
+    "matchAfter":  109
+}

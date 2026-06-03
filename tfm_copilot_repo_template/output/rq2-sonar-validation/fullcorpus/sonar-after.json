@@ -1,0 +1,1766 @@
+﻿{
+    "paging":  {
+                   "pageIndex":  1,
+                   "pageSize":  500,
+                   "total":  126
+               },
+    "baseComponent":  {
+                          "key":  "tfm-rq2-fullcorpus-after",
+                          "name":  "TFM RQ2 Full Corpus (after)",
+                          "description":  "Prototipo para detectar y refactorizar sentencias condicionales anidadas en Java,\n        con el objetivo de reducir la complejidad cognitiva del cÃ³digo.",
+                          "qualifier":  "TRK",
+                          "measures":  [
+
+                                       ]
+                      },
+    "components":  [
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_ANT_CLASS_LOADER_INITIALIZE_CLASS.java",
+                           "name":  "ANT_ANT_CLASS_LOADER_INITIALIZE_CLASS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_ANT_CLASS_LOADER_INITIALIZE_CLASS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_AVAILABLE_EVAL.java",
+                           "name":  "ANT_AVAILABLE_EVAL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_AVAILABLE_EVAL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "17",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_CONCAT_FILTER_READ.java",
+                           "name":  "ANT_CONCAT_FILTER_READ.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_CONCAT_FILTER_READ.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "9",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_HEAD_FILTER_HEAD_FILTER.java",
+                           "name":  "ANT_HEAD_FILTER_HEAD_FILTER.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_HEAD_FILTER_HEAD_FILTER.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_J_UNIT_TASK_CREATE_CLASS_LOADER.java",
+                           "name":  "ANT_J_UNIT_TASK_CREATE_CLASS_LOADER.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_J_UNIT_TASK_CREATE_CLASS_LOADER.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "14",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_PATH_CONVERT_SET_DEST.java",
+                           "name":  "ANT_PATH_CONVERT_SET_DEST.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_PATH_CONVERT_SET_DEST.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_STRIP_JAVA_COMMENTS_READ.java",
+                           "name":  "ANT_STRIP_JAVA_COMMENTS_READ.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_STRIP_JAVA_COMMENTS_READ.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "48",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_TAR_BUFFER_READ_BLOCK.java",
+                           "name":  "ANT_TAR_BUFFER_READ_BLOCK.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_TAR_BUFFER_READ_BLOCK.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "11",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/ANT_U_R_L_RESOURCE_GET_U_R_L.java",
+                           "name":  "ANT_U_R_L_RESOURCE_GET_U_R_L.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/ANT_U_R_L_RESOURCE_GET_U_R_L.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "7",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_BYTECODE_VIEWER_BOOT.java",
+                           "name":  "BYTECODE_VIEWER_BYTECODE_VIEWER_BOOT.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_BYTECODE_VIEWER_BOOT.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "11",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_MALWARE_CODE_SCANNER_SCAN_METHODS.java",
+                           "name":  "BYTECODE_VIEWER_MALWARE_CODE_SCANNER_SCAN_METHODS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_MALWARE_CODE_SCANNER_SCAN_METHODS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "7",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_REPLACE_STRINGS_SCAN_CLASS_NODE.java",
+                           "name":  "BYTECODE_VIEWER_REPLACE_STRINGS_SCAN_CLASS_NODE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_REPLACE_STRINGS_SCAN_CLASS_NODE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "57",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_SHOW_ALL_STRINGS_EXECUTE.java",
+                           "name":  "BYTECODE_VIEWER_SHOW_ALL_STRINGS_EXECUTE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/BYTECODE_VIEWER_SHOW_ALL_STRINGS_EXECUTE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "37",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/COMMONS_COLLECTIONS_PERMUTATION_ITERATOR_NEXT.java",
+                           "name":  "COMMONS_COLLECTIONS_PERMUTATION_ITERATOR_NEXT.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/COMMONS_COLLECTIONS_PERMUTATION_ITERATOR_NEXT.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "12",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/CYBERCAPTOR_VERTEX_GET_RELATED_MACHINE.java",
+                           "name":  "CYBERCAPTOR_VERTEX_GET_RELATED_MACHINE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/CYBERCAPTOR_VERTEX_GET_RELATED_MACHINE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "38",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_DEFAULT_J_S_O_N_PARSER_PARSE_ARRAY.java",
+                           "name":  "FASTJSON_DEFAULT_J_S_O_N_PARSER_PARSE_ARRAY.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_DEFAULT_J_S_O_N_PARSER_PARSE_ARRAY.java",
+                           "language":  "java",
+                           "measures":  [
+
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_FIELD_SERIALIZER_GET_PROPERTY_VALUE.java",
+                           "name":  "FASTJSON_FIELD_SERIALIZER_GET_PROPERTY_VALUE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_FIELD_SERIALIZER_GET_PROPERTY_VALUE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_LEXER_BASE_SCAN_FIELD_INT.java",
+                           "name":  "FASTJSON_J_S_O_N_LEXER_BASE_SCAN_FIELD_INT.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_LEXER_BASE_SCAN_FIELD_INT.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "30",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_LEXER_BASE_SCAN_SYMBOL_UN_QUOTED.java",
+                           "name":  "FASTJSON_J_S_O_N_LEXER_BASE_SCAN_SYMBOL_UN_QUOTED.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_LEXER_BASE_SCAN_SYMBOL_UN_QUOTED.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "11",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_OBJECT_CONTAINS_KEY.java",
+                           "name":  "FASTJSON_J_S_O_N_OBJECT_CONTAINS_KEY.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_OBJECT_CONTAINS_KEY.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_OBJECT_GET.java",
+                           "name":  "FASTJSON_J_S_O_N_OBJECT_GET.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_OBJECT_GET.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_PATH_EQ_NOT_NULL.java",
+                           "name":  "FASTJSON_J_S_O_N_PATH_EQ_NOT_NULL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_PATH_EQ_NOT_NULL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "16",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_PATH_PATCH_ADD.java",
+                           "name":  "FASTJSON_J_S_O_N_PATH_PATCH_ADD.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_PATH_PATCH_ADD.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "16",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_PATH_REMOVE.java",
+                           "name":  "FASTJSON_J_S_O_N_PATH_REMOVE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_PATH_REMOVE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "58",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_SERIALIZER_GET_DATE_FORMAT.java",
+                           "name":  "FASTJSON_J_S_O_N_SERIALIZER_GET_DATE_FORMAT.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_SERIALIZER_GET_DATE_FORMAT.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_SERIALIZER_WRITE_REFERENCE.java",
+                           "name":  "FASTJSON_J_S_O_N_SERIALIZER_WRITE_REFERENCE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_J_S_O_N_SERIALIZER_WRITE_REFERENCE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "8",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_JAVA_BEAN_DESERIALIZER_DESERIALZE.java",
+                           "name":  "FASTJSON_JAVA_BEAN_DESERIALIZER_DESERIALZE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_JAVA_BEAN_DESERIALIZER_DESERIALZE.java",
+                           "language":  "java",
+                           "measures":  [
+
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_JAVA_BEAN_INFO_BUILD.java",
+                           "name":  "FASTJSON_JAVA_BEAN_INFO_BUILD.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_JAVA_BEAN_INFO_BUILD.java",
+                           "language":  "java",
+                           "measures":  [
+
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_JAVA_BEAN_SERIALIZER_WRITE.java",
+                           "name":  "FASTJSON_JAVA_BEAN_SERIALIZER_WRITE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_JAVA_BEAN_SERIALIZER_WRITE.java",
+                           "language":  "java",
+                           "measures":  [
+
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_PARSER_CONFIG_CHECK_AUTO_TYPE.java",
+                           "name":  "FASTJSON_PARSER_CONFIG_CHECK_AUTO_TYPE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_PARSER_CONFIG_CHECK_AUTO_TYPE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "1",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_PROPERTY_SEGMENT_EXTRACT.java",
+                           "name":  "FASTJSON_PROPERTY_SEGMENT_EXTRACT.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_PROPERTY_SEGMENT_EXTRACT.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "23",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/FASTJSON_SERIALIZE_CONFIG_ADD_FILTER.java",
+                           "name":  "FASTJSON_SERIALIZE_CONFIG_ADD_FILTER.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/FASTJSON_SERIALIZE_CONFIG_ADD_FILTER.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/IOTBROKER_AMQP_CLIENT_PROCESS_S_A_S_L_OUTCOME.java",
+                           "name":  "IOTBROKER_AMQP_CLIENT_PROCESS_S_A_S_L_OUTCOME.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/IOTBROKER_AMQP_CLIENT_PROCESS_S_A_S_L_OUTCOME.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_JSON_PARSER_BASE_PARSE_INT_VALUE.java",
+                           "name":  "JACKSON_CORE_JSON_PARSER_BASE_PARSE_INT_VALUE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_JSON_PARSER_BASE_PARSE_INT_VALUE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_NON_BLOCKING_UTF8_JSON_PARSER_BASE_FINISH_C_COMMENT.java",
+                           "name":  "JACKSON_CORE_NON_BLOCKING_UTF8_JSON_PARSER_BASE_FINISH_C_COMMENT.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_NON_BLOCKING_UTF8_JSON_PARSER_BASE_FINISH_C_COMMENT.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "16",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_NON_BLOCKING_UTF8_JSON_PARSER_BASE_START_NAME_AFTER_COMMA.java",
+                           "name":  "JACKSON_CORE_NON_BLOCKING_UTF8_JSON_PARSER_BASE_START_NAME_AFTER_COMMA.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_NON_BLOCKING_UTF8_JSON_PARSER_BASE_START_NAME_AFTER_COMMA.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "21",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_PARSER_BASE_DECODE_BASE64_ESCAPE.java",
+                           "name":  "JACKSON_CORE_PARSER_BASE_DECODE_BASE64_ESCAPE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_PARSER_BASE_DECODE_BASE64_ESCAPE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "5",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_READER_BASED_JSON_PARSER_NEXT_NAME.java",
+                           "name":  "JACKSON_CORE_READER_BASED_JSON_PARSER_NEXT_NAME.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_READER_BASED_JSON_PARSER_NEXT_NAME.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "29",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_READER_BASED_JSON_PARSER_NEXT_TOKEN.java",
+                           "name":  "JACKSON_CORE_READER_BASED_JSON_PARSER_NEXT_TOKEN.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_READER_BASED_JSON_PARSER_NEXT_TOKEN.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "20",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_READER_BASED_JSON_PARSER_SKIP_COLON_FAST.java",
+                           "name":  "JACKSON_CORE_READER_BASED_JSON_PARSER_SKIP_COLON_FAST.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_READER_BASED_JSON_PARSER_SKIP_COLON_FAST.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "28",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_TEXT_BUFFER_RELEASE_BUFFERS.java",
+                           "name":  "JACKSON_CORE_TEXT_BUFFER_RELEASE_BUFFERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_TEXT_BUFFER_RELEASE_BUFFERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_JSON_GENERATOR_OUTPUT_RAW_MULTI_BYTE_CHAR.java",
+                           "name":  "JACKSON_CORE_U_T_F8_JSON_GENERATOR_OUTPUT_RAW_MULTI_BYTE_CHAR.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_JSON_GENERATOR_OUTPUT_RAW_MULTI_BYTE_CHAR.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "6",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_NEXT_NAME.java",
+                           "name":  "JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_NEXT_NAME.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_NEXT_NAME.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "18",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_NEXT_TOKEN.java",
+                           "name":  "JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_NEXT_TOKEN.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_NEXT_TOKEN.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "18",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_RELEASE_BUFFERS.java",
+                           "name":  "JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_RELEASE_BUFFERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_RELEASE_BUFFERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_SKIP_COLON_FAST.java",
+                           "name":  "JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_SKIP_COLON_FAST.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_CORE_U_T_F8_STREAM_JSON_PARSER_SKIP_COLON_FAST.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "28",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_ANNOTATED_WITH_PARAMS_GET_PARAMETER_ANNOTATIONS.java",
+                           "name":  "JACKSON_DATABIND_ANNOTATED_WITH_PARAMS_GET_PARAMETER_ANNOTATIONS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_ANNOTATED_WITH_PARAMS_GET_PARAMETER_ANNOTATIONS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_AS_ARRAY_SERIALIZER_BASE_ACCEPT_JSON_FORMAT_VISITOR.java",
+                           "name":  "JACKSON_DATABIND_AS_ARRAY_SERIALIZER_BASE_ACCEPT_JSON_FORMAT_VISITOR.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_AS_ARRAY_SERIALIZER_BASE_ACCEPT_JSON_FORMAT_VISITOR.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_AS_ARRAY_SERIALIZER_BASE_CREATE_CONTEXTUAL.java",
+                           "name":  "JACKSON_DATABIND_AS_ARRAY_SERIALIZER_BASE_CREATE_CONTEXTUAL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_AS_ARRAY_SERIALIZER_BASE_CREATE_CONTEXTUAL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "33",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_BASIC_DESERIALIZER_FACTORY_HANDLE_SINGLE_ARGUMENT_CREATOR.java",
+                           "name":  "JACKSON_DATABIND_BASIC_DESERIALIZER_FACTORY_HANDLE_SINGLE_ARGUMENT_CREATOR.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_BASIC_DESERIALIZER_FACTORY_HANDLE_SINGLE_ARGUMENT_CREATOR.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "32",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_BEAN_DESERIALIZER_BASE_DELEGATE_DESERIALIZER.java",
+                           "name":  "JACKSON_DATABIND_BEAN_DESERIALIZER_BASE_DELEGATE_DESERIALIZER.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_BEAN_DESERIALIZER_BASE_DELEGATE_DESERIALIZER.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "5",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_DOUBLE_DESER_DESERIALIZE.java",
+                           "name":  "JACKSON_DATABIND_DOUBLE_DESER_DESERIALIZE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_DOUBLE_DESER_DESERIALIZE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_ENUM_DESERIALIZER_CREATE_CONTEXTUAL.java",
+                           "name":  "JACKSON_DATABIND_ENUM_DESERIALIZER_CREATE_CONTEXTUAL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_ENUM_DESERIALIZER_CREATE_CONTEXTUAL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "13",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_ENUM_RESOLVER_FIND_ENUM.java",
+                           "name":  "JACKSON_DATABIND_ENUM_RESOLVER_FIND_ENUM.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_ENUM_RESOLVER_FIND_ENUM.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_FLOAT_DESER_DESERIALIZE.java",
+                           "name":  "JACKSON_DATABIND_FLOAT_DESER_DESERIALIZE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_FLOAT_DESER_DESERIALIZE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_MERGING_SETTABLE_BEAN_PROPERTY_DESERIALIZE_SET_AND_RETURN.java",
+                           "name":  "JACKSON_DATABIND_MERGING_SETTABLE_BEAN_PROPERTY_DESERIALIZE_SET_AND_RETURN.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_MERGING_SETTABLE_BEAN_PROPERTY_DESERIALIZE_SET_AND_RETURN.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_METHOD_PROPERTY_SET.java",
+                           "name":  "JACKSON_DATABIND_METHOD_PROPERTY_SET.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_METHOD_PROPERTY_SET.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_METHOD_PROPERTY_SET_AND_RETURN.java",
+                           "name":  "JACKSON_DATABIND_METHOD_PROPERTY_SET_AND_RETURN.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_METHOD_PROPERTY_SET_AND_RETURN.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_OBJECT_ARRAY_SERIALIZER_CREATE_CONTEXTUAL.java",
+                           "name":  "JACKSON_DATABIND_OBJECT_ARRAY_SERIALIZER_CREATE_CONTEXTUAL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_OBJECT_ARRAY_SERIALIZER_CREATE_CONTEXTUAL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "31",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_OBJECT_READER_VERIFY_NO_TRAILING_TOKENS.java",
+                           "name":  "JACKSON_DATABIND_OBJECT_READER_VERIFY_NO_TRAILING_TOKENS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_OBJECT_READER_VERIFY_NO_TRAILING_TOKENS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_P_O_J_O_PROPERTIES_COLLECTOR_RESOLVE_FIELD_VS_GETTER.java",
+                           "name":  "JACKSON_DATABIND_P_O_J_O_PROPERTIES_COLLECTOR_RESOLVE_FIELD_VS_GETTER.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_P_O_J_O_PROPERTIES_COLLECTOR_RESOLVE_FIELD_VS_GETTER.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "8",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_SETTABLE_BEAN_PROPERTY_ASSIGN_INDEX.java",
+                           "name":  "JACKSON_DATABIND_SETTABLE_BEAN_PROPERTY_ASSIGN_INDEX.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_SETTABLE_BEAN_PROPERTY_ASSIGN_INDEX.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_STD_DATE_FORMAT_PARSE_DATE.java",
+                           "name":  "JACKSON_DATABIND_STD_DATE_FORMAT_PARSE_DATE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_STD_DATE_FORMAT_PARSE_DATE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "10",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_STD_VALUE_INSTANTIATOR_CREATE_USING_ARRAY_DELEGATE.java",
+                           "name":  "JACKSON_DATABIND_STD_VALUE_INSTANTIATOR_CREATE_USING_ARRAY_DELEGATE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_STD_VALUE_INSTANTIATOR_CREATE_USING_ARRAY_DELEGATE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_STD_VALUE_INSTANTIATOR_CREATE_USING_DELEGATE.java",
+                           "name":  "JACKSON_DATABIND_STD_VALUE_INSTANTIATOR_CREATE_USING_DELEGATE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_STD_VALUE_INSTANTIATOR_CREATE_USING_DELEGATE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_TYPE_FACTORY_BINDINGS_FOR_SUBTYPE.java",
+                           "name":  "JACKSON_DATABIND_TYPE_FACTORY_BINDINGS_FOR_SUBTYPE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_TYPE_FACTORY_BINDINGS_FOR_SUBTYPE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "7",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_UNTYPED_OBJECT_DESERIALIZER_CUSTOM_DESERIALIZE_NULLABLE_KEY.java",
+                           "name":  "JACKSON_DATABIND_UNTYPED_OBJECT_DESERIALIZER_CUSTOM_DESERIALIZE_NULLABLE_KEY.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JACKSON_DATABIND_UNTYPED_OBJECT_DESERIALIZER_CUSTOM_DESERIALIZE_NULLABLE_KEY.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/JMETAL_L_Z09_OBJECTIVE.java",
+                           "name":  "JMETAL_L_Z09_OBJECTIVE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/JMETAL_L_Z09_OBJECTIVE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "39",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_ABSTRACT_DATASET_ACTIONS_CHECKER_CAN_DELETE.java",
+                           "name":  "KNOWAGE_ABSTRACT_DATASET_ACTIONS_CHECKER_CAN_DELETE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_ABSTRACT_DATASET_ACTIONS_CHECKER_CAN_DELETE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "14",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_BUSINESS_MODEL_OPEN_PARAMETERS_GET_BUSINESS_MODEL_EXECUTION_FILTERS.java",
+                           "name":  "KNOWAGE_BUSINESS_MODEL_OPEN_PARAMETERS_GET_BUSINESS_MODEL_EXECUTION_FILTERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_BUSINESS_MODEL_OPEN_PARAMETERS_GET_BUSINESS_MODEL_EXECUTION_FILTERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "171",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_BUSINESS_MODEL_RESOURCE_GET_DRIVERS_FROM_QBE_DATA_SET.java",
+                           "name":  "KNOWAGE_BUSINESS_MODEL_RESOURCE_GET_DRIVERS_FROM_QBE_DATA_SET.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_BUSINESS_MODEL_RESOURCE_GET_DRIVERS_FROM_QBE_DATA_SET.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "196",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DATA_SET_RESOURCE_GET_DRIVERS_FROM_QBE_DATA_SET.java",
+                           "name":  "KNOWAGE_DATA_SET_RESOURCE_GET_DRIVERS_FROM_QBE_DATA_SET.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DATA_SET_RESOURCE_GET_DRIVERS_FROM_QBE_DATA_SET.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "196",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DATA_SET_RESOURCE_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "name":  "KNOWAGE_DATA_SET_RESOURCE_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DATA_SET_RESOURCE_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "181",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DATA_STORE_CONFIGURATION_CONVERTER_GET_DATASET.java",
+                           "name":  "KNOWAGE_DATA_STORE_CONFIGURATION_CONVERTER_GET_DATASET.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DATA_STORE_CONFIGURATION_CONVERTER_GET_DATASET.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DOCUMENT_EXECUTION_PARAMETERS_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "name":  "KNOWAGE_DOCUMENT_EXECUTION_PARAMETERS_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DOCUMENT_EXECUTION_PARAMETERS_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "180",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DOCUMENT_EXECUTION_RESOURCE_GET_DOCUMENT_EXECUTION_FILTERS.java",
+                           "name":  "KNOWAGE_DOCUMENT_EXECUTION_RESOURCE_GET_DOCUMENT_EXECUTION_FILTERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DOCUMENT_EXECUTION_RESOURCE_GET_DOCUMENT_EXECUTION_FILTERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "247",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DOCUMENT_EXECUTION_RESOURCE_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "name":  "KNOWAGE_DOCUMENT_EXECUTION_RESOURCE_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_DOCUMENT_EXECUTION_RESOURCE_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "178",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_GEO_SPATIAL_DIMENSION_DATASET_VALIDATOR_CHECK_VALUE.java",
+                           "name":  "KNOWAGE_GEO_SPATIAL_DIMENSION_DATASET_VALIDATOR_CHECK_VALUE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_GEO_SPATIAL_DIMENSION_DATASET_VALIDATOR_CHECK_VALUE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "17",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_META_UTILS_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "name":  "KNOWAGE_META_UTILS_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_META_UTILS_TRANSFORM_RUNTIME_DRIVERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "180",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_SPAGO_U_R_L_VALIDATOR_IS_VALID_PATH.java",
+                           "name":  "KNOWAGE_SPAGO_U_R_L_VALIDATOR_IS_VALID_PATH.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/KNOWAGE_SPAGO_U_R_L_VALIDATOR_IS_VALID_PATH.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/MOEA_COMMAND_LINE_UTILITY_GET_CONSOLE_WIDTH.java",
+                           "name":  "MOEA_COMMAND_LINE_UTILITY_GET_CONSOLE_WIDTH.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/MOEA_COMMAND_LINE_UTILITY_GET_CONSOLE_WIDTH.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "11",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_INVALID_ELSE_BRANCH.java",
+                           "name":  "PILOT_INVALID_ELSE_BRANCH.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_INVALID_ELSE_BRANCH.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_INVALID_METHOD_GUARD.java",
+                           "name":  "PILOT_INVALID_METHOD_GUARD.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_INVALID_METHOD_GUARD.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_INVALID_MULTI_STMT.java",
+                           "name":  "PILOT_INVALID_MULTI_STMT.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_INVALID_MULTI_STMT.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_MIXED_OPPORTUNITIES.java",
+                           "name":  "PILOT_MIXED_OPPORTUNITIES.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_MIXED_OPPORTUNITIES.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "5",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_BOUNDS_CHECK.java",
+                           "name":  "PILOT_VALID_BOUNDS_CHECK.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_BOUNDS_CHECK.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_NESTED_IN_LOOP.java",
+                           "name":  "PILOT_VALID_NESTED_IN_LOOP.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_NESTED_IN_LOOP.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_NULL_CHECK.java",
+                           "name":  "PILOT_VALID_NULL_CHECK.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_NULL_CHECK.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_SIMPLE.java",
+                           "name":  "PILOT_VALID_SIMPLE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/PILOT_VALID_SIMPLE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_BLANK_CELL_SHEET_GROUP_CONTAINS_CELL.java",
+                           "name":  "POI_BLANK_CELL_SHEET_GROUP_CONTAINS_CELL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_BLANK_CELL_SHEET_GROUP_CONTAINS_CELL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "8",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_C_F_RULE_BASE_SET_CONDITION_TYPE.java",
+                           "name":  "POI_C_F_RULE_BASE_SET_CONDITION_TYPE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_C_F_RULE_BASE_SET_CONDITION_TYPE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_COMMENTS_TABLE_GET_V_M_L_DRAWING.java",
+                           "name":  "POI_COMMENTS_TABLE_GET_V_M_L_DRAWING.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_COMMENTS_TABLE_GET_V_M_L_DRAWING.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_DATE_FUNC_EVALUATE.java",
+                           "name":  "POI_DATE_FUNC_EVALUATE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_DATE_FUNC_EVALUATE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "1",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_FORMULA_CELL_CACHE_ENTRY_IS_INPUT_SENSITIVE.java",
+                           "name":  "POI_FORMULA_CELL_CACHE_ENTRY_IS_INPUT_SENSITIVE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_FORMULA_CELL_CACHE_ENTRY_IS_INPUT_SENSITIVE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_H_S_S_F_CHART_CREATE_SERIES.java",
+                           "name":  "POI_H_S_S_F_CHART_CREATE_SERIES.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_H_S_S_F_CHART_CREATE_SERIES.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "44",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_H_S_S_F_CHART_REMOVE_SERIES.java",
+                           "name":  "POI_H_S_S_F_CHART_REMOVE_SERIES.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_H_S_S_F_CHART_REMOVE_SERIES.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "32",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_INTERNAL_SHEET_VISIT_CONTAINED_RECORDS.java",
+                           "name":  "POI_INTERNAL_SHEET_VISIT_CONTAINED_RECORDS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_INTERNAL_SHEET_VISIT_CONTAINED_RECORDS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "13",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_LINEAR_REGRESSION_FUNCTION_EVALUATE_INTERNAL.java",
+                           "name":  "POI_LINEAR_REGRESSION_FUNCTION_EVALUATE_INTERNAL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_LINEAR_REGRESSION_FUNCTION_EVALUATE_INTERNAL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "17",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_LINK_TABLE_GET_NAME_X_PTG.java",
+                           "name":  "POI_LINK_TABLE_GET_NAME_X_PTG.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_LINK_TABLE_GET_NAME_X_PTG.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "7",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_OPERATION_EVALUATOR_FACTORY_EVALUATE.java",
+                           "name":  "POI_OPERATION_EVALUATOR_FACTORY_EVALUATE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_OPERATION_EVALUATOR_FACTORY_EVALUATE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "12",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_READ_ONLY_SHARED_STRINGS_TABLE_CHARACTERS.java",
+                           "name":  "POI_READ_ONLY_SHARED_STRINGS_TABLE_CHARACTERS.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_READ_ONLY_SHARED_STRINGS_TABLE_CHARACTERS.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "9",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_RELATIONAL_OPERATION_EVAL_DO_COMPARE.java",
+                           "name":  "POI_RELATIONAL_OPERATION_EVAL_DO_COMPARE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_RELATIONAL_OPERATION_EVAL_DO_COMPARE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "20",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_TWO_OPERAND_NUMERIC_OPERATION_EVALUATE.java",
+                           "name":  "POI_TWO_OPERAND_NUMERIC_OPERATION_EVALUATE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_TWO_OPERAND_NUMERIC_OPERATION_EVALUATE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "5",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_V_B_A_MACRO_READER_FIND_COMPRESSED_STREAM_W_BRUTE_FORCE.java",
+                           "name":  "POI_V_B_A_MACRO_READER_FIND_COMPRESSED_STREAM_W_BRUTE_FORCE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_V_B_A_MACRO_READER_FIND_COMPRESSED_STREAM_W_BRUTE_FORCE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "16",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_VALUE_CONVERT_TEXT_TO_NUMBER.java",
+                           "name":  "POI_VALUE_CONVERT_TEXT_TO_NUMBER.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_VALUE_CONVERT_TEXT_TO_NUMBER.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "52",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/POI_X_Y_NUMERIC_FUNCTION_EVALUATE_INTERNAL.java",
+                           "name":  "POI_X_Y_NUMERIC_FUNCTION_EVALUATE_INTERNAL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/POI_X_Y_NUMERIC_FUNCTION_EVALUATE_INTERNAL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "14",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_ANT_EXECUTE_TASK.java",
+                           "name":  "REAL_ANT_EXECUTE_TASK.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_ANT_EXECUTE_TASK.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_ANT_MATCH_PATH.java",
+                           "name":  "REAL_ANT_MATCH_PATH.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_ANT_MATCH_PATH.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_ANT_SCAN_ENABLED.java",
+                           "name":  "REAL_ANT_SCAN_ENABLED.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_ANT_SCAN_ENABLED.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_COLLECTIONS_GET.java",
+                           "name":  "REAL_COMMONS_COLLECTIONS_GET.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_COLLECTIONS_GET.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_COLLECTIONS_INNER_ELSE.java",
+                           "name":  "REAL_COMMONS_COLLECTIONS_INNER_ELSE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_COLLECTIONS_INNER_ELSE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_COLLECTIONS_ISEMPTY.java",
+                           "name":  "REAL_COMMONS_COLLECTIONS_ISEMPTY.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_COLLECTIONS_ISEMPTY.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_IO_ARRAY_SUBRANGE.java",
+                           "name":  "REAL_COMMONS_IO_ARRAY_SUBRANGE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_IO_ARRAY_SUBRANGE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_ASSIGNMENT_COND.java",
+                           "name":  "REAL_COMMONS_LANG_ASSIGNMENT_COND.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_ASSIGNMENT_COND.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_CHOMP.java",
+                           "name":  "REAL_COMMONS_LANG_CHOMP.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_CHOMP.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "6",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_CONTAINS_NONE.java",
+                           "name":  "REAL_COMMONS_LANG_CONTAINS_NONE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_CONTAINS_NONE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "11",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_DECREMENT_COND.java",
+                           "name":  "REAL_COMMONS_LANG_DECREMENT_COND.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_DECREMENT_COND.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_INNER_METHOD_CALL.java",
+                           "name":  "REAL_COMMONS_LANG_INNER_METHOD_CALL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_INNER_METHOD_CALL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "3",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_IS_NUMERIC.java",
+                           "name":  "REAL_COMMONS_LANG_IS_NUMERIC.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_IS_NUMERIC.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "10",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_MID.java",
+                           "name":  "REAL_COMMONS_LANG_MID.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_MID.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "7",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_TRIPLE_GUARD.java",
+                           "name":  "REAL_COMMONS_LANG_TRIPLE_GUARD.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_TRIPLE_GUARD.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_VALID_INDEX.java",
+                           "name":  "REAL_COMMONS_LANG_VALID_INDEX.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_LANG_VALID_INDEX.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_CONVERGED.java",
+                           "name":  "REAL_COMMONS_MATH_CONVERGED.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_CONVERGED.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_IN_INTERVAL.java",
+                           "name":  "REAL_COMMONS_MATH_IN_INTERVAL.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_IN_INTERVAL.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_NO_NESTING.java",
+                           "name":  "REAL_COMMONS_MATH_NO_NESTING.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_NO_NESTING.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "2",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       },
+                       {
+                           "key":  "tfm-rq2-fullcorpus-after:output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_VALIDATE_RANGE.java",
+                           "name":  "REAL_COMMONS_MATH_VALIDATE_RANGE.java",
+                           "qualifier":  "FIL",
+                           "path":  "output/rq2-sonar-validation/fullcorpus/after/REAL_COMMONS_MATH_VALIDATE_RANGE.java",
+                           "language":  "java",
+                           "measures":  [
+                                            {
+                                                "metric":  "cognitive_complexity",
+                                                "value":  "4",
+                                                "bestValue":  false
+                                            }
+                                        ]
+                       }
+                   ]
+}

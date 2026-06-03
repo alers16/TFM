@@ -1,0 +1,20 @@
+﻿public class FASTJSON_SERIALIZE_CONFIG_ADD_FILTER {
+/**
+ * add class level serialize filter
+ * @since 1.2.10
+ */
+public void addFilter(Class<?> clazz, SerializeFilter filter) {
+    ObjectSerializer serializer = getObjectWriter(clazz);
+    if (serializer instanceof SerializeFilterable) {
+        SerializeFilterable filterable = (SerializeFilterable) serializer;
+        if (this != SerializeConfig.globalInstance && filterable == MapSerializer.instance) {
+            MapSerializer newMapSer = new MapSerializer();
+            this.put(clazz, newMapSer);
+            newMapSer.addFilter(filter);
+            return;
+        }
+        filterable.addFilter(filter);
+    }
+}
+}
+
