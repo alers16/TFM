@@ -377,6 +377,28 @@ class CognitiveComplexityCalculatorSonarValidationTest {
         }
 
         @Test
+        @DisplayName("Ternario anidado en if – incremento de anidamiento → CC=3 [SONAR=3]")
+        void ternarioAnidadoEnIf() {
+            // if (a) { return b ? c : d; }
+            // if: +1 (nesting=0)
+            // ternario a nesting=1: +1 estructural + 1 anidamiento = +2
+            // Total: 3
+            assertEquals(3, calculator.calculate(parseMethod(
+                    "if (a) { return b ? c : d; }")));
+        }
+
+        @Test
+        @DisplayName("Ternario anidado en ternario → CC=3 [SONAR=3]")
+        void ternarioAnidadoEnTernario() {
+            // return a ? b : (c ? d : e);
+            // ternario externo: +1 (nesting=0)
+            // ternario interno a nesting=1: +1 estructural + 1 anidamiento = +2
+            // Total: 3
+            assertEquals(3, calculator.calculate(parseMethod(
+                    "return a ? b : (c ? d : e);")));
+        }
+
+        @Test
         @DisplayName("Lógica en return – return a && b → CC=1")
         void logicaEnReturn() {
             assertEquals(1, calculator.calculate(parseMethod("return a && b;")));

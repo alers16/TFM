@@ -45,8 +45,8 @@ import com.github.javaparser.ast.stmt.WhileStmt;
  * <ul>
  *   <li>Incremento estructural (+1): if, else if, else, for, for-each, while,
  *       do-while, switch, catch, break/continue con etiqueta, operador ternario.</li>
- *   <li>Incremento de anidamiento (+nivel): if, for, for-each, while, do-while,
- *       switch, catch. No aplica a else-if ni else.</li>
+ *   <li>Incremento de anidamiento (+nivel): if, operador ternario, for,
+ *       for-each, while, do-while, switch, catch. No aplica a else-if ni else.</li>
  *   <li>Operadores lógicos: +1 por cada secuencia de operadores del mismo tipo
  *       ({@code &&} o {@code ||}) en cualquier expresión (condiciones, return,
  *       asignaciones, argumentos de método, etc.).</li>
@@ -376,7 +376,8 @@ public class CognitiveComplexityCalculator {
      * descendientes, respetando los límites de scope de lambdas y clases anónimas.
      *
      * <ul>
-     *   <li>Operador ternario ({@code ?:}): +1 estructural.</li>
+     *   <li>Operador ternario ({@code ?:}): +1 estructural y +nivel de anidamiento;
+     *       las ramas {@code then}/{@code else} se procesan a {@code nestingLevel+1}.</li>
      *   <li>Operador lógico ({@code &&}/{@code ||}): +1 si inicia una nueva secuencia
      *       (el padre efectivo no es del mismo tipo).</li>
      *   <li>Lambda: el cuerpo se procesa a {@code nestingLevel+1}.</li>
@@ -390,10 +391,15 @@ public class CognitiveComplexityCalculator {
     private int processExpression(Node node, int nestingLevel) {
         if (node instanceof ConditionalExpr) {
             ConditionalExpr ternary = (ConditionalExpr) node;
-            int c = 1; // +1 estructural por operador ternario
+            // El operador ternario recibe, según el modelo SonarSource, un
+            // incremento estructural (+1) Y un incremento de anidamiento
+            // (+nivel actual); además eleva el nivel de anidamiento para sus
+            // ramas (then/else). La condición se procesa al nivel actual, igual
+            // que en el if (sus operadores lógicos se cuentan por secuencias).
+            int c = 1 + nestingLevel;
             c += processExpression(ternary.getCondition(), nestingLevel);
-            c += processExpression(ternary.getThenExpr(), nestingLevel);
-            c += processExpression(ternary.getElseExpr(), nestingLevel);
+            c += processExpression(ternary.getThenExpr(), nestingLevel + 1);
+            c += processExpression(ternary.getElseExpr(), nestingLevel + 1);
             return c;
         }
         if (node instanceof BinaryExpr) {
