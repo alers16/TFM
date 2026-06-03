@@ -1,6 +1,6 @@
 ﻿# ValidaciÃ³n de contraste proxy vs SonarQube â€” corpus completo
 
-- **Generado:** 2026-06-03T15:07:08.2021252Z  Â·  **Operador:** Ale Roman  Â·  **Host:** DESKTOP-7E8R1FA
+- **Generado:** 2026-06-03T15:25:48.7561933Z  Â·  **Operador:** Ale Roman  Â·  **Host:** DESKTOP-7E8R1FA
 - **SonarQube:** versiÃ³n 26.4.0.121862 en http://localhost:9000
 - **Proyectos:** `tfm-rq2-fullcorpus-before` / `tfm-rq2-fullcorpus-after`
 - **Casos:** 126 materializados, 122 medidos por SonarQube, 4 sin medida (no parseables).

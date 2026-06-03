@@ -1,6 +1,6 @@
 ﻿{
     "artifactType":  "rq2-sonar-validation-fullcorpus",
-    "generatedAt":  "2026-06-03T15:07:08.2021252Z",
+    "generatedAt":  "2026-06-03T15:32:50.1417753Z",
     "operator":  "Ale Roman",
     "host":  "DESKTOP-7E8R1FA",
     "sonarHostUrl":  "http://localhost:9000",
@@ -10,6 +10,6 @@
     "casesTotal":  126,
     "casesMeasured":  122,
     "casesMissing":  4,
-    "matchBefore":  109,
-    "matchAfter":  109
+    "matchBefore":  122,
+    "matchAfter":  122
 }
