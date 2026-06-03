@@ -1,37 +1,613 @@
 caseId,model,modelVersion,promptVersion,attemptNumber,verdict,verdictReason,parseable,complexityBefore,complexityAfter,delta,baselineDelta,matchesBaseline,executionTimestamp,responseTimeMs,validationErrors,observations
-PILOT_VALID_SIMPLE,gpt-4o,gpt-4o,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:35.037292400Z,2178,,
-PILOT_VALID_SIMPLE,gpt-4o,gpt-4o,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:37.215954Z,1790,,
-PILOT_VALID_SIMPLE,gpt-4o,gpt-4o,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:39.006627700Z,1431,,
-PILOT_VALID_NESTED_IN_LOOP,gpt-4o,gpt-4o,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:36:40.438439300Z,1523,,
-PILOT_VALID_NESTED_IN_LOOP,gpt-4o,gpt-4o,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:36:41.961861900Z,1403,,
-PILOT_VALID_NESTED_IN_LOOP,gpt-4o,gpt-4o,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:36:43.365806600Z,1584,,
-REAL_COMMONS_MATH_CONVERGED,gpt-4o,gpt-4o,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:44.950349800Z,1007,,
-REAL_COMMONS_MATH_CONVERGED,gpt-4o,gpt-4o,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:45.958126400Z,1031,,
-REAL_COMMONS_MATH_CONVERGED,gpt-4o,gpt-4o,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:46.989466500Z,968,,
-REAL_ANT_MATCH_PATH,gpt-4o,gpt-4o,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:36:47.958297400Z,1020,,
-REAL_ANT_MATCH_PATH,gpt-4o,gpt-4o,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:36:48.978520900Z,1176,,
-REAL_ANT_MATCH_PATH,gpt-4o,gpt-4o,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:36:50.155096300Z,1351,,
-REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4o,gpt-4o,v2.0,1,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,4,4,0,0,true,2026-06-02T14:36:51.506658600Z,670,,
-REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4o,gpt-4o,v2.0,2,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,4,4,0,0,true,2026-06-02T14:36:52.177592100Z,569,,
-REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4o,gpt-4o,v2.0,3,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,4,4,0,0,true,2026-06-02T14:36:52.747104700Z,803,,
-REAL_COMMONS_COLLECTIONS_GET,gpt-4o,gpt-4o,v2.0,1,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,3,3,0,0,true,2026-06-02T14:36:53.550394800Z,714,,
-REAL_COMMONS_COLLECTIONS_GET,gpt-4o,gpt-4o,v2.0,2,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,3,3,0,0,true,2026-06-02T14:36:54.264734300Z,692,,
-REAL_COMMONS_COLLECTIONS_GET,gpt-4o,gpt-4o,v2.0,3,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,3,3,0,0,true,2026-06-02T14:36:54.957723400Z,528,,
-PILOT_VALID_SIMPLE,gpt-4.1,gpt-4.1,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:55.486588900Z,970,,
-PILOT_VALID_SIMPLE,gpt-4.1,gpt-4.1,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:56.457459800Z,1200,,
-PILOT_VALID_SIMPLE,gpt-4.1,gpt-4.1,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:36:57.657490Z,1224,,
-PILOT_VALID_NESTED_IN_LOOP,gpt-4.1,gpt-4.1,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:36:58.882319600Z,1313,,
-PILOT_VALID_NESTED_IN_LOOP,gpt-4.1,gpt-4.1,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:37:00.195451800Z,1329,,
-PILOT_VALID_NESTED_IN_LOOP,gpt-4.1,gpt-4.1,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:37:01.524605500Z,999,,
-REAL_COMMONS_MATH_CONVERGED,gpt-4.1,gpt-4.1,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:37:02.526318Z,1064,,
-REAL_COMMONS_MATH_CONVERGED,gpt-4.1,gpt-4.1,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:37:03.590717200Z,857,,
-REAL_COMMONS_MATH_CONVERGED,gpt-4.1,gpt-4.1,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,3,2,-1,-1,true,2026-06-02T14:37:04.448204200Z,1017,,
-REAL_ANT_MATCH_PATH,gpt-4.1,gpt-4.1,v2.0,1,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:37:05.475129500Z,1001,,
-REAL_ANT_MATCH_PATH,gpt-4.1,gpt-4.1,v2.0,2,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:37:06.476351800Z,940,,
-REAL_ANT_MATCH_PATH,gpt-4.1,gpt-4.1,v2.0,3,SUCCESS,"Refactorización correcta, coincide con baseline",true,6,4,-2,-2,true,2026-06-02T14:37:07.416769700Z,961,,
-REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4.1,gpt-4.1,v2.0,1,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,4,4,0,0,true,2026-06-02T14:37:08.378371Z,653,,
-REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4.1,gpt-4.1,v2.0,2,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,4,4,0,0,true,2026-06-02T14:37:09.031796Z,660,,
-REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4.1,gpt-4.1,v2.0,3,SUCCESS,Rechazo correcto: caso inelegible según baseline,false,4,4,0,0,true,2026-06-02T14:37:09.692390Z,628,,
-REAL_COMMONS_COLLECTIONS_GET,gpt-4.1,gpt-4.1,v2.0,1,INCORRECT,Caso inelegible según baseline transformado por el LLM (delta=-1),true,3,2,-1,0,false,2026-06-02T14:37:10.320714900Z,792,,
-REAL_COMMONS_COLLECTIONS_GET,gpt-4.1,gpt-4.1,v2.0,2,INCORRECT,Caso inelegible según baseline transformado por el LLM (delta=-1),true,3,2,-1,0,false,2026-06-02T14:37:11.113285200Z,758,,
-REAL_COMMONS_COLLECTIONS_GET,gpt-4.1,gpt-4.1,v2.0,3,INCORRECT,Caso inelegible según baseline transformado por el LLM (delta=-1),true,3,2,-1,0,false,2026-06-02T14:37:11.871391200Z,945,,
+PILOT_VALID_SIMPLE,gpt-4o,gpt-4o,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:44.014957800Z,178,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_SIMPLE,gpt-4o,gpt-4o,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:44.193497400Z,124,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_SIMPLE,gpt-4o,gpt-4o,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:44.317833700Z,126,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_NESTED_IN_LOOP,gpt-4o,gpt-4o,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:44.444181700Z,126,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_NESTED_IN_LOOP,gpt-4o,gpt-4o,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:44.570944900Z,124,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_NESTED_IN_LOOP,gpt-4o,gpt-4o,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:44.694998600Z,122,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_CONVERGED,gpt-4o,gpt-4o,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:44.817829400Z,126,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_CONVERGED,gpt-4o,gpt-4o,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:44.944780100Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_CONVERGED,gpt-4o,gpt-4o,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:45.068478200Z,131,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_ANT_MATCH_PATH,gpt-4o,gpt-4o,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:45.200160100Z,127,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_ANT_MATCH_PATH,gpt-4o,gpt-4o,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:45.327679400Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_ANT_MATCH_PATH,gpt-4o,gpt-4o,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:45.451006700Z,121,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4o,gpt-4o,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,4,-1,0,0,false,2026-06-03T15:56:45.572853100Z,130,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4o,gpt-4o,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,4,-1,0,0,false,2026-06-03T15:56:45.703572500Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4o,gpt-4o,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,4,-1,0,0,false,2026-06-03T15:56:45.826976400Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_COLLECTIONS_GET,gpt-4o,gpt-4o,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,0,false,2026-06-03T15:56:45.950352900Z,126,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_COLLECTIONS_GET,gpt-4o,gpt-4o,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,0,false,2026-06-03T15:56:46.076941800Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_COLLECTIONS_GET,gpt-4o,gpt-4o,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,0,false,2026-06-03T15:56:46.200432400Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_SIMPLE,gpt-4.1,gpt-4.1,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:46.324326100Z,125,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_SIMPLE,gpt-4.1,gpt-4.1,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:46.450219400Z,121,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_SIMPLE,gpt-4.1,gpt-4.1,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:46.572167Z,122,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_NESTED_IN_LOOP,gpt-4.1,gpt-4.1,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:46.694200700Z,122,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_NESTED_IN_LOOP,gpt-4.1,gpt-4.1,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:46.816632100Z,121,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+PILOT_VALID_NESTED_IN_LOOP,gpt-4.1,gpt-4.1,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:46.938479700Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_CONVERGED,gpt-4.1,gpt-4.1,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:47.061868400Z,126,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_CONVERGED,gpt-4.1,gpt-4.1,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:47.188565500Z,123,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_CONVERGED,gpt-4.1,gpt-4.1,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,-1,false,2026-06-03T15:56:47.312065900Z,125,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_ANT_MATCH_PATH,gpt-4.1,gpt-4.1,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:47.437994900Z,124,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_ANT_MATCH_PATH,gpt-4.1,gpt-4.1,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:47.563654300Z,125,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_ANT_MATCH_PATH,gpt-4.1,gpt-4.1,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,6,-1,0,-2,false,2026-06-03T15:56:47.688973300Z,125,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4.1,gpt-4.1,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,4,-1,0,0,false,2026-06-03T15:56:47.814970400Z,122,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4.1,gpt-4.1,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,4,-1,0,0,false,2026-06-03T15:56:47.937935700Z,129,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_MATH_VALIDATE_RANGE,gpt-4.1,gpt-4.1,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,4,-1,0,0,false,2026-06-03T15:56:48.067160800Z,126,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_COLLECTIONS_GET,gpt-4.1,gpt-4.1,v2.0,1,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,0,false,2026-06-03T15:56:48.193494900Z,127,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_COLLECTIONS_GET,gpt-4.1,gpt-4.1,v2.0,2,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,0,false,2026-06-03T15:56:48.320767700Z,128,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",
+REAL_COMMONS_COLLECTIONS_GET,gpt-4.1,gpt-4.1,v2.0,3,ERROR,"Error tecnico: no se obtuvo respuesta del modelo. Detalle: RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",false,3,-1,0,0,false,2026-06-03T15:56:48.448804800Z,126,"RuntimeException: OpenAI API error 429: {
+    ""error"": {
+        ""message"": ""You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."",
+        ""type"": ""insufficient_quota"",
+        ""param"": null,
+        ""code"": ""insufficient_quota""
+    }
+}
+",

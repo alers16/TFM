@@ -1,11 +1,13 @@
 {
   "campaignPhase": "Trap",
   "campaignType": "trap-cases-rq3",
-  "status": "completed",
-  "statusDetail": "technicalErrors=0",
-  "startedAt": "2026-06-02T14:36:19.628751700Z",
+  "status": "completed-with-incidents",
+  "statusDetail": "technicalErrors=18",
+  "startedAt": "2026-06-03T15:56:41.656175300Z",
   "protocolFrozen": true,
   "protocol": {
+    "expectedInvocations": 18,
+    "attemptsPerCase": 3,
     "maxOutputTokens": 2048,
     "promptVersion": "v1.0",
     "models": [
@@ -13,13 +15,11 @@
       "gpt-4.1"
     ],
     "temperature": 0.0,
-    "subsetSize": 3,
-    "expectedInvocations": 18,
-    "attemptsPerCase": 3
+    "subsetSize": 3
   },
   "modelVersions": {
-    "gpt-4.1": "gpt-4.1",
-    "gpt-4o": "gpt-4o"
+    "gpt-4o": "gpt-4o",
+    "gpt-4.1": "gpt-4.1"
   },
   "completedInvocations": 18,
   "trapCases": [
