@@ -4,8 +4,8 @@
 // @file JavaBeanDeserializer.java
 // @method deserialze(DefaultJSONParser, Type, Object, Object, int, int[])
 // @license [PENDIENTE]
-// @sonarCCBefore 580
-// @sonarCCAfter 577   (estimado; CC delta=-3)
+// @sonarCCBefore 582
+// @sonarCCAfter 579   (estimado; CC delta=-3)
 // @eligible YES
 // @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
 

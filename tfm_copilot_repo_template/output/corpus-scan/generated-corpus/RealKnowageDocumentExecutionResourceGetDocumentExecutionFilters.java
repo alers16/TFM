@@ -4,8 +4,8 @@
 // @file DocumentExecutionResource.java
 // @method getDocumentExecutionFilters(HttpServletRequest)
 // @license [PENDIENTE]
-// @sonarCCBefore 228
-// @sonarCCAfter 220   (estimado; CC delta=-8)
+// @sonarCCBefore 257
+// @sonarCCAfter 247   (estimado; CC delta=-10)
 // @eligible YES
 // @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
 

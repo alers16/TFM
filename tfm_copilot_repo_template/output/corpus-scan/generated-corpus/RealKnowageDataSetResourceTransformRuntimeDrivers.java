@@ -4,8 +4,8 @@
 // @file DataSetResource.java
 // @method transformRuntimeDrivers(List<BusinessModelDriverRuntime>, IParameterUseDAO, String, MetaModel, BusinessModelOpenParameters)
 // @license [PENDIENTE]
-// @sonarCCBefore 167
-// @sonarCCAfter 160   (estimado; CC delta=-7)
+// @sonarCCBefore 190
+// @sonarCCAfter 181   (estimado; CC delta=-9)
 // @eligible YES
 // @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
 

@@ -4,8 +4,8 @@
 // @file DataSetResource.java
 // @method getDriversFromQbeDataSet(String, Map<String, Object>, String)
 // @license [PENDIENTE]
-// @sonarCCBefore 183
-// @sonarCCAfter 176   (estimado; CC delta=-7)
+// @sonarCCBefore 205
+// @sonarCCAfter 196   (estimado; CC delta=-9)
 // @eligible YES
 // @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
 

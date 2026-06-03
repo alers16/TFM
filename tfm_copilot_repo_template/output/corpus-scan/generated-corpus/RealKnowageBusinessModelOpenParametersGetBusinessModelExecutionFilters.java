@@ -4,8 +4,8 @@
 // @file BusinessModelOpenParameters.java
 // @method getBusinessModelExecutionFilters(HttpServletRequest)
 // @license [PENDIENTE]
-// @sonarCCBefore 157
-// @sonarCCAfter 150   (estimado; CC delta=-7)
+// @sonarCCBefore 180
+// @sonarCCAfter 171   (estimado; CC delta=-9)
 // @eligible YES
 // @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
 

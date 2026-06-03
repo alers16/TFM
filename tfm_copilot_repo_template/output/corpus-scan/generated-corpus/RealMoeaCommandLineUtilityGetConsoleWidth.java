@@ -4,8 +4,8 @@
 // @file CommandLineUtility.java
 // @method getConsoleWidth()
 // @license [PENDIENTE]
-// @sonarCCBefore 13
-// @sonarCCAfter 10   (estimado; CC delta=-3)
+// @sonarCCBefore 15
+// @sonarCCAfter 11   (estimado; CC delta=-4)
 // @eligible YES
 // @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
 

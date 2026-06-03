@@ -441,7 +441,7 @@ Proyectos analizados: **15**  |  Candidatos totales: **38187**  |  Elegibles: **
 
 | Fichero | Clase | Método | Línea | CC antes | CC después | Delta | Condición externa |
 |---------|-------|--------|-------|----------|-----------|-------|-------------------|
-| `org/moeaframework/util/cli/CommandLineUtility.java` | CommandLineUtility | `getConsoleWidth` | 120 | 13 | 10 | -3 | `width <= 0` |
+| `org/moeaframework/util/cli/CommandLineUtility.java` | CommandLineUtility | `getConsoleWidth` | 120 | 15 | 11 | -4 | `width <= 0` |
 
 ### Motivos de descarte (resumen)
 
@@ -553,16 +553,16 @@ Proyectos analizados: **15**  |  Candidatos totales: **38187**  |  Elegibles: **
 | Fichero | Clase | Método | Línea | CC antes | CC después | Delta | Condición externa |
 |---------|-------|--------|-------|----------|-----------|-------|-------------------|
 | `it/eng/knowage/document/export/cockpit/converter/DataStoreConfigurationConverter.java` | DataStoreConfigurationConverter | `getDataset` | 88 | 3 | 2 | -1 | `jsonConfiguration != null` |
-| `it/eng/spagobi/api/BusinessModelOpenParameters.java` | BusinessModelOpenParameters | `getBusinessModelExecutionFilters` | 704 | 157 | 150 | -7 | `oVals != null` |
-| `it/eng/spagobi/api/BusinessModelResource.java` | BusinessModelResource | `getDriversFromQbeDataSet` | 757 | 183 | 176 | -7 | `oVals != null` |
-| `it/eng/spagobi/api/common/MetaUtils.java` | MetaUtils | `transformRuntimeDrivers` | 315 | 166 | 159 | -7 | `oVals != null` |
-| `it/eng/spagobi/api/DocumentExecutionParameters.java` | DocumentExecutionParameters | `transformRuntimeDrivers` | 637 | 166 | 159 | -7 | `oVals != null` |
-| `it/eng/spagobi/api/DocumentExecutionResource.java` | DocumentExecutionResource | `getDocumentExecutionFilters` | 754 | 210 | 202 | -8 | `oVals != null` |
-| `it/eng/spagobi/api/DocumentExecutionResource.java` | DocumentExecutionResource | `transformRuntimeDrivers` | 1790 | 166 | 159 | -7 | `oVals != null` |
-| `it/eng/spagobi/api/v2/DataSetResource.java` | DataSetResource | `transformRuntimeDrivers` | 1227 | 167 | 160 | -7 | `oVals != null` |
-| `it/eng/spagobi/api/v2/DocumentExecutionResource.java` | DocumentExecutionResource | `getDocumentExecutionFilters` | 754 | 228 | 220 | -8 | `oVals != null` |
-| `it/eng/spagobi/api/v2/DocumentExecutionResource.java` | DocumentExecutionResource | `transformRuntimeDrivers` | 1949 | 165 | 158 | -7 | `oVals != null` |
-| `it/eng/spagobi/api/v3/DataSetResource.java` | DataSetResource | `getDriversFromQbeDataSet` | 1179 | 183 | 176 | -7 | `oVals != null` |
+| `it/eng/spagobi/api/BusinessModelOpenParameters.java` | BusinessModelOpenParameters | `getBusinessModelExecutionFilters` | 704 | 180 | 171 | -9 | `oVals != null` |
+| `it/eng/spagobi/api/BusinessModelResource.java` | BusinessModelResource | `getDriversFromQbeDataSet` | 757 | 205 | 196 | -9 | `oVals != null` |
+| `it/eng/spagobi/api/common/MetaUtils.java` | MetaUtils | `transformRuntimeDrivers` | 315 | 189 | 180 | -9 | `oVals != null` |
+| `it/eng/spagobi/api/DocumentExecutionParameters.java` | DocumentExecutionParameters | `transformRuntimeDrivers` | 637 | 189 | 180 | -9 | `oVals != null` |
+| `it/eng/spagobi/api/DocumentExecutionResource.java` | DocumentExecutionResource | `getDocumentExecutionFilters` | 754 | 241 | 231 | -10 | `oVals != null` |
+| `it/eng/spagobi/api/DocumentExecutionResource.java` | DocumentExecutionResource | `transformRuntimeDrivers` | 1790 | 189 | 180 | -9 | `oVals != null` |
+| `it/eng/spagobi/api/v2/DataSetResource.java` | DataSetResource | `transformRuntimeDrivers` | 1227 | 190 | 181 | -9 | `oVals != null` |
+| `it/eng/spagobi/api/v2/DocumentExecutionResource.java` | DocumentExecutionResource | `getDocumentExecutionFilters` | 754 | 257 | 247 | -10 | `oVals != null` |
+| `it/eng/spagobi/api/v2/DocumentExecutionResource.java` | DocumentExecutionResource | `transformRuntimeDrivers` | 1949 | 187 | 178 | -9 | `oVals != null` |
+| `it/eng/spagobi/api/v3/DataSetResource.java` | DataSetResource | `getDriversFromQbeDataSet` | 1179 | 205 | 196 | -9 | `oVals != null` |
 | `it/eng/spagobi/commons/validation/SpagoURLValidator.java` | SpagoURLValidator | `isValidPath` | 216 | 5 | 4 | -1 | `dot2Count > 0` |
 | `it/eng/spagobi/tools/dataset/actions/AbstractDatasetActionsChecker.java` | AbstractDatasetActionsChecker | `canDelete` | 258 | 16 | 14 | -2 | `isUser || isTester || isModelAdministrator` |
 | `it/eng/spagobi/tools/dataset/validation/GeoSpatialDimensionDatasetValidator.java` | GeoSpatialDimensionDatasetValidator | `checkValue` | 270 | 20 | 17 | -3 | `admissibleValue instanceof Number` |
@@ -628,9 +628,9 @@ Proyectos analizados: **15**  |  Candidatos totales: **38187**  |  Elegibles: **
 | `com/alibaba/fastjson/JSONPath.java` | JSONPath | `eqNotNull` | 3811 | 17 | 16 | -1 | `isIntB` |
 | `com/alibaba/fastjson/JSONPath.java` | PropertySegment | `extract` | 2461 | 101 | 97 | -4 | `matchStat == JSONLexer.VALUE` |
 | `com/alibaba/fastjson/parser/DefaultJSONParser.java` | DefaultJSONParser | `parseArray` | 861 | 76 | 71 | -5 | `i == types.length - 1` |
-| `com/alibaba/fastjson/parser/deserializer/JavaBeanDeserializer.java` | JavaBeanDeserializer | `deserialze` | 480 | 580 | 577 | -3 | `field.fieldClass == String.class` |
+| `com/alibaba/fastjson/parser/deserializer/JavaBeanDeserializer.java` | JavaBeanDeserializer | `deserialze` | 480 | 582 | 579 | -3 | `field.fieldClass == String.class` |
 | `com/alibaba/fastjson/parser/JSONLexerBase.java` | JSONLexerBase | `scanSymbolUnQuoted` | 847 | 13 | 11 | -2 | `chLocal < identifierFlags.length` |
-| `com/alibaba/fastjson/parser/JSONLexerBase.java` | JSONLexerBase | `scanFieldInt` | 1936 | 31 | 29 | -2 | `//
+| `com/alibaba/fastjson/parser/JSONLexerBase.java` | JSONLexerBase | `scanFieldInt` | 1936 | 32 | 30 | -2 | `//
 value < 0 || offset > 11 + 3 + fieldName.length` |
 | `com/alibaba/fastjson/parser/ParserConfig.java` | ParserConfig | `checkAutoType` | 1545 | 114 | 113 | -1 | `clazz != null` |
 | `com/alibaba/fastjson/serializer/FieldSerializer.java` | FieldSerializer | `getPropertyValue` | 152 | 5 | 3 | -2 | `format != null && propertyValue != null` |

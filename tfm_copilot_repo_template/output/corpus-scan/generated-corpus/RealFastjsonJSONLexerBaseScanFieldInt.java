@@ -4,8 +4,8 @@
 // @file JSONLexerBase.java
 // @method scanFieldInt(char[])
 // @license [PENDIENTE]
-// @sonarCCBefore 31
-// @sonarCCAfter 29   (estimado; CC delta=-2)
+// @sonarCCBefore 32
+// @sonarCCAfter 30   (estimado; CC delta=-2)
 // @eligible YES
 // @description [PENDIENTE DE REVISIÓN] Detectado automáticamente por CorpusScanRunner. Verificar semántica antes de incluir en corpus oficial.
 

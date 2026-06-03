@@ -224,7 +224,7 @@ $md = @"
 
 | caseId | proxyBefore | sonarBefore | proxyAfter | sonarAfter |
 |---|---|---|---|---|
-$([string]::Join("`n", ($divergence | ForEach-Object { "| $($_.caseId) | $($_.proxyBefore) | $($_.sonarBefore) | $($_.proxyAfter) | $($_.sonarAfter) |" })))
+$([string]::Join("`n", @($divergence | ForEach-Object { "| $($_.caseId) | $($_.proxyBefore) | $($_.sonarBefore) | $($_.proxyAfter) | $($_.sonarAfter) |" })))
 
 > Detalle completo por caso en ``comparison.csv``. Las medidas oficiales crudas
 > están en ``sonar-before.json`` y ``sonar-after.json``.
