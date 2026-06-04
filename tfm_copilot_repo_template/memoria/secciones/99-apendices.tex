@@ -1,39 +1,267 @@
 % =====================================================================
-%  Apéndices A--G.  ESTADO: andamiaje.
+%  Apéndices A--G.  ESTADO: REDACTADO.
 %  Con `\appendix`, cada \chapter se numera como «Apéndice A, B, ...».
-%  El contenido fuente está en memoria/apendices/*.md (legado a migrar).
+%  Contenido verificado contra el código y los artefactos de output/.
 % =====================================================================
 \appendix
 \label{cap:apendices}
 
 \chapter{Manual técnico}
-\pendienteredaccion{} Fuente: \texttt{memoria/apendices/A-manual-tecnico.md}.
+\label{ap:manual}
+Este apéndice reúne las instrucciones para compilar, probar y reproducir los
+experimentos sin asistencia externa. Los comandos se muestran para PowerShell
+(Windows), entorno en el que se desarrolló el trabajo.
+
+\section*{A.1 Requisitos}
+Java~17 o superior y Maven~3.8+. Para la validación con SonarQube
+(\autoref{ap:sonarqube}) se necesita Docker. Para ejecutar RQ3 en modo
+\emph{live}, una clave de la API de OpenAI en la variable de entorno
+\texttt{OPENAI\_API\_KEY}. Las versiones de las dependencias están fijadas en
+\texttt{pom.xml}.
+
+\section*{A.2 Compilación y pruebas}
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+mvn clean compile
+mvn test
+\end{lstlisting}
+
+\section*{A.3 Credenciales para RQ3}
+Las credenciales se leen exclusivamente de variables de entorno (Java no carga
+\texttt{.env} automáticamente). La única obligatoria es \texttt{OPENAI\_API\_KEY};
+opcionalmente \texttt{OPENAI\_MODEL} (por defecto \texttt{gpt-4o}) y
+\texttt{OPENAI\_SECONDARY\_MODEL} (por defecto \texttt{gpt-4.1}). En PowerShell,
+para cargarlas desde un fichero \texttt{.env}:
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+Get-Content .env | ForEach-Object {
+  if ($_ -match '^\s*([^#][^=]*)=(.*)$') {
+    [Environment]::SetEnvironmentVariable($Matches[1].Trim(), $Matches[2].Trim())
+  }
+}
+\end{lstlisting}
+
+\section*{A.4 Experimento RQ2 (lote determinista)}
+Genera el \emph{classpath} y ejecuta el lote sobre el corpus piloto y real; los
+artefactos se escriben en \texttt{output/rq2-batch/}.
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+mvn -DskipTests compile dependency:build-classpath "-Dmdep.outputFile=target/classpath.txt"
+$cp = Get-Content target/classpath.txt
+java -cp "target/classes;$cp" es.tfm.refactoring.experiment.Rq2BatchExecutor
+\end{lstlisting}
+
+\section*{A.5 Experimento RQ3 (campaña de LLM)}
+La campaña usa el protocolo congelado por defecto (modelos \texttt{gpt-4o} y
+\texttt{gpt-4.1}, temperatura 0, tres intentos, \emph{prompt} \texttt{v1.0}) y
+exige \texttt{OPENAI\_API\_KEY}; su ausencia genera un incidente registrado, no
+un fallo silencioso. Los artefactos se escriben en el directorio indicado.
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+java -cp "target/classes;$cp" es.tfm.refactoring.llm.CampaignExecutor output/rq3-campaign-real-phase9
+\end{lstlisting}
+Para una prueba sin coste de API se dispone de un modo \emph{dry-run}:
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+java -cp "target/classes;$cp" es.tfm.refactoring.llm.CampaignExecutor --mode=dry-run output/rq3-campaign-dry
+\end{lstlisting}
+
+\section*{A.6 Validación con SonarQube}
+El procedimiento completo se describe en el \autoref{ap:sonarqube}.
 
 \chapter{Paquete de replicación}
-\pendienteredaccion{} Fuente: \texttt{memoria/apendices/B-replicacion.md}.
+\label{ap:replicacion}
+La reproducibilidad se sostiene sobre artefactos versionados:
+
+\begin{itemize}
+  \item \textbf{Corpus}: \texttt{src/main/resources/pilot-corpus/} (8 casos
+  sintéticos) y \texttt{src/main/resources/real-corpus/} (118 casos reales),
+  con metadatos de procedencia (\lstinline|@project|, \lstinline|@file|,
+  \lstinline|@method|, \lstinline|@license|).
+  \item \textbf{Protocolo congelado} de RQ3 en
+  \lstinline|LlmExperimentProtocol.defaultProtocol()| (modelos, temperatura,
+  intentos, versión del \emph{prompt}).
+  \item \textbf{Salidas RQ2}: \texttt{output/rq2-batch/} (JSON/CSV/resumen).
+  \item \textbf{Salidas RQ3}: \texttt{output/rq3-campaign-real-phase9/}
+  (agregado, evidencia por invocación, incidencias y metadatos).
+  \item \textbf{Validación SonarQube}:
+  \texttt{output/rq2-sonar-validation/fullcorpus/}.
+  \item \textbf{Entorno}: versiones fijadas en \texttt{pom.xml} (Java~17,
+  JavaParser~3.26.4, JUnit~5.11.4, Gson~2.11.0).
+\end{itemize}
 
 \chapter{Prompt RQ3 v1.0 y oráculo}
-\pendienteredaccion{} Texto literal del prompt (\texttt{LlmPromptBuilder})
-y descripción del oráculo. Fuente:
-\texttt{memoria/apendices/C-prompt-rq3.md}.
+\label{ap:prompt}
+Se reproduce literalmente el \emph{prompt} de la campaña oficial (versión
+\texttt{v1.0}, \emph{zero-shot}), tal como lo construye
+\texttt{LlmPromptBuilder}. El \emph{prompt} es idéntico entre modelos, para
+garantizar una comparación justa.
+
+\section*{C.1 \emph{System prompt} (literal)}
+\begin{lstlisting}[language={},breaklines=true,basicstyle=\footnotesize\ttfamily]
+You are a Java refactoring assistant. Your task is to analyze Java code and apply a specific refactoring pattern: combining nested if-statements into a single if with a compound condition using &&.
+
+Rules:
+1. Only combine nested ifs where the outer if has NO else branch, the inner if has NO else branch, and the outer if's then-block contains ONLY the inner if (no other statements).
+2. Preserve the original evaluation order of conditions.
+3. Do NOT alter the semantics of the code.
+4. Do NOT change method signatures, return types, or other code outside the if-statements.
+5. If the code cannot be safely refactored with this pattern, respond with exactly: NO_REFACTORING_APPLICABLE
+6. If you apply the refactoring, return ONLY the complete refactored method body wrapped in a Java class, inside a ```java code block.
+7. Do not add comments, explanations, or annotations outside the code block unless you are refusing with NO_REFACTORING_APPLICABLE.
+\end{lstlisting}
+
+\section*{C.2 \emph{User prompt} (plantilla literal)}
+El marcador \texttt{\%s} se sustituye por el código fuente del caso.
+\begin{lstlisting}[language={},breaklines=true,basicstyle=\footnotesize\ttfamily]
+Analyze the following Java code and apply the nested-if combination refactoring where applicable. Return the complete refactored class in a ```java code block, or respond with NO_REFACTORING_APPLICABLE if no safe refactoring is possible.
+
+```java
+%s
+```
+\end{lstlisting}
+
+\section*{C.3 Diseño y oráculo}
+El diseño es \emph{zero-shot} y centrado en el patrón objetivo, no en una
+optimización genérica; exige preservación semántica y ofrece la opción de
+rechazo explícito (\texttt{NO\_REFACTORING\_APPLICABLE}) para casos no
+elegibles. El paquete de replicación incluye además una variante \emph{few-shot}
+(\texttt{v2.0}) con un ejemplo aplicable y otro no aplicable. La evaluación de
+cada respuesta la realiza el oráculo automático
+(\lstinline|LlmResponseValidator|), descrito en la \autoref{sec:oraculo}, con su
+guarda de elegibilidad que distingue el rechazo correcto de la transformación
+indebida.
 
 \chapter{Catálogo de \texttt{DiscardReason}}
-\pendienteredaccion{} Diez categorías (verificadas en
-\texttt{DiscardReason.java}): \texttt{OUTER\_HAS\_ELSE},
-\texttt{OUTER\_BLOCK\_MULTIPLE\_STATEMENTS},
-\texttt{SINGLE\_STATEMENT\_NOT\_IF}, \texttt{INNER\_HAS\_ELSE},
-\texttt{METHOD\_CALL\_IN\_CONDITION}, \texttt{ASSIGNMENT\_IN\_CONDITION},
-\texttt{INCREMENT\_OR\_DECREMENT\_IN\_CONDITION},
-\texttt{LAMBDA\_IN\_CONDITION}, \texttt{OBJECT\_CREATION\_IN\_CONDITION},
-\texttt{NO\_NESTED\_IF\_PATTERN}. Fuente:
-\texttt{memoria/apendices/D-discard-reasons.md}.
+\label{ap:discard}
+La \autoref{tab:discardreason} enumera las diez categorías de descarte que
+emite el detector, con la precondición asociada y su descripción literal
+(fuente: \texttt{DiscardReason.java}).
+
+\begin{table}[ht]
+\centering
+\caption{Categorías de \texttt{DiscardReason} y precondición asociada.}
+\label{tab:discardreason}
+\begin{tabular}{@{}llp{6.2cm}@{}}
+\toprule
+\textbf{Categoría} & \textbf{Prec.} & \textbf{Descripción} \\
+\midrule
+\texttt{OUTER\_HAS\_ELSE} & P1 & El \lstinline|if| externo tiene \lstinline|else|/\lstinline|else-if|. \\
+\texttt{OUTER\_BLOCK\_MULTIPLE\_STATEMENTS} & P2 & El bloque \lstinline|then| tiene más de una sentencia. \\
+\texttt{SINGLE\_STATEMENT\_NOT\_IF} & P3 & La sentencia única del bloque \lstinline|then| no es un \lstinline|if|. \\
+\texttt{INNER\_HAS\_ELSE} & P4 & El \lstinline|if| interno tiene \lstinline|else|/\lstinline|else-if|. \\
+\texttt{METHOD\_CALL\_IN\_CONDITION} & P5 & Llamada a método en condición (posible \emph{side effect}). \\
+\texttt{ASSIGNMENT\_IN\_CONDITION} & P5 & Asignación en condición (\emph{side effect}). \\
+\texttt{INCREMENT\_OR\_DECREMENT\_IN\_CONDITION} & P5 & Operador \lstinline|++|/\lstinline|--| en condición. \\
+\texttt{LAMBDA\_IN\_CONDITION} & P5 & Lambda en condición (\emph{side effect} potencial). \\
+\texttt{OBJECT\_CREATION\_IN\_CONDITION} & P5 & Instanciación con \lstinline|new| en condición. \\
+\texttt{NO\_NESTED\_IF\_PATTERN} & --- & No hay patrón de \lstinline|if| anidado combinable. \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \chapter{Tablas extendidas RQ2 / RQ3}
-\pendienteredaccion{} Fuente: \texttt{memoria/apendices/E-tablas-extendidas.md}.
+\label{ap:tablas}
+Por extensión, las tablas completas no se reproducen aquí; se conservan
+íntegras y reproducibles en los artefactos:
+
+\begin{itemize}
+  \item \textbf{RQ2, por caso} (los 126 casos con CC \emph{before}/\emph{after}
+  y $\Delta$): \texttt{output/rq2-batch/rq2-summary.md} y
+  \texttt{rq2-all-results.csv}.
+  \item \textbf{RQ3, por caso y por modelo} (veredicto de cada invocación):
+  \texttt{output/rq3-campaign-real-phase9/rq3-aggregated.md} y
+  \texttt{rq3-summary.csv}.
+  \item \textbf{Contraste SonarQube, por caso}:
+  \texttt{output/rq2-sonar-validation/fullcorpus/comparison.csv}.
+\end{itemize}
 
 \chapter{Procedimiento SonarQube}
-\pendienteredaccion{} Fuente: \texttt{memoria/apendices/F-sonarqube.md} y
-\texttt{docs/}.
+\label{ap:sonarqube}
+Este apéndice describe, de forma autocontenida, cómo reproducir la validación
+de contraste de la complejidad cognitiva del proxy frente a la implementación
+oficial de SonarQube sobre el corpus completo (\autoref{sec:resultados-sonar}).
+Los comandos son para PowerShell.
+
+\section*{F.1 Requisitos}
+Docker en ejecución, Maven en el \texttt{PATH} (el análisis usa el goal
+\texttt{mvn sonar:sonar}, no requiere el CLI \texttt{sonar-scanner}) y el puerto
+9000 libre.
+
+\section*{F.2 Arranque del servidor}
+SonarQube Community Build se levanta con \emph{docker compose}; tras arrancar,
+se espera a que el estado sea \texttt{UP}:
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+docker compose -f docker-compose.sonarqube.yml up -d
+do { Start-Sleep 5; $s = (Invoke-RestMethod http://localhost:9000/api/system/status).status; $s }
+while ($s -ne 'UP')
+\end{lstlisting}
+
+\section*{F.3 Token de autenticación}
+En la interfaz web (\texttt{http://localhost:9000}, credenciales iniciales
+\texttt{admin}/\texttt{admin}): \emph{My Account~$\rightarrow$ Security~$\rightarrow$
+Generate Tokens}. El token se exporta como variable de entorno:
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+$env:SONAR_TOKEN = "sqa_xxxxxxxxxxxxxxxx"
+\end{lstlisting}
+
+\section*{F.4 Ejecución de la validación}
+El script \texttt{sonar-fullcorpus-validation.ps1} automatiza todo el flujo:
+\begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
+./sonar-fullcorpus-validation.ps1
+\end{lstlisting}
+Para cada caso (1)~materializa el método \emph{before} y el \emph{after} como
+ficheros Java independientes, envueltos en una clase nombrada por \texttt{caseId};
+(2)~analiza dos proyectos SonarQube separados con
+\texttt{mvn -DskipTests compile sonar:sonar}, fijando \texttt{sonar.sources} a la
+carpeta materializada y \texttt{sonar.java.binaries} a \texttt{target/classes};
+(3)~recupera la métrica oficial \texttt{cognitive\_complexity} por fichero
+mediante la API \texttt{api/measures/component\_tree}; y (4)~cruza la CC oficial
+con la del proxy, caso por caso.
+
+\section*{F.5 Artefactos y resultado}
+Los resultados se escriben en
+\texttt{output/rq2-sonar-validation/fullcorpus/}:
+\begin{itemize}
+  \item \texttt{comparison.csv}: una fila por caso (proxy vs SonarQube,
+  coincidencia y diferencias).
+  \item \texttt{comparison.md}: informe con la tasa de coincidencia y la tabla
+  de divergencias.
+  \item \texttt{metadata.json}: versión del motor de SonarQube, \emph{timestamp},
+  operador y recuentos.
+  \item \texttt{sonar-before.json} / \texttt{sonar-after.json}: respuesta cruda
+  de la API.
+\end{itemize}
+En la corrida consolidada, de los 126 casos 122 fueron medibles y la
+coincidencia entre el proxy y SonarQube fue \textbf{exacta en los 122}, tanto en
+\emph{before} como en \emph{after} (\autoref{sec:resultados-sonar}).
+
+\section*{F.6 Limitaciones}
+La complejidad cognitiva es sintáctica: SonarQube la calcula sobre el AST aunque
+no resuelva todos los símbolos, por lo que envolver el método en una clase
+mínima es válido para el contraste. Un caso que no parsee aparece como
+\emph{sin medida}. El resultado depende, además, de la versión del motor de
+SonarQube en el momento del análisis, que queda registrada en
+\texttt{metadata.json}. La limpieza del servidor se realiza con
+\texttt{docker compose -f docker-compose.sonarqube.yml down -v}.
 
 \chapter{Trazabilidad RQ $\leftrightarrow$ artefactos}
-\pendienteredaccion{} Fuente: \texttt{memoria/apendices/G-trazabilidad.md}.
+\label{ap:trazabilidad}
+La \autoref{tab:trazabilidad} relaciona cada pregunta de investigación con su
+diseño, su implementación, sus pruebas y la evidencia experimental que la
+respalda.
+
+\begin{table}[ht]
+\centering
+\caption{Trazabilidad entre preguntas de investigación, código, pruebas y
+evidencia.}
+\label{tab:trazabilidad}
+\begin{tabular}{@{}lp{2.6cm}p{2.6cm}p{4.0cm}@{}}
+\toprule
+\textbf{RQ} & \textbf{Diseño} & \textbf{Implementación} & \textbf{Evidencia} \\
+\midrule
+RQ1 & \autoref{sec:precondiciones} (P1--P5) & paquetes \texttt{detection}, \texttt{transformation} & \texttt{output/rq2-batch/} (motivos de descarte) \\
+RQ2 & \autoref{sec:exp-rq2} & \texttt{analysis}, \texttt{experiment} & \texttt{output/rq2-batch/}, \texttt{output/rq2-sonar-validation/fullcorpus/} \\
+RQ3 & \autoref{sec:exp-rq3} & paquete \texttt{llm} & \texttt{output/rq3-campaign-real-phase9/} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cada componente está cubierto por la batería de pruebas del proyecto
+(\texttt{mvn test}), que incluye la validación del cálculo de complejidad
+cognitiva frente a los casos oficiales de SonarSource.

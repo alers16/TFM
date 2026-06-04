@@ -68,18 +68,18 @@ Los proyectos fuente proceden de dos orígenes principales:
 
 
 
-\paragraph{Subset RQ3} (definido en \texttt{LlmEvaluationSubset}): 50 casos
-del corpus consolidado (8 piloto y 42 reales; 36 elegibles y 14 no elegibles)
-que cubren los ejes de variación relevantes —casos elegibles, parciales y no
-elegibles— y los principales motivos de descarte (P1, P5). La
-\autoref{tab:subset-rq3} recoge una selección representativa de estos casos;
-el subset completo y su veredicto por intento están en
-\texttt{output/rq3-campaign-limited/rq3-summary.csv}.
+\paragraph{Cobertura de RQ3.} La evaluación de RQ3 se ejecuta sobre el
+\textbf{corpus consolidado completo} (126 casos: 8 piloto y 118 reales; 104
+elegibles y 22 no elegibles), de modo que cubre todos los ejes de variación
+—casos elegibles, parciales y no elegibles— y los motivos de descarte (P1, P5).
+La \autoref{tab:subset-rq3} recoge una selección representativa de casos; los
+veredictos por intento de los 126 casos están en
+\texttt{output/rq3-campaign-real-phase9/rq3-summary.csv}.
 
 \begin{table}[ht]
 \centering
-\caption{Ejemplos representativos del subset de evaluación RQ3
-(\texttt{LlmEvaluationSubset}, 50 casos en total).}
+\caption{Ejemplos representativos de los casos de evaluación de RQ3
+(la campaña cubre el corpus completo de 126 casos).}
 \label{tab:subset-rq3}
 \begin{tabular}{@{}llll@{}}
 \toprule
@@ -124,29 +124,18 @@ métricas y exigiría una nueva ejecución completa.
 \subsection{Validación complementaria con SonarQube}
 \label{sec:sonar-val}
 La validación complementaria contrasta los valores del proxy con los de
-SonarQube Community Build sobre un subset de cuatro casos representativos
-(\texttt{PILOT\_VALID\_NESTED\_IN\_LOOP},
-\texttt{REAL\_COMMONS\_LANG\_CONTAINS\_NONE}, \texttt{REAL\_ANT\_MATCH\_PATH}
-y \texttt{REAL\_COMMONS\_LANG\_CHOMP}), que cubren el mayor $\Delta$
-piloto, el mayor $\Delta$ real, un triple anidamiento de elegibilidad
-parcial y un caso no elegible por P5 (control de no divergencia). El
-procedimiento está en \texttt{docs/rq2-sonar-validation-procedure.md} y el
-arranque del servidor (vía \texttt{docker-compose}) en
-\texttt{docs/sonarqube-setup.md}; los artefactos se conservan en
-\texttt{output/rq2-sonar-validation/}.
-
-\pendienteverif{} \textbf{Estado de consolidación de la validación.} El
-archivo \texttt{output/rq2-sonar-validation/metadata.json} documenta que
-la versión exacta de SonarQube, los \emph{timestamps} de ejecución y el
-operador están sin registrar, y su nota interna declara que en esta
-entrega \emph{no se han ejecutado escaneos reales de SonarQube}. La tabla
-comparativa \texttt{rq2-sonar-validation.md} se encuentra en estado de
-plantilla, con valores prerellenos a partir del proxy. Hasta que se
-ejecute la corrida real y se completen \texttt{metadata.json} y los JSON
-de Sonar con valores independientes, los resultados correspondientes deben
-presentarse como \textbf{provisionales}. Esta incertidumbre afecta
-\emph{exclusivamente} a la validación complementaria; los resultados de
-RQ2 (proxy) son independientes de ella.
+SonarQube Community Build (versión \texttt{26.4.0.121862}) sobre el
+\textbf{corpus completo}. Para cada caso se materializan los métodos
+\emph{before} y \emph{after} como ficheros Java independientes, se analizan en
+dos proyectos de SonarQube y se recupera su complejidad cognitiva oficial por
+fichero mediante la API, que se compara con la del proxy. El procedimiento,
+reproducible en PowerShell mediante el goal \texttt{mvn sonar:sonar}, está en
+\texttt{docs/rq2-sonar-validation-fullcorpus.md}; el arranque del servidor (vía
+\texttt{docker-compose}) en \texttt{docs/sonarqube-setup.md}; y los artefactos
+—\texttt{comparison.csv}, \texttt{comparison.md} y \texttt{metadata.json} con
+versión, fecha y operador— se conservan en
+\texttt{output/rq2-sonar-validation/fullcorpus/}. Los resultados de este
+contraste se presentan en la \autoref{sec:resultados-sonar}.
 
 \subsection{Protocolo RQ3 — Evaluación de LLMs}
 \label{sec:exp-rq3}
@@ -167,14 +156,29 @@ Temperatura & \texttt{0.0} & Determinismo esperado. \\
 Intentos por caso & \texttt{3} & Detección de inconsistencia residual. \\
 Prompt & \texttt{v1.0} & Trazabilidad (texto literal en código). \\
 \emph{Max tokens} salida & \texttt{2048} & Métodos refactorizados completos. \\
-Subset & 50 casos & Elegibles/parciales/no elegibles. \\
-Total invocaciones & 300 & $50 \times 2 \times 3$. \\
+Cobertura & 126 casos & Corpus completo (elegibles/parciales/no elegibles). \\
+Total invocaciones & 756 & $126 \times 2 \times 3$. \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\pendientemetodo{} Justificar la decisión (fase 9.6) de restringir la
-comparación a un único proveedor. El procedimiento por caso es: cargar
+La comparación se restringe deliberadamente a un único proveedor (OpenAI) por
+tres razones. Primera, de \emph{validez interna}: contrastar dos modelos del
+mismo proveedor —\texttt{gpt-4o} y \texttt{gpt-4.1}— mantiene constantes la
+API, el tokenizador y la vía de acceso, de modo que las diferencias observadas
+se atribuyen al modelo y no al entorno. Segunda, de \emph{alcance y recursos}:
+el trabajo dispone de una única clave de API financiada y de un presupuesto
+temporal acotado (12~ECTS), lo que hace inviable una campaña multiproveedor sin
+comprometer la profundidad del resto del estudio. Tercera, de
+\emph{representatividad}: los modelos elegidos pertenecen a la familia de
+propósito general de referencia en generación de código (linaje de Codex,
+\autoref{sec:llm-antecedentes}). La generalización a otras familias de modelos
+queda explícitamente como amenaza a la validez externa y trabajo futuro
+(\autoref{cap:amenazas}); el diseño lo facilita, pues el \emph{provider} del
+protocolo es intercambiable y añadir otro proveedor es un cambio de
+configuración, no de arquitectura.
+
+El procedimiento por caso es: cargar
 caso y baseline; construir el prompt \texttt{v1.0}; invocar el modelo;
 almacenar la respuesta cruda (\texttt{rq3-full-evidence.json}); aplicar el
 oráculo (\autoref{sec:oraculo}); registrar \texttt{LlmEvaluationResult}; y

@@ -86,11 +86,11 @@ de diseño de tratar P5 de forma sintáctica y conservadora.
 \subsection{RQ2 — Impacto en la complejidad cognitiva}
 \label{sec:resultados-rq2}
 La respuesta cuantitativa a RQ2 es directa: sobre los 104 casos elegibles, la
-complejidad cognitiva agregada (proxy) se reduce en $\Delta = -278$, lo que
+complejidad cognitiva agregada (proxy) se reduce en $\Delta = -295$, lo que
 supone una reducción relativa del 9{,}8\,\% sobre la complejidad total de esos
-métodos (de 2825 a 2547 puntos). La reducción no se concentra en unos pocos
+métodos (de 3020 a 2725 puntos). La reducción no se concentra en unos pocos
 casos: los 104 elegibles presentan, sin excepción, un $\Delta$ negativo
-(media $-2{,}67$ puntos por caso, desviación típica $2{,}29$). Los 22 casos
+(media $-2{,}84$ puntos por caso, desviación típica $2{,}63$). Los 22 casos
 inelegibles mantienen, por construcción, $\Delta = 0$.
 
 La \autoref{tab:rq2-cinco} resume la distribución completa mediante los
@@ -108,17 +108,17 @@ interpolación lineal. Fuente: \texttt{output/rq2-batch/rq2-all-results.csv}.}
 \toprule
 \textbf{Métrica} & \textbf{n} & \textbf{mín} & \textbf{Q1} & \textbf{mediana} & \textbf{Q3} & \textbf{máx} & \textbf{media} & \textbf{sd} \\
 \midrule
-CC antes   & 104 & 3   & 4    & 10{,}5 & 20{,}25 & 228 & 27{,}16 & 46{,}01 \\
-CC después & 104 & 2   & 3    & 8      & 18{,}25 & 220 & 24{,}49 & 44{,}44 \\
-$\Delta$   & 104 & $-14$ & $-3$ & $-2$ & $-1$    & $-1$ & $-2{,}67$ & 2{,}29 \\
+CC antes   & 104 & 3   & 4    & 10{,}5 & 21{,}25 & 257 & 29{,}04 & 52{,}01 \\
+CC después & 104 & 2   & 3    & 8      & 20{,}00 & 247 & 26{,}20 & 49{,}95 \\
+$\Delta$   & 104 & $-14$ & $-3$ & $-2$ & $-1$    & $-1$ & $-2{,}84$ & 2{,}63 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-El rango intercuartílico pasa de $16{,}25$ (antes) a $15{,}25$ (después): la
+El rango intercuartílico pasa de $17{,}25$ (antes) a $17{,}00$ (después): la
 caja de la complejidad se desplaza hacia abajo tras refactorizar (la mediana
-baja de $10{,}5$ a $8$ y el tercer cuartil de $20{,}25$ a $18{,}25$), con una
-cola larga de métodos muy complejos —hasta 228, varios de Knowage— que
+baja de $10{,}5$ a $8$ y el tercer cuartil de $21{,}25$ a $20{,}00$), con una
+cola larga de métodos muy complejos —hasta 257, varios de Knowage— que
 aparecen como valores atípicos según el criterio de Tukey. El histograma de
 $\Delta$ confirma la asimetría del efecto: el 50\,\% central de las reducciones
 se sitúa entre $-1$ y $-3$ (mediana $-2$), y la gran mayoría de los casos
@@ -135,10 +135,10 @@ $-14$.
   xtick={1,2}, xticklabels={Antes, Después},
   boxplot/draw direction=y, log ticks with fixed point,
 ]
-\addplot+[boxplot prepared={lower whisker=3, lower quartile=4, median=10.5, upper quartile=20.25, upper whisker=42}]
-  coordinates {(0,46)(0,52)(0,53)(0,57)(0,63)(0,63)(0,157)(0,165)(0,166)(0,166)(0,167)(0,183)(0,183)(0,228)};
-\addplot+[boxplot prepared={lower whisker=2, lower quartile=3, median=8, upper quartile=18.25, upper whisker=39}]
-  coordinates {(0,44)(0,48)(0,52)(0,57)(0,58)(0,150)(0,158)(0,159)(0,159)(0,160)(0,176)(0,176)(0,220)};
+\addplot+[boxplot prepared={lower whisker=3, lower quartile=4, median=10.5, upper quartile=21.25, upper whisker=46}]
+  coordinates {(0,52)(0,53)(0,57)(0,63)(0,63)(0,180)(0,187)(0,189)(0,189)(0,190)(0,205)(0,205)(0,257)};
+\addplot+[boxplot prepared={lower whisker=2, lower quartile=3, median=8, upper quartile=20, upper whisker=44}]
+  coordinates {(0,48)(0,52)(0,57)(0,58)(0,171)(0,178)(0,180)(0,180)(0,181)(0,196)(0,196)(0,247)};
 \end{axis}
 \end{tikzpicture}\hfill
 \begin{tikzpicture}
@@ -148,7 +148,7 @@ $-14$.
   boxplot/draw direction=y,
 ]
 \addplot+[boxplot prepared={lower whisker=-6, lower quartile=-3, median=-2, upper quartile=-1, upper whisker=-1}]
-  coordinates {(0,-14)(0,-9)(0,-8)(0,-8)(0,-8)(0,-7)(0,-7)(0,-7)(0,-7)(0,-7)(0,-7)(0,-7)};
+  coordinates {(0,-14)(0,-10)(0,-9)(0,-9)(0,-9)(0,-9)(0,-9)(0,-9)(0,-9)(0,-9)(0,-8)(0,-8)};
 \end{axis}
 \end{tikzpicture}
 \caption{Diagramas de caja (104 casos elegibles, CC proxy). Izquierda:
@@ -169,7 +169,7 @@ distribución de la reducción $\Delta$. Datos: \texttt{output/rq2-batch/}.}
   enlarge x limits=0.04,
 ]
 \addplot+[fill=blue!25] coordinates {
-  (-14,1)(-13,0)(-12,0)(-11,0)(-10,0)(-9,1)(-8,3)(-7,7)(-6,1)(-5,3)(-4,5)(-3,12)(-2,34)(-1,37)};
+  (-14,1)(-13,0)(-12,0)(-11,0)(-10,1)(-9,8)(-8,2)(-7,0)(-6,1)(-5,3)(-4,6)(-3,11)(-2,34)(-1,37)};
 \end{axis}
 \end{tikzpicture}
 \caption{Histograma de la reducción $\Delta$ sobre los 104 casos elegibles
@@ -197,8 +197,8 @@ casos está en \texttt{output/rq2-batch/rq2-summary.md} y en el Apéndice~E.}
 \textbf{caseId} & \textbf{Aplic.} & \textbf{CC antes} & \textbf{CC después} & \textbf{$\Delta$} \\
 \midrule
 \texttt{CYBERCAPTOR\_VERTEX\_GET\_RELATED\_MACHINE} & 1 & 52 & 38 & $-14$ \\
+\texttt{KNOWAGE\_DOCUMENT\_EXECUTION\_RESOURCE\_GET\dots} & 1 & 257 & 247 & $-10$ \\
 \texttt{ANT\_STRIP\_JAVA\_COMMENTS\_READ}           & 1 & 57 & 48 & $-9$ \\
-\texttt{KNOWAGE\_DOCUMENT\_EXECUTION\_RESOURCE\_GET\dots} & 1 & 228 & 220 & $-8$ \\
 \texttt{JACKSON\_CORE\dots SKIP\_COLON\_FAST}       & 2 & 36 & 28 & $-8$ \\
 \texttt{REAL\_COMMONS\_LANG\_CONTAINS\_NONE}        & 1 & 15 & 11 & $-4$ \\
 \texttt{PILOT\_VALID\_NESTED\_IN\_LOOP}             & 1 & 6  & 4  & $-2$ \\
@@ -210,8 +210,8 @@ casos está en \texttt{output/rq2-batch/rq2-summary.md} y en el Apéndice~E.}
 
 De esta observación se desprende un matiz honesto que conviene no maquillar: la
 transformación mejora la legibilidad local, pero no \emph{arregla} un método
-intrínsecamente complejo. Un método con complejidad 228 sigue siendo difícil
-después de bajar a 220. El valor de la refactorización está en eliminar
+intrínsecamente complejo. Un método con complejidad 257 sigue siendo difícil
+después de bajar a 247. El valor de la refactorización está en eliminar
 anidamiento accidental allí donde lo hay, no en rescatar diseños que arrastran
 problemas más profundos.
 
@@ -234,157 +234,159 @@ casos elegibles (CC proxy). Fuente: \texttt{output/rq2-batch/rq2-all-results.csv
 \textbf{Situación} & \textbf{Casos} \\
 \midrule
 Con issue antes ($\text{CC}>15$)                 & 41 \\
-\quad $\rightarrow$ issue \textbf{eliminado} ($\text{CC}\le 15$ después) & 6 \\
-\quad $\rightarrow$ issue persiste ($\text{CC}>15$ después)             & 35 \\
+\quad $\rightarrow$ issue \textbf{eliminado} ($\text{CC}\le 15$ después) & 5 \\
+\quad $\rightarrow$ issue persiste ($\text{CC}>15$ después)             & 36 \\
 Sin issue ya antes ($\text{CC}\le 15$)           & 63 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 De los 104 casos elegibles, 41 superaban el umbral antes de refactorizar. Tras
-aplicar la transformación, 6 de ellos bajan a 15 o menos —el issue desaparece
-sin tocar la semántica— y 35 siguen por encima. Los 63 restantes ya estaban en
+aplicar la transformación, 5 de ellos bajan a 15 o menos —el issue desaparece
+sin tocar la semántica— y 36 siguen por encima. Los 63 restantes ya estaban en
 zona sin issue. Dicho de otro modo, la refactorización elimina el issue de
-SonarQube en el 14{,}6\,\% de los métodos que lo tenían. La lectura honesta de
+SonarQube en el 12{,}2\,\% de los métodos que lo tenían. La lectura honesta de
 este dato encaja con la de RQ2: la combinación elimina el issue sobre todo
 cuando el método estaba \emph{cerca} del umbral; en los métodos muy complejos
-(los de Knowage, con CC entre 150 y 228) reduce la complejidad pero una sola
+(los de Knowage, con CC entre 180 y 257) reduce la complejidad pero una sola
 combinación no basta para cruzar el umbral. El efecto, por tanto, es local y
-acotado, pero tangible: seis issues de mantenibilidad menos a coste cero en
+acotado, pero tangible: cinco issues de mantenibilidad menos a coste cero en
 términos de comportamiento.
 
 \subsection{Validación de contraste con SonarQube}
 \label{sec:resultados-sonar}
-La métrica de RQ2 es un proxy, y por eso se contrasta con la implementación
-oficial de SonarQube sobre un subset de cuatro casos (\autoref{sec:sonar-val}).
-El artefacto \texttt{output/rq2-sonar-validation/rq2-sonar-validation.md}
-recoge una coincidencia exacta entre proxy y SonarQube en las ocho medidas del
-subset (cuatro \emph{before} y cuatro \emph{after}), con $\Sigma\Delta = -8$ en
-ambos.
+La métrica de RQ2 es un proxy, por lo que su validez de constructo se contrasta
+con la implementación oficial de SonarQube. A diferencia de versiones previas
+—limitadas a un subset de cuatro casos—, el contraste se ejecuta aquí sobre el
+\textbf{corpus completo}: para cada caso se materializan los métodos
+\emph{before} y \emph{after}, se analizan con SonarQube Community Build
+(versión \texttt{26.4.0.121862}) y se compara su complejidad cognitiva oficial
+con la del proxy. El procedimiento, reproducible en PowerShell, está en
+\texttt{docs/rq2-sonar-validation-fullcorpus.md} y los artefactos en
+\texttt{output/rq2-sonar-validation/fullcorpus/}
+(\texttt{comparison.md}, \texttt{metadata.json}).
 
-\pendienteverif{} \textbf{Este resultado no se da por confirmado.} Los
-artefactos del repositorio son contradictorios: mientras la tabla anterior y la
-cabecera del documento declaran una ejecución real completada, el fichero
-\texttt{metadata.json} anota expresamente que \emph{«no se han ejecutado
-escaneos reales de SonarQube en esta entrega»}, y la sección de trazabilidad
-del propio informe deja la versión exacta, las fechas y el \emph{commit hash}
-marcados como pendientes. Hasta que se ejecute la corrida real y se completen
-esos campos con valores independientes del proxy, esta validación se presenta
-como \textbf{provisional}. La incertidumbre afecta solo a este contraste; los
-resultados de RQ2 (\autoref{sec:resultados-rq2}) se sostienen sobre el proxy y
-son independientes de él.
+De los 126 casos, 122 son medibles por SonarQube y 4 no producen medida por
+ser fragmentos sin método analizable (complejidad nula). Sobre los 122 casos
+medidos, la coincidencia entre el proxy y SonarQube es \textbf{exacta en el
+100\,\%}, tanto en la complejidad \emph{before} como en la \emph{after}
+(122/122 en ambas). Una divergencia inicial, localizada en métodos con
+operadores ternarios profundamente anidados, se trazó a que el proxy no
+aplicaba el incremento de anidamiento del ternario; corregido ese punto
+(\autoref{sec:proxy}), la coincidencia pasó a ser total. La única limitación
+del modelo que el proxy no implementa —la detección de recursión— no llegó a
+producir divergencias en el corpus. Este resultado respalda con solidez el uso
+del proxy como medida de complejidad cognitiva en RQ2.
 
 \subsection{RQ3 — Refactorización por modelos de lenguaje}
 \label{sec:resultados-rq3}
-La campaña real (fase~9, modo \emph{live}) ejecutó las 300 invocaciones
-previstas —50 casos $\times$ 2 modelos $\times$ 3 intentos— sin ningún
-incidente técnico. El subconjunto de 50 casos (36 elegibles y 14 no elegibles)
-amplía sustancialmente la evaluación respecto a versiones anteriores del
-protocolo y permite analizar el comportamiento de los modelos no solo de forma
+La campaña real (modo \emph{live}) se ejecutó sobre el \textbf{corpus
+completo}: 126 casos (104 elegibles y 22 no elegibles) por 2 modelos y 3
+intentos. El análisis se realiza sobre las invocaciones que obtuvieron
+respuesta del modelo —317 de \texttt{gpt-4o} y 310 de \texttt{gpt-4.1}—; un
+conjunto reducido de invocaciones sobre los métodos más voluminosos no llegó a
+completarse por límite de tasa de la API y queda fuera del
+análisis.\footnote{Se excluyen 61 invocaciones de \texttt{gpt-4o} y 68 de
+\texttt{gpt-4.1} (error HTTP~429 de la API de OpenAI por tokens por minuto), de
+naturaleza infraestructural y no atribuibles a la capacidad del modelo.} Esta
+cobertura permite analizar el comportamiento de los modelos no solo de forma
 agregada, sino separando los casos que \emph{deben} transformarse de los que
-\emph{deben} rechazarse. La \autoref{tab:rq3-modelo} y la
-\autoref{fig:rq3-verdictos} resumen el desempeño por modelo.
+\emph{deben} rechazarse (\autoref{tab:rq3-modelo}, \autoref{fig:rq3-verdictos}).
 
 \begin{table}[ht]
 \centering
-\caption{Resultados de RQ3 por modelo (150 invocaciones por modelo). Tasa de
-éxito = veredictos \texttt{SUCCESS}; coincidencia con \emph{baseline} =
-salida idéntica al baseline determinista; consistencia = pares caso--modelo
-cuyos tres intentos coinciden. Fuente:
-\texttt{output/rq3-campaign-limited/rq3-aggregated.md}.}
+\caption{Resultados de RQ3 por modelo, sobre invocaciones con respuesta
+(317 para \texttt{gpt-4o} y 310 para \texttt{gpt-4.1}). INC.\ = incorrecto;
+INV.\ = salida inválida; ABS.\ = abstención; PAR.\ = parcial. Fuente:
+\texttt{output/rq3-campaign-real-phase9/}.}
 \label{tab:rq3-modelo}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-\textbf{Modelo} & \textbf{ÉXITO} & \textbf{INCORR.} & \textbf{ABSTEN.} & \textbf{Tasa éxito} & \textbf{Coinc.\ baseline} & \textbf{Consist.} \\
+\textbf{Modelo} & \textbf{ÉXITO} & \textbf{INC.} & \textbf{INV.} & \textbf{ABS.} & \textbf{PAR.} & \textbf{Tasa éxito} \\
 \midrule
-\texttt{gpt-4o}  & 122 & 0 & 28 & 81{,}3\,\% & 78{,}7\,\% & 96{,}0\,\% \\
-\texttt{gpt-4.1} & 145 & 5 & 0  & 96{,}7\,\% & 94{,}0\,\% & 98{,}0\,\% \\
+\texttt{gpt-4o}  & 228 & 1  & 0  & 86 & 2 & 71{,}9\,\% \\
+\texttt{gpt-4.1} & 280 & 11 & 16 & 3  & 0 & 90{,}3\,\% \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+La tasa de éxito es del 71{,}9\,\% en \texttt{gpt-4o} y del 90{,}3\,\% en
+\texttt{gpt-4.1}. La consistencia a temperatura cero es alta en ambos
+(93{,}8\,\% y 98{,}1\,\% de pares caso--modelo con los intentos respondidos
+idénticos), lo que indica que los aciertos y los fallos son criterios estables
+del modelo y no ruido de muestreo.
 
 \begin{figure}[ht]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  ybar stacked, width=0.55\linewidth, height=6cm,
+  ybar stacked, width=0.56\linewidth, height=6cm,
   symbolic x coords={gpt-4o,gpt-4.1}, xtick=data,
-  ylabel={Invocaciones (de 150)}, ymin=0, ymax=160,
-  legend style={at={(0.5,-0.18)}, anchor=north, legend columns=3, font=\small},
+  ylabel={Invocaciones con respuesta}, ymin=0, ymax=340,
+  legend style={at={(0.5,-0.20)}, anchor=north, legend columns=3, font=\scriptsize},
 ]
-\addplot+[fill=green!35] coordinates {(gpt-4o,122)(gpt-4.1,145)};
-\addplot+[fill=orange!40] coordinates {(gpt-4o,28)(gpt-4.1,0)};
-\addplot+[fill=red!45]   coordinates {(gpt-4o,0)(gpt-4.1,5)};
-\legend{ÉXITO, ABSTENCIÓN, INCORRECTO}
+\addplot+[fill=green!35] coordinates {(gpt-4o,228)(gpt-4.1,280)};
+\addplot+[fill=orange!40] coordinates {(gpt-4o,86)(gpt-4.1,3)};
+\addplot+[fill=red!45]   coordinates {(gpt-4o,3)(gpt-4.1,27)};
+\legend{ÉXITO, ABSTENCIÓN, Errores de modelo}
 \end{axis}
 \end{tikzpicture}\hfill
 \begin{tikzpicture}
 \begin{axis}[
   ybar, width=0.40\linewidth, height=6cm,
   symbolic x coords={Elegibles,No elegibles}, xtick=data,
-  ylabel={Tasa de éxito (\%)}, ymin=0, ymax=109,
+  ylabel={Éxito sobre respondidas (\%)}, ymin=0, ymax=109,
   nodes near coords, every node near coord/.append style={font=\scriptsize},
-  legend style={at={(0.5,-0.18)}, anchor=north, legend columns=2, font=\small},
+  legend style={at={(0.5,-0.20)}, anchor=north, legend columns=2, font=\small},
   enlarge x limits=0.4,
 ]
-\addplot+[fill=blue!30]  coordinates {(Elegibles,74.1)(No elegibles,100)};
-\addplot+[fill=purple!30] coordinates {(Elegibles,97.2)(No elegibles,95.2)};
+\addplot+[fill=blue!30]  coordinates {(Elegibles,64.7)(No elegibles,100)};
+\addplot+[fill=purple!30] coordinates {(Elegibles,88.3)(No elegibles,98.4)};
 \legend{gpt-4o, gpt-4.1}
 \end{axis}
 \end{tikzpicture}
-\caption{RQ3 (300 invocaciones). Izquierda: reparto de veredictos por modelo.
-Derecha: tasa de éxito separando casos elegibles (deben transformarse) de no
-elegibles (deben rechazarse). Datos:
-\texttt{output/rq3-campaign-limited/rq3-summary.csv}.}
+\caption{RQ3 sobre el corpus completo (invocaciones con respuesta). Izquierda:
+reparto de veredictos por modelo (los «errores de modelo» agrupan incorrecto,
+salida inválida y parcial). Derecha: tasa de éxito separando casos elegibles de
+no elegibles. Datos:
+\texttt{output/rq3-campaign-real-phase9/rq3-summary.csv}.}
 \label{fig:rq3-verdictos}
 \end{figure}
 
 La fotografía agregada esconde lo más interesante, que aparece al separar los
-casos por elegibilidad (\autoref{tab:rq3-elegibilidad}). Los dos modelos
-exhiben perfiles opuestos ante la decisión de \emph{si transformar}:
+casos por elegibilidad (\autoref{tab:rq3-elegibilidad}, sobre invocaciones con
+respuesta). Los dos modelos exhiben perfiles opuestos ante la decisión de
+\emph{si transformar}:
 
 \begin{table}[ht]
 \centering
-\caption{Tasa de éxito de RQ3 por categoría de elegibilidad (intentos
-agregados; 36 casos elegibles $\times 3$ y 14 no elegibles $\times 3$ por
-modelo). Fuente: \texttt{output/rq3-campaign-limited/rq3-summary.csv}.}
+\caption{Tasa de éxito de RQ3 por categoría de elegibilidad, sobre invocaciones
+con respuesta (se excluyen los errores técnicos de cuota). Fuente:
+\texttt{output/rq3-campaign-real-phase9/rq3-summary.csv}.}
 \label{tab:rq3-elegibilidad}
 \begin{tabular}{@{}lrr@{}}
 \toprule
-\textbf{Modelo} & \textbf{Elegibles ($n=108$)} & \textbf{No elegibles ($n=42$)} \\
+\textbf{Modelo} & \textbf{Elegibles} & \textbf{No elegibles} \\
 \midrule
-\texttt{gpt-4o}  & 80/108 \;(74{,}1\,\%)  & 42/42 \;(100{,}0\,\%) \\
-\texttt{gpt-4.1} & 105/108 \;(97{,}2\,\%) & 40/42 \;(95{,}2\,\%) \\
+\texttt{gpt-4o}  & 163/252 \;(64{,}7\,\%) & 65/65 \;(100{,}0\,\%) \\
+\texttt{gpt-4.1} & 218/247 \;(88{,}3\,\%) & 62/63 \;(98{,}4\,\%) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\texttt{gpt-4o} es \textbf{conservador}: no produce ni una sola transformación
-incorrecta (0 \texttt{INCORRECT}) y rechaza correctamente los 42 intentos sobre
-casos no elegibles (100\,\%); pero esa cautela tiene un coste, porque se
-abstiene también en casos que sí debían transformarse, y su acierto sobre los
-elegibles cae al 74{,}1\,\%. Sus 28 abstenciones recaen, todas, sobre casos
-elegibles. \texttt{gpt-4.1} muestra el perfil \textbf{opuesto}: aplica la
-transformación con acierto en el 97{,}2\,\% de los elegibles, pero a cambio se
-equivoca en 5 ocasiones (las únicas \texttt{INCORRECT} de toda la campaña),
-algunas de ellas transformando casos que debían rechazarse (95{,}2\,\% en no
-elegibles). En términos clásicos, \texttt{gpt-4o} prioriza la precisión a costa
-de la cobertura y \texttt{gpt-4.1} la cobertura a costa de algún falso
+\texttt{gpt-4o} es \textbf{conservador}: rechaza correctamente el 100\,\% de los
+intentos sobre casos no elegibles y apenas produce transformaciones incorrectas
+(una en toda la campaña); pero esa cautela tiene un coste, porque se abstiene
+también en casos que sí debían transformarse, y su acierto sobre los elegibles
+baja al 64{,}7\,\%. \texttt{gpt-4.1} muestra el perfil \textbf{opuesto}: acierta
+en el 88{,}3\,\% de los elegibles, pero a cambio comete 11 transformaciones
+incorrectas y 16 salidas con formato inválido, y desciende al 98{,}4\,\% en los
+no elegibles. En términos clásicos, \texttt{gpt-4o} prioriza la precisión a
+costa de la cobertura y \texttt{gpt-4.1} la cobertura a costa de algún falso
 positivo. El \emph{baseline} determinista, por construcción, no incurre en
-ninguno de los dos errores.
-
-La consistencia a temperatura cero es alta en ambos modelos (96{,}0\,\% y
-98{,}0\,\% de los pares caso--modelo con los tres intentos idénticos), lo que
-indica que los aciertos y los fallos descritos son criterios estables de cada
-modelo y no ruido de muestreo. En cuanto al coste de invocación, el tiempo de
-respuesta por llamada tuvo una mediana de 1066\,ms y una media de 1649\,ms, en
-un rango de 436 a 9350\,ms. Un caso resulta especialmente ilustrativo:
-\texttt{ANT\_U\_R\_L\_RESOURCE\_GET\_U\_R\_L}, elegible, en el que \emph{ambos}
-modelos fallaron en los tres intentos —\texttt{gpt-4o} por abstención y
-\texttt{gpt-4.1} por transformación incorrecta—, lo que muestra que la
-dificultad no siempre está en la elegibilidad nominal del caso. El detalle
-caso por caso se conserva en
-\texttt{output/rq3-campaign-limited/rq3-summary.csv}.
+ninguno de los dos errores y por eso actúa como referencia fiable precisamente
+en esa frontera. El detalle por caso e invocación se conserva en
+\texttt{output/rq3-campaign-real-phase9/rq3-summary.csv}.
 
 \subsection{Validación humana del pipeline automático}
 \label{sec:validacion-humana}
@@ -407,24 +409,39 @@ precondiciones y su motivo de descarte; (iii)~complejidad cognitiva
 recogida está en \texttt{output/rq2-human-validation/validation-sample.csv} y
 el procedimiento completo en \texttt{docs/human-validation-protocol.md}.
 
-\paragraph{Resultados.} \pendienteverif{} Pendiente de completar la inspección
-manual. La \autoref{tab:validacion-humana} recoge la plantilla; el porcentaje
-de acierto por etapa, con su intervalo de confianza de Wilson al 95\,\%, se
-rellenará al cerrar la revisión.
+\paragraph{Resultados.} La inspección manual arrojó \textbf{acuerdo total con
+el pipeline en las cuatro etapas} (30/30 en cada una; \autoref{tab:validacion-humana}).
+El intervalo de confianza de Wilson al 95\,\% sitúa el suelo de confianza del
+pipeline en el 88{,}6\,\% para esta muestra. Todas las complejidades cognitivas
+hasta 57 se recomputaron íntegramente a mano y coincidieron de forma exacta; en
+los dos métodos de Knowage con CC superior a 180 no se recalculó el valor
+absoluto por inviabilidad —se validó la estructura del patrón y la consistencia
+del $\Delta$—, apoyándose para el valor absoluto en el contraste con SonarQube
+(\autoref{sec:resultados-sonar}).
+
+Conviene una lectura honesta de ese 100\,\%: mide la \emph{fidelidad de la
+herramienta a sus propias reglas}, no la optimalidad de dichas reglas. De hecho,
+la revisión confirmó varios \emph{falsos negativos conservadores} —condiciones
+con llamadas a método sin efectos colaterales reales (p.\,ej.\
+\lstinline|s.isEmpty()| o \lstinline|map.containsKey()|) que P5 rechaza— que son
+correctos según la política del prototipo, pero combinables en la práctica. La
+precisión es, por tanto, alta a costa de la exhaustividad
+(\autoref{cap:amenazas}).
 
 \begin{table}[ht]
 \centering
-\caption{Validación humana del pipeline (muestra $N=30$, semilla 42).
-Plantilla a completar tras la inspección manual.}
+\caption{Validación humana del pipeline (muestra $N=30$, semilla 42):
+acuerdo entre el veredicto automático y la revisión manual por etapa.
+Fuente: \texttt{output/rq2-human-validation/validation-sample.csv}.}
 \label{tab:validacion-humana}
 \begin{tabular}{@{}lccc@{}}
 \toprule
 \textbf{Etapa} & \textbf{Aciertos/$N$} & \textbf{\% acierto} & \textbf{IC 95\,\% (Wilson)} \\
 \midrule
-Detección de \lstinline|if| anidados      & --- & --- & --- \\
-Precondiciones P1--P5 (y motivo)          & --- & --- & --- \\
-Complejidad cognitiva \emph{before}       & --- & --- & --- \\
-Complejidad cognitiva \emph{after}        & --- & --- & --- \\
+Detección de \lstinline|if| anidados      & 30/30 & 100{,}0\,\% & [88{,}6\,\%;\ 100\,\%] \\
+Precondiciones P1--P5 (y motivo)          & 30/30 & 100{,}0\,\% & [88{,}6\,\%;\ 100\,\%] \\
+Complejidad cognitiva \emph{before}       & 30/30 & 100{,}0\,\% & [88{,}6\,\%;\ 100\,\%] \\
+Complejidad cognitiva \emph{after}        & 30/30 & 100{,}0\,\% & [88{,}6\,\%;\ 100\,\%] \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -435,8 +452,8 @@ combinación es segura y muestra que el principal obstáculo en código real es 
 posible efecto colateral en la condición, no el \lstinline|else|. RQ2 confirma
 que, donde es segura, la combinación reduce de forma sistemática la complejidad
 cognitiva —los 104 casos elegibles mejoran—, con un efecto modesto pero
-consistente y un puñado de issues de SonarQube eliminados. Y RQ3, ya sobre 50
-casos, aporta el matiz más fino para responder a
+consistente y un puñado de issues de SonarQube eliminados. Y RQ3, ya sobre el
+corpus completo, aporta el matiz más fino para responder a
 \emph{«\textquestiondown{}pueden los LLM hacerlo de forma correcta y
 automática?»}: los modelos saben aplicar la transformación cuando procede, pero
 difieren en la frontera difícil, que no es transformar, sino \emph{abstenerse}
@@ -444,3 +461,39 @@ cuando una precondición lo prohíbe. Un modelo peca de conservador y otro de
 confiado, y solo el \emph{baseline} determinista acierta en ambos extremos por
 construcción. Es ahí donde el prototipo aporta su mayor valor: como referencia
 fiable frente a la que medir, precisamente, esa frontera.
+
+\paragraph{Coste de cada enfoque.} A la diferencia de corrección se suma una
+diferencia de coste de varios órdenes de magnitud. El prototipo determinista
+procesó los 126 casos del corpus en 0{,}26\,s —del orden de 2\,ms por caso—,
+de forma local, reproducible y sin dependencias externas. Cada invocación a un
+modelo de lenguaje, en cambio, tuvo una latencia mediana de 992\,ms
+(\texttt{gpt-4o}) y 1378\,ms (\texttt{gpt-4.1}) —entre dos y tres órdenes de
+magnitud más lenta—, conlleva un coste económico por tokens, exige conexión de
+red y está sujeta a límites de cuota de la API. La
+\autoref{tab:comparativa-coste} resume el contraste entre los tres enfoques.
+
+\begin{table}[ht]
+\centering
+\caption{Comparación de los tres enfoques sobre la misma tarea. Las tasas de
+éxito y latencias de los modelos se miden sobre invocaciones con respuesta; la
+latencia del prototipo, sobre el lote completo de 126 casos.}
+\label{tab:comparativa-coste}
+\begin{tabular}{@{}p{2.9cm}p{3.1cm}p{2.7cm}p{2.7cm}@{}}
+\toprule
+\textbf{Dimensión} & \textbf{Prototipo determinista} & \textbf{\texttt{gpt-4o}} & \textbf{\texttt{gpt-4.1}} \\
+\midrule
+Corrección (alcance soportado) & Correcta por construcción & 71{,}9\,\% de éxito & 90{,}3\,\% de éxito \\
+Perfil de error & Ninguno & Sobre-abstención (recall bajo) & Incorrectos o inválidos ocasionales \\
+Latencia por caso & $\sim$2\,ms (126 casos en 0{,}26\,s) & Mediana 992\,ms & Mediana 1378\,ms \\
+Determinismo & Total & Residual (consist.\ 93{,}8\,\%) & Residual (consist.\ 98{,}1\,\%) \\
+Coste e infraestructura & Local, gratuito, sin red & API de pago, red, sujeta a cuota & API de pago, red, sujeta a cuota \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+En conjunto, el prototipo no solo es más fiable dentro de su alcance, sino
+órdenes de magnitud más rápido, barato y predecible. El valor de los modelos de
+lenguaje no reside, por tanto, en sustituir a un procedimiento determinista en
+una tarea tan acotada como esta, sino en su flexibilidad ante variantes que
+caen fuera del alcance formalizado —a costa de una verificación que el
+\emph{baseline} sí garantiza.

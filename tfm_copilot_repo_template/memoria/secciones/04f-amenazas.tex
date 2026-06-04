@@ -1,18 +1,23 @@
 % =====================================================================
-%  4.7 Amenazas a la validez.  ESTADO: andamiaje.
-%  Sección sensible: redactar tras cerrar §4.6 (resultados).
+%  4.7 Amenazas a la validez.  ESTADO: REDACTADO (tras consolidar §4.6).
 % =====================================================================
 \section{Amenazas a la validez}
 \label{cap:amenazas}
 
-\pendienteredaccion{} Redactar tras consolidar los resultados. Estructura
-prevista (por tipo de validez):
+Esta sección analiza las amenazas a la validez del estudio, organizadas por
+tipo —constructo, interna, externa y de conclusión— y cerrando con las
+mitigaciones implementadas.
 
 \subsection{Validez de constructo.}
-Proxy de complejidad cognitiva $\neq$ SonarQube oficial; validación
-cruzada limitada a un subset (\autoref{sec:sonar-val}). El oráculo de RQ3
-se basa en la CC y en la comparación con el baseline determinista, no en
-revisión humana ni en ejecución de los tests del proyecto original.
+La métrica de RQ2 es un proxy del modelo de SonarSource, no la implementación
+oficial. No obstante, esta amenaza está fuertemente mitigada: el contraste
+sobre el corpus completo (\autoref{sec:resultados-sonar}) arroja coincidencia
+exacta con SonarQube en el 100\,\% de los casos medidos (122/122), tanto antes
+como después de refactorizar. La única regla del modelo no implementada
+—detección de recursión— no produjo divergencias en el corpus, pero sigue
+siendo una limitación teórica del proxy. Por otra parte, el oráculo de RQ3 se
+basa en la CC y en la comparación con el baseline determinista, no en revisión
+humana ni en ejecución de los tests del proyecto original.
 
 \subsection{Validez interna.}
 Determinismo del transformador validado por tests; los LLMs presentan
@@ -28,23 +33,25 @@ estadísticamente representativa del código Java «en general»: es una
 selección). A ello se añade una limitación de reproducibilidad: parte de
 los proyectos fuente no tiene versión ni \emph{commit} anclados y el corpus
 mezcla versiones de un mismo proyecto (\autoref{sec:corpus}), por lo que
-reconstruirlo idéntico exigiría reanclar dichas versiones. El subset de
-RQ3 ($n=50$) cubre los ejes de variación del corpus, pero sigue siendo una
-muestra intencional y no una muestra aleatoria representativa del código Java
-en general. Además, la comparativa de RQ3 se restringe a dos modelos del mismo
-proveedor (OpenAI):
-\hipotesis{} su generalización a otras familias de modelos está por
-comprobar. Por último, el patrón objetivo se limita al caso base sin
+reconstruirlo idéntico exigiría reanclar dichas versiones. La evaluación de
+RQ3 cubre el corpus consolidado completo (126 casos), pero ese corpus es,
+igualmente, una muestra intencional de métodos con condicionales anidados y no
+una muestra aleatoria representativa del código Java en general. Además, la
+comparativa de RQ3 se restringe a dos modelos del mismo proveedor (OpenAI),
+cuya generalización a otras familias de modelos está por comprobar
+(\autoref{sec:exp-rq3}). Por último, el patrón objetivo se limita al caso base sin
 \lstinline|else|/\lstinline|else if|, por lo que los resultados no son
 extrapolables a refactorizaciones más complejas.
 
 \subsection{Validez de conclusión.}
-Aunque el subset de RQ3 se ha ampliado a $n=50$ casos, sigue sin sostener
-inferencia estadística fuerte sobre poblaciones de código; métrica única (CC)
-que puede sesgar la valoración global de calidad.
+Aunque RQ3 cubre el corpus completo (126 casos), este sigue sin sostener
+inferencia estadística fuerte sobre poblaciones de código; el análisis de
+capacidad de los modelos se realiza, además, sobre las invocaciones que
+obtuvieron respuesta (\autoref{sec:resultados-rq3}). Por último, la métrica
+única (CC) puede sesgar la valoración global de calidad.
 
 \subsection{Mitigaciones implementadas.}
 Congelación del protocolo (\texttt{LlmExperimentProtocol}); trazabilidad
 completa (evidencias JSON/CSV/MD por invocación); guarda de elegibilidad
-v1.1 en el oráculo. \pendientemetodo{} Decidir si se amplía a otro
-proveedor de LLM o se documenta la restricción de forma definitiva.
+v1.1 en el oráculo. La restricción a un único proveedor de LLM queda
+justificada en la \autoref{sec:exp-rq3}.
