@@ -1,19 +1,15 @@
-% =====================================================================
-%  4.3 Arquitectura del prototipo.  ESTADO: REDACTADO (estable).
-%  Migrado de memoria/cap4-arquitectura.md. La lista de clases coincide
-%  con src/main/java/es/tfm/refactoring/.
-% =====================================================================
+
 \section{Arquitectura del prototipo}
 \label{sec:arquitectura}
 
 \subsection{Visión general}
 La organización del prototipo en paquetes responde a una idea sencilla:
-cada paquete asume una responsabilidad y solo una. La base son las tres
+cada paquete asume una responsabilidad y solo una. Partimos de las tres
 responsabilidades clásicas de una herramienta de análisis y
-refactorización —detección, transformación y medición—, ampliadas
+refactorización, detección, transformación y medición; y las ampliamos
 con dos piezas propias de este trabajo: un pipeline experimental que
 orquesta los lotes y un subsistema dedicado a la evaluación de los LLMs
-(RQ3). Esta separación no es estética; es lo que permite cambiar una
+(RQ3). Esta separación no es estética; es lo que nos permite cambiar una
 parte sin arrastrar a las demás y, sobre todo, razonar sobre cada etapa de
 forma aislada. Todas las operaciones sobre código se apoyan en el AST que
 proporciona la biblioteca \textbf{JavaParser}, declarada como dependencia

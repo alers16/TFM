@@ -1,8 +1,4 @@
-% =====================================================================
-%  4.5 Diseño experimental.  ESTADO: REDACTADO (estable).
-%  Migrado de memoria/cap4-experimento.md. Conserva los marcadores de
-%  pendiente sobre SonarQube y procedencia del corpus.
-% =====================================================================
+
 \section{Diseño experimental}
 \label{sec:experimento}
 
@@ -66,6 +62,16 @@ Los proyectos fuente proceden de dos orígenes principales:
     \texttt{aioteslake} no aportaron casos.
 \end{enumerate}
 
+\paragraph{Nota de alcance respecto al anteproyecto.} El anteproyecto aprobado
+preveía partir de los \emph{~}1.000 métodos con $\text{CC}>15$ del repositorio
+de Saborido et al., sin acotar el tipo de transformación. Al concretar el
+alcance en la combinación de condicionales anidados, un patrón específico y
+verificable, no la reducción de CC en general, el corpus resultante quedó en
+126 casos: los métodos que contienen exactamente este patrón en los proyectos
+fuente, más los 8 casos sintéticos del piloto. El resto de los métodos con
+$\text{CC}>15$ de esos proyectos pertenece a familias de transformación
+distintas (principalmente extracción de método) que quedan fuera del alcance
+declarado en §\ref{sec:alcance}.
 
 
 \paragraph{Cobertura de RQ3.} La evaluación de RQ3 se ejecuta sobre el
@@ -168,7 +174,7 @@ mismo proveedor —\texttt{gpt-4o} y \texttt{gpt-4.1}— mantiene constantes la
 API, el tokenizador y la vía de acceso, de modo que las diferencias observadas
 se atribuyen al modelo y no al entorno. Segunda, de \emph{alcance y recursos}:
 el trabajo dispone de una única clave de API financiada y de un presupuesto
-temporal acotado (12~ECTS), lo que hace inviable una campaña multiproveedor sin
+temporal acotado, lo que hace inviable una campaña multiproveedor sin
 comprometer la profundidad del resto del estudio. Tercera, de
 \emph{representatividad}: los modelos elegidos pertenecen a la familia de
 propósito general de referencia en generación de código (linaje de Codex,
@@ -180,7 +186,7 @@ configuración, no de arquitectura.
 
 El procedimiento por caso es: cargar
 caso y baseline; construir el prompt \texttt{v1.0}; invocar el modelo;
-almacenar la respuesta cruda (\texttt{rq3-full-evidence.json}); aplicar el
+almacenar la respuesta cruda; aplicar el
 oráculo (\autoref{sec:oraculo}); registrar \texttt{LlmEvaluationResult}; y
 repetir para cada intento y modelo. La parte \textbf{congelada} incluye
 modelos, temperatura, intentos, versión del prompt, oráculo y composición
@@ -188,10 +194,8 @@ del subset; el provider es intercambiable, siendo \lstinline|live| el modo
 oficial.
 
 \subsection{Reproducibilidad}
-Las garantías se sostienen sobre elementos verificables: configuración
-congelada impresa en \texttt{rq3-run-metadata.json}; exigencia explícita
-de \lstinline|OPENAI_API_KEY| en modo \lstinline|live| (cuya ausencia
-genera un incidente registrado, no un fallo silencioso); versionado del
+Las garantías se sostienen sobre elementos verificables; exigencia explícita
+de \lstinline|OPENAI_API_KEY| en modo \lstinline|live|; versionado del
 prompt propagado a cada artefacto; versiones fijadas en \texttt{pom.xml}
 (Java 17, JavaParser 3.26.4, JUnit 5.11.4, Gson 2.11.0); y artefactos
-persistentes auditables bajo \texttt{output/} sin ejecutar el código.
+persistentes auditables sin ejecutar el código.

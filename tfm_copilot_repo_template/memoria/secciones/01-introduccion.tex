@@ -16,35 +16,34 @@ práctico de calidad del software.
 
 Para señalar de forma operativa ese código difícil de mantener, las
 herramientas de análisis estático utilizan la \emph{complejidad
-cognitiva}~\cite{10.1145/3194164.3194186}, una métrica definida por SonarSource
----la empresa tras SonarQube, hoy un estándar de facto del análisis de calidad
-del código--- que estima a nivel de método el esfuerzo necesario para
-comprenderlo y que, a diferencia de métricas más clásicas, penaliza
-especialmente el anidamiento de estructuras de control. SonarSource recomienda,
-de hecho, que el valor de esta métrica no supere 15 en ningún método. Sus fundamentos, su validación empírica y su relación con otras
-métricas se desarrollan en el \autoref{cap:antecedentes}; aquí basta con
-retener dos ideas: que existe una medida ampliamente adoptada del coste de
-comprender el código y que el anidamiento es uno de los factores que más la
-penalizan.
+cognitiva}~\cite{10.1145/3194164.3194186}, una métrica definida por
+SonarSource que estima, a nivel de método, el esfuerzo necesario para
+comprender el código y que, a diferencia de métricas más clásicas, penaliza
+de forma especial el anidamiento de estructuras de control. Su presencia en
+herramientas como SonarQube ha contribuido a consolidarla como un criterio
+habitual para identificar métodos difíciles de mantener. Además, sus
+fundamentos, su validación empírica y su relación con otras métricas se
+desarrollan en el \autoref{cap:antecedentes}; aquí basta con retener dos
+ideas: que existe una medida ampliamente adoptada del coste de comprender el
+código y que el anidamiento es uno de los factores que más la penalizan.
 
-Ese mecanismo de penalización convierte a los condicionales anidados en uno de
-los principales contribuyentes a la complejidad cognitiva de un método, y se
-trata además de un patrón frecuente en código real. El escaneo de proyectos
-Java de código abierto realizado en este trabajo
-localizó numerosas instancias del patrón objetivo, lo que confirma que no se
-trata de una construcción marginal. La técnica habitual para reducir la
-complejidad cognitiva es la extracción de
+Ese mecanismo convierte a los condicionales anidados en uno de los principales
+contribuyentes a la complejidad cognitiva de un método, y se trata además de
+un patrón frecuente en código real. El escaneo de proyectos Java de código
+abierto realizado en este trabajo localizó numerosas instancias del patrón
+objetivo, lo que confirma que no se trata de una construcción marginal. La
+técnica más habitual para reducir complejidad cognitiva es la extracción de
 método~\cite{10.1109/ACCESS.2022.3144743}, que descompone un método en otros
-más pequeños; frente a ella, este trabajo parte de una observación más
-específica del grupo de investigación en el que se enmarca: ciertos
-condicionales anidados pueden simplificarse de forma más directa,
-combinándolos en uno solo mediante la fusión de sus expresiones lógicas. En
-muchos de esos casos, dos condicionales anidados sin cláusula \lstinline|else|
-equivalen a una única condición conjuntiva. Combinarlos reduce la complejidad cognitiva sin alterar
-el comportamiento del programa. La dificultad no está en la idea, sino en
-decidir \emph{con garantías} cuándo esa combinación es segura, ya que la
-presencia de un \lstinline|else|, de efectos colaterales en las condiciones o
-de cambios en la semántica de cortocircuito puede invalidarla.
+más pequeños. Frente a ello, este trabajo parte de una observación más
+específica: ciertos condicionales anidados pueden simplificarse de forma más
+directa, combinándolos en una sola condición mediante la fusión de sus
+expresiones lógicas. En muchos de esos casos, dos condicionales anidados sin
+cláusula \lstinline|else| equivalen a una única condición conjuntiva.
+Combinarlos reduce la complejidad cognitiva sin alterar el comportamiento del
+programa. La dificultad no está en la idea, sino en decidir \emph{con
+garantías} cuándo esa combinación es segura, ya que la presencia de un
+\lstinline|else|, de efectos colaterales en las condiciones o de cambios en
+la semántica de cortocircuito puede invalidarla.
 
 A esta motivación se añade un tercer factor de actualidad. Los grandes
 modelos de lenguaje se han incorporado al desarrollo de software y ya se
@@ -59,11 +58,14 @@ delicada, y la aparición de los modelos de lenguaje como agentes de
 refactorización--- es la que motiva este trabajo y da sentido a sus tres
 preguntas de investigación.
 
+\section{Problema abordado}
+\label{sec:problema-intro}
+
 Este trabajo estudia la combinación segura de sentencias condicionales
 anidadas en Java, con especial atención al patrón canónico
 \lstinline|if (A) { if (B) { S } }| $\rightarrow$ \lstinline|if (A && B) { S }|.
 
-La cuestión central no es solo si la transformación reduce la complejidad
+La cuestión central no es solo si esta transformación reduce la complejidad
 cognitiva, sino también en qué condiciones puede aplicarse sin alterar el
 comportamiento observable del programa. A partir de este problema, el trabajo
 plantea un enfoque determinista basado en precondiciones explícitas y lo
@@ -76,28 +78,30 @@ La descripción detallada del problema se desarrolla en el
 
 \subsection*{Objetivo general}
 
-Diseñar, implementar y evaluar un enfoque para detectar y refactorizar de
-forma automática sentencias condicionales anidadas en Java, con el fin de
-reducir su complejidad cognitiva preservando el comportamiento observable del
-código. Como parte de la evaluación, el enfoque se contrasta con las
-refactorizaciones generadas por grandes modelos de lenguaje bajo un protocolo
-experimental controlado.
+El objetivo general de este trabajo es diseñar, implementar y evaluar un enfoque para detectar y refactorizar de
+forma automática sentencias condicionales anidadas en Java, con el objetivo
+de reducir su complejidad cognitiva preservando, cuando corresponda, el
+comportamiento observable del código. Como parte de esta evaluación, el
+enfoque se contrasta con refactorizaciones generadas por grandes modelos de
+lenguaje bajo un protocolo experimental controlado.
 
 \subsection*{Objetivos específicos}
 
 \begin{enumerate}
   \item Identificar y formalizar los casos en los que es posible combinar
   condicionales anidados de forma segura, documentando las precondiciones de
-  aplicabilidad y el resultado de la transformación~(RQ1).
+  aplicabilidad y el resultado de la transformación.
+
   \item Diseñar e implementar un prototipo determinista que detecte dichas
   oportunidades sobre el árbol de sintaxis abstracta (AST) y aplique la
-  transformación, sirviendo de artefacto y de \emph{baseline} verificable para
-  el resto de objetivos.
+  transformación correspondiente.
+
   \item Medir el impacto de las refactorizaciones sobre la complejidad
-  cognitiva mediante una métrica definida y reproducible~(RQ2).
+  cognitiva mediante una métrica definida y reproducible.
+
   \item Comparar las refactorizaciones del prototipo con las producidas por
   grandes modelos de lenguaje, bajo un protocolo controlado, en términos de
-  corrección, completitud y calidad~(RQ3).
+  corrección, completitud y calidad de la solución generada.
 \end{enumerate}
 
 \section{Preguntas de investigación}

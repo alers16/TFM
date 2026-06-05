@@ -1,44 +1,40 @@
-% =====================================================================
-%  Capítulo 3. Descripción del problema  (Bloque UMA obligatorio)
-%  ESTADO: REDACTADO. La guía UMA pide aquí una descripción clara y
-%  precisa del problema (o familia de problemas). La operacionalización,
-%  las hipótesis y los riesgos se tratan en Metodología y en Amenazas.
-% =====================================================================
 \chapter{Descripción del problema}
 \label{cap:problema}
 
-Este capítulo describe de forma precisa el problema que aborda el trabajo.
-Primero se formula el problema y se fija el patrón objetivo de transformación;
-después se define con exactitud qué se entiende por condicional anidada
-\emph{combinable} y se muestran casos que no lo son; por último, se sitúa el
-patrón dentro de una familia más amplia de problemas y se delimita el alcance.
+Este capítulo delimita el problema que aborda el trabajo. Primero se formula
+el problema y se fija el patrón objetivo de transformación; después se define
+qué se entiende exactamente por condicional anidada \emph{combinable} y se
+muestran casos próximos que no lo son; por último, se sitúa el patrón dentro
+de una familia más amplia de problemas y se acota el alcance del prototipo.
 La metodología, la operacionalización de las preguntas de investigación y las
-hipótesis de trabajo se tratan en el \autoref{cap:metodologia}.
+hipótesis de trabajo se desarrollan en el \autoref{cap:metodologia}.
 
 \section{Formulación del problema}
 \label{sec:formulacion}
-Los condicionales anidados son una de las construcciones que más
-contribuyen a la complejidad cognitiva de un método: cada nivel de
-anidamiento añade un salto mental que el lector debe
-sostener~\cite{10.1145/3194164.3194186} (\autoref{sec:cc-antecedentes}). Sin
-embargo, en muchos casos dos sentencias \lstinline|if| anidadas sin ramas
-alternativas no expresan dos decisiones, sino una sola condición conjuntiva
-escrita en dos pisos. Cuando esto ocurre, aplanarlas en \lstinline|if (A && B)|
-simplifica el código sin cambiar lo que hace.
 
-El problema abordado nace de esa observación y tiene dos caras. La primera es
-\emph{determinar en qué condiciones esa combinación es semánticamente segura y
-automatizable}; la segunda, \emph{medir su efecto sobre la complejidad
-cognitiva}. Interesa responder a ambas no solo para una herramienta
-determinista, sino también para un gran modelo de lenguaje, lo que permite
-comparar dos formas muy distintas de afrontar la misma tarea. Estas dos caras
-se recogen en las preguntas de investigación oficiales del trabajo, enunciadas
-en la \autoref{sec:rq-intro}.
+Los condicionales anidados son una de las construcciones que más contribuyen
+a la complejidad cognitiva de un método: cada nivel de anidamiento añade un
+salto mental que el lector debe sostener~\cite{10.1145/3194164.3194186}
+(\autoref{sec:cc-antecedentes}). Sin embargo, en muchos casos dos sentencias
+\lstinline|if| anidadas sin ramas alternativas no expresan dos decisiones
+distintas, sino una sola condición conjuntiva escrita en dos niveles. Cuando
+esto ocurre, aplanarlas en \lstinline|if (A && B)| simplifica el código sin
+cambiar lo que hace.
+
+El problema abordado nace de esa observación y tiene dos dimensiones. La
+primera consiste en determinar en qué condiciones esa combinación es
+semánticamente segura y automatizable. La segunda consiste en medir su efecto
+sobre la complejidad cognitiva. Interesa responder a ambas no solo para una
+herramienta determinista, sino también para un gran modelo de lenguaje, lo
+que permite comparar dos formas muy distintas de afrontar la misma tarea.
+Estas dos dimensiones se recogen en las preguntas de investigación oficiales
+del trabajo, enunciadas en la \autoref{sec:rq-intro}.
 
 \section{Patrón objetivo}
 \label{sec:patron}
-La transformación canónica estudiada parte del anidamiento simple y
-produce una condición conjuntiva equivalente:
+
+La transformación canónica estudiada parte de un anidamiento simple y se
+transforma en una condición conjuntiva equivalente:
 
 \begin{lstlisting}[caption={Antes: condicionales anidados.},label={lst:antes}]
 if (A) {
@@ -57,39 +53,41 @@ if (A && B) {
 \noindent donde \lstinline|A| y \lstinline|B| son expresiones booleanas y
 \lstinline|S| un bloque de sentencias arbitrario. La equivalencia se sostiene
 bajo las precondiciones de aplicabilidad (\autoref{sec:precondiciones}): el
-operador \lstinline|&&| evalúa \lstinline|A| y, solo si se cumple,
-\lstinline|B|, preservando el orden y el cortocircuito del anidamiento original
-y, con ello, el comportamiento observable.
+operador \lstinline|&&| evalúa primero \lstinline|A| y, solo si se cumple,
+\lstinline|B|, preservando así el orden y el cortocircuito del anidamiento
+original y, con ello, el comportamiento observable.
 
 \section{Qué es una condicional anidada combinable}
 \label{sec:definicion-combinable}
+
 Se denomina \emph{condicional anidada combinable} a un par de sentencias
 \lstinline|if| en el que el \lstinline|if| externo no tiene rama alternativa,
 su rama \lstinline|then| contiene exactamente otra sentencia \lstinline|if|, y
 esta segunda tampoco tiene rama alternativa. Para un par así, sustituir el
 anidamiento por \lstinline|if (A && B)| preserva el comportamiento observable,
 porque \lstinline|&&| evalúa \lstinline|A| y, solo si es cierto,
-\lstinline|B| —el mismo orden y cortocircuito que el anidamiento original.
-Esta es la condición de combinabilidad \emph{estructural}.
+\lstinline|B|: el mismo orden y el mismo cortocircuito que en la versión
+anidada. Esta es la condición de combinabilidad \emph{estructural}.
 
-El prototipo añade una restricción más: exige que las condiciones estén libres
-de efectos colaterales. No es porque la combinación deje de preservar el
-comportamiento en su presencia —el orden de evaluación se mantiene—, sino
-porque solo bajo esa restricción puede garantizar la seguridad de forma
-automática y verificable sobre la estructura del código, sin un análisis
-semántico que excede el alcance del prototipo. El conjunto completo de
-precondiciones se formaliza en la \autoref{sec:precondiciones}.
+El prototipo añade una restricción adicional: exige que las condiciones estén
+libres de efectos colaterales. No se debe a que la combinación deje de
+preservar el comportamiento en su presencia, sino a que solo bajo esa restricción puede garantizarse la
+seguridad de forma automática y verificable sobre la estructura del código,
+sin recurrir a un análisis semántico que excede el alcance del prototipo. El
+conjunto completo de precondiciones se formaliza en la
+\autoref{sec:precondiciones}.
 
 \section{Casos que no son combinables}
 \label{sec:no-combinables}
+
 La dificultad del problema no está en el caso favorable, sino en distinguirlo
 de otros muy parecidos en los que aplanar el anidamiento \emph{cambia el
-comportamiento}. Dos ejemplos lo ilustran.
+comportamiento}. Dos ejemplos permiten verlo con claridad.
 
 Si el \lstinline|if| externo tiene una rama \lstinline|else|, esta cubre el
-caso en que \lstinline|A| es falso; combinar las condiciones la haría aplicable
-también cuando \lstinline|A| es cierto pero \lstinline|B| es falso, alterando
-el flujo:
+caso en que \lstinline|A| es falso; combinar las condiciones la haría
+aplicable también cuando \lstinline|A| es cierto pero \lstinline|B| es falso,
+alterando el flujo:
 
 \begin{lstlisting}[caption={No combinable: \texttt{else} en el \texttt{if} externo.},label={lst:no-else}]
 if (A) {
@@ -111,26 +109,28 @@ if (A) {
 }
 \end{lstlisting}
 
-\noindent Estos casos no son anecdóticos: son los que obligan a definir
-precondiciones explícitas y verificables en lugar de aplicar la transformación
-de forma indiscriminada.
+\noindent Estos casos no son anecdóticos: son precisamente los que obligan a
+definir precondiciones explícitas y verificables en lugar de aplicar la
+transformación de forma indiscriminada.
 
 \section{Familia de problemas y alcance}
 \label{sec:alcance}
+
 El patrón canónico estudiado ---dos \lstinline|if| anidados sin ramas
-alternativas--- es el miembro más simple de una familia más amplia de
-oportunidades de combinación de condicionales. Otras variantes (cadenas de
-tres o más \lstinline|if| anidados, condicionales con \lstinline|else if|, o
-combinaciones que exigen reordenar el flujo) comparten la misma motivación,
-pero plantean dificultades de equivalencia crecientes. El trabajo aborda
-deliberadamente el caso base, por ser aquel en el que la seguridad de la
-transformación puede establecerse con garantías; las variantes restantes
-quedan como extensiones naturales (\autoref{cap:conclusiones}).
+alternativas--- es el caso más simple dentro de una familia más amplia de
+oportunidades de combinación de condicionales. Otras variantes, como cadenas
+de tres o más \lstinline|if| anidados, condicionales con
+\lstinline|else if| o combinaciones que exigen reordenar el flujo, comparten
+la misma motivación, pero plantean dificultades de equivalencia crecientes.
+Este trabajo aborda deliberadamente el caso base, por ser aquel en el que la
+seguridad de la transformación puede establecerse con garantías; las
+variantes restantes quedan como extensiones naturales
+(\autoref{cap:conclusiones}).
 
 La \autoref{tab:alcance} resume qué entra y qué queda fuera del alcance
-inicial. Las construcciones excluidas no son irrelevantes: son aquellas cuya
-seguridad no puede establecerse sin un análisis semántico que excede el
-prototipo.
+inicial. Las construcciones excluidas no son irrelevantes; simplemente son
+aquellas cuya seguridad no puede establecerse con garantías dentro del alcance
+del prototipo.
 
 \begin{table}[ht]
 \centering

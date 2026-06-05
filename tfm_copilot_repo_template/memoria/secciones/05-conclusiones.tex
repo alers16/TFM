@@ -44,9 +44,9 @@ exacta con SonarQube en el 100\,\% de los casos medidos
 
 \paragraph{RQ3 — \textquestiondown{}Pueden los grandes modelos de lenguaje realizar esta
 refactorización de forma correcta y automática?} La respuesta es matizada: los
-modelos saben aplicar la transformación cuando procede —\texttt{gpt-4.1} acierta
+modelos saben aplicar la transformación cuando procede, \texttt{gpt-4.1} acierta
 en el 90{,}3\,\% de las invocaciones con respuesta y \texttt{gpt-4o} en el
-71{,}9\,\%—, pero la dificultad real no está en transformar, sino en
+71{,}9\,\%, pero la dificultad real no está en transformar, sino en
 \emph{abstenerse} cuando una precondición lo prohíbe
 (\autoref{sec:resultados-rq3}). Los dos modelos exhiben perfiles opuestos:
 \texttt{gpt-4o} prioriza la precisión (no transforma casos no elegibles) a
@@ -89,8 +89,12 @@ acotada). Y la comparación de RQ3 se limita a dos modelos de un mismo proveedor
 
 \section{Trabajo futuro}
 
-El trabajo abre varias líneas de continuación con orientación investigadora,
-susceptibles de desarrollarse en una tesis doctoral:
+Las limitaciones descritas delimitan un programa de investigación coherente que
+puede articularse como tesis doctoral en el área de mantenimiento automático de
+software: la hipótesis de que la refactorización automática y verificable de
+código Java puede extenderse a una familia más amplia de transformaciones
+semánticamente equivalentes, con garantías formales y evaluación empírica
+reproducible. Las líneas concretas son:
 \begin{itemize}
   \item \textbf{Ampliar la familia de patrones}: cadenas de tres o más
   \lstinline|if| anidados, condicionales con \lstinline|else if| y otras

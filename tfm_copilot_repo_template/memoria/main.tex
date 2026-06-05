@@ -1,21 +1,3 @@
-% =====================================================================
-%  Memoria del Trabajo Fin de Máster (TFM)
-%  Máster Universitario en Ingeniería del Software e Inteligencia
-%  Artificial — Universidad de Málaga (UMA)
-%
-%  Título: Refactorización de sentencias condicionales anidadas para
-%          reducir la complejidad cognitiva en Java.
-%
-%  Formato: clase `report` (orientada a memoria/tesis: capítulos con
-%  \chapter, índice nativo), márgenes a página completa con `geometry`.
-%  La guía de la UMA no exige LNCS; pide márgenes a página completa, que
-%  aquí se cubren con `geometry`. (Decisión revisada respecto a llncs,
-%  inadecuada para un documento con capítulos y apéndices.)
-%
-%  Compilación recomendada:  latexmk -pdf main.tex
-%  Alternativa:              pdflatex main -> bibtex main -> pdflatex x2
-%  (El índice se rellena en la 2ª pasada; usar latexmk evita el problema.)
-% =====================================================================
 \documentclass[12pt,a4paper,oneside]{report}
 
 % --- Codificación y tipografía -------------------------------------
@@ -67,6 +49,7 @@
 \hypersetup{hidelinks}
 \usepackage{microtype}
 \setlength{\emergencystretch}{3em}
+\usepackage{pdfpages}
 
 % --- Profundidad del índice y de la numeración ---------------------
 % Índice hasta sección (capítulo + sección + subsección quedaría muy
@@ -97,26 +80,10 @@
 \begin{document}
 
 % --- Portada --------------------------------------------------------
-\begin{titlepage}
-\centering
-{\large Universidad de Málaga\\
-Escuela Técnica Superior de Ingeniería Informática\par}
-\vspace{0.5cm}
-{\large Máster Universitario en Ingeniería del Software e Inteligencia Artificial\par}
-\vfill
-{\Huge\bfseries Refactorización de sentencias condicionales anidadas para reducir la complejidad cognitiva en Java\par}
-\vspace{1cm}
-{\large\itshape Nested conditional refactoring for reducing cognitive complexity in Java\par}
-\vfill
-{\large
-\begin{tabular}{rl}
-Autor: & Alejandro Román Sánchez \\[0.4em]
-Tutor: & José Francisco Chicano García \\[0.2em]
-Cotutor: & Rubén Saborido Infantes \\
-\end{tabular}\par}
-\vfill
-{\large Málaga, \pendienteverif{} (mes y año)\par}
-\end{titlepage}
+% Sustituye portada.pdf por el nombre real del fichero una vez lo tengas.
+% Colócalo en la misma carpeta que main.tex (memoria/).
+% Si el PDF de portada ocupa más de una página, cambia pages=1 por pages={1,2}.
+\includepdf[pages=1, fitpaper=true]{portada.pdf}
 
 % --- Resumen / Abstract / Keywords ---------------------------------
 \input{secciones/00-preliminares}
@@ -128,24 +95,23 @@ Cotutor: & Rubén Saborido Infantes \\
 \clearpage
 
 % --- Cuerpo de la memoria ------------------------------------------
-%\input{secciones/01-introduccion}
-%\input{secciones/02-antecedentes}
-%\input{secciones/03-problema}
-%\input{secciones/03b-metodologia}
+\input{secciones/01-introduccion}
+\input{secciones/02-antecedentes}
+\input{secciones/03-problema}
+\input{secciones/03b-metodologia}
 \input{secciones/04-propuesta}
 \input{secciones/04a-diseno}
 \input{secciones/04b-arquitectura}
 \input{secciones/04c-implementacion}
-%\input{secciones/04d-experimento}
+\input{secciones/04d-experimento}
 \input{secciones/04e-resultados}
-%\input{secciones/04f-amenazas}
-%\input{secciones/05-conclusiones}
+\input{secciones/04f-amenazas}
+\input{secciones/05-conclusiones}
 
 % --- Bibliografía ---------------------------------------------------
 % No se incluyen entradas inventadas. Ver bibliografia/referencias.bib.
-% Estilo LNCS/Springer oficial (splncs04): bibliografía uniforme y
-% compatible con el formato recomendado por la guía UMA. Citas numéricas
-% [n]. El .bst splncs04 viene incorporado en Overleaf (paquete springer).
+% Estilo neutro `plain` (el formato definitivo está [PENDIENTE DE
+% VERIFICACIÓN] según la guía UMA).
 \bibliographystyle{splncs04}
 \bibliography{bibliografia/referencias}
 

@@ -1,23 +1,20 @@
-% =====================================================================
-%  4.2 Diseño del enfoque.  ESTADO: REDACTADO (estable).
-%  Migrado de memoria/cap4-diseno.md. Trazado a clases reales.
-% =====================================================================
+
 \section{Diseño del enfoque}
 \label{sec:diseno}
 
 Antes de entrar en los detalles, conviene fijar la lógica que guía el
-enfoque. Esta sección presenta primero la estrategia general y los
+enfoque. En esta sección se presenta la estrategia general y los
 principios que la sostienen; a continuación, el patrón objetivo y las
 precondiciones que delimitan cuándo es seguro aplicarlo; y, por último, la
 política de transformación y la política iterativa con las que el
 prototipo opera sobre el código.
 
-\subsection{Estrategia general}
+\subsection{Estrategia general.}
 El enfoque responde a \textbf{RQ1} mediante un prototipo determinista que
 trabaja directamente sobre el árbol de sintaxis abstracta (AST) de Java.
 La decisión de partida es deliberadamente \textbf{conservadora}: ante la
 menor duda sobre la equivalencia semántica de una transformación, el caso
-se rechaza. Se prefiere perder oportunidades de refactorización antes que
+se rechaza. Es preferible perder oportunidades de refactorización antes que
 arriesgar un cambio de comportamiento, porque el prototipo aspira a servir
 como baseline fiable frente al cual medir a los LLMs en RQ3.
 
@@ -43,18 +40,16 @@ En conjunto, estos principios trazan una frontera nítida entre lo que el
 prototipo se atreve a transformar y lo que prefiere dejar intacto, frontera
 que las precondiciones de la \autoref{sec:precondiciones} formalizan.
 
-\subsection{Patrón objetivo de transformación}
+\subsection{Patrón objetivo de transformación.}
 El patrón canónico (\autoref{fig:before-after}; Listados~\ref{lst:antes}
 y~\ref{lst:despues}) es
 semánticamente equivalente al original \emph{bajo} las precondiciones
 P1--P5: en ausencia de efectos colaterales en \lstinline|A| y
 \lstinline|B|, el operador \lstinline|&&| preserva la evaluación en
-cortocircuito y, por tanto, el comportamiento observable. Conviene precisar
-el estatus de esta equivalencia: es una propiedad de diseño justificada por
+cortocircuito y, por tanto, el comportamiento observable. Esta propiedad de diseño está justificada por
 las precondiciones, que actúan como \emph{condición sintáctica suficiente}.
 El transformador no realiza análisis de flujo de datos ni de alias que la
-demuestre formalmente —su propia documentación lo declara de forma
-explícita—, de modo que la garantía descansa enteramente en el carácter
+demuestre formalmente, de modo que la garantía descansa enteramente en el carácter
 conservador de P1--P5. Esta limitación se retoma en las amenazas a la
 validez (\autoref{cap:amenazas}).
 
@@ -90,7 +85,7 @@ evaluación y es semánticamente equivalente bajo las precondiciones P1--P5.}
 \label{fig:before-after}
 \end{figure}
 
-\subsection{Precondiciones de aplicabilidad (P1--P5)}
+\subsection{Precondiciones de aplicabilidad (P1--P5).}
 \label{sec:precondiciones}
 El detector evalúa, para cada nodo \lstinline|IfStmt| del AST, las
 siguientes precondiciones, todas necesarias y conjuntamente suficientes
@@ -164,8 +159,8 @@ elegible.
 \draw[arr] (p4) -- node[lbl,above]{no} (r4);
 \draw[arr] (p5) -- node[lbl,above]{no} (r5);
 \end{tikzpicture}
-\caption{Árbol de decisión del detector (modo \texttt{STRICT}). Las
-precondiciones P1--P5 se evalúan en cascada; cada rama «no» produce un
+\caption{Árbol de decisión del detector. Las
+precondiciones P1--P5 se evalúan en cascada; cada rama "no" produce un
 motivo de descarte estable (\texttt{DiscardReason}).}
 \label{fig:arbol-p1-p5}
 \end{figure}
@@ -227,7 +222,6 @@ Una vez detectada una oportunidad, \texttt{NestedIfTransformer} aplica la transf
     \item \textbf{Sustitución del nodo externo.}
     La condición del \lstinline|if| externo se reemplaza por la nueva condición combinada y el cuerpo pasa a ser el del \lstinline|if| interno, previamente clonado y normalizado a \lstinline|BlockStmt|. Por último se invoca \lstinline|removeElseStmt()| como salvaguarda adicional (\emph{no-op} si, como garantiza la guarda previa, ya no hay \lstinline|else|).
 \end{enumerate}
-
 \subsection{Política iterativa \emph{one-at-a-time}}
 \label{sec:one-at-a-time}
 

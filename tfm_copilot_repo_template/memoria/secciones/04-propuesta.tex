@@ -1,22 +1,20 @@
-% =====================================================================
-%  Capítulo 4. Detalles de la propuesta  (Bloque UMA obligatorio)
-%  4.1 Visión general (DSR). ESTADO: REDACTADO (estable).
-%  El capítulo continúa en 04a..04f (diseño, arquitectura, implementación,
-%  diseño experimental, resultados y amenazas).
-% =====================================================================
+
 \chapter{Detalles de la propuesta}
 \label{cap:propuesta}
 
 \section{Visión general}
 \label{sec:vision-general}
-La propuesta se desarrolla siguiendo la metodología \emph{Design Science
-Research} descrita en el \autoref{cap:metodologia}. Este capítulo cubre su
-componente de \emph{construcción}: el artefacto, un prototipo determinista de
-detección y refactorización de condicionales anidados. Conviene subrayar que
-el prototipo no es solo el objeto de estudio; actúa también como
-\emph{baseline verificable}, es decir, como la referencia fiable contra la que
-se contrastan después las refactorizaciones de los grandes modelos de lenguaje
-en RQ3.
+La propuesta se plantea como un proyecto de \emph{Design Science Research}
+(DSR)~\cite{10.2307/25148625, 10.2753/MIS0742-1222240302}, porque su
+estructura encaja de forma natural con el
+objetivo: construir un artefacto y evaluarlo. El artefacto es un prototipo
+determinista de detección y refactorización; la evaluación consiste en
+medir cómo responde a cada una de las preguntas de investigación. Esta
+doble naturaleza —construir y comprobar— recorre todo el capítulo. Conviene
+subrayar, además, que el prototipo no es solo el objeto de estudio: actúa
+como \emph{baseline verificable}, es decir, como la referencia fiable
+contra la que se contrastan después las refactorizaciones de los grandes
+modelos de lenguaje en RQ3.
 
 \paragraph{Mapa RQ $\leftrightarrow$ secciones.}
 La \autoref{tab:mapa-rq} relaciona cada pregunta de investigación con las
@@ -38,13 +36,4 @@ RQ3 & LLMs: corrección y automatización & \ref{sec:llm-subsistema}, \ref{sec:e
 \end{tabular}
 \end{table}
 
-\paragraph{Resumen de contribuciones técnicas.}
-(i)~La formalización de las precondiciones P1--P5 y su catálogo de
-descartes; (ii)~el prototipo basado en AST con pipeline reproducible;
-(iii)~el subsistema de evaluación de LLMs con protocolo congelado y
-oráculo automático; y (iv)~el paquete de replicación. Las secciones
-siguientes desarrollan el diseño (\autoref{sec:diseno}), la arquitectura
-(\autoref{sec:arquitectura}), la implementación
-(\autoref{sec:implementacion}), el diseño experimental
-(\autoref{sec:experimento}), los resultados (\autoref{sec:resultados}) y
-las amenazas a la validez (\autoref{cap:amenazas}).
+
