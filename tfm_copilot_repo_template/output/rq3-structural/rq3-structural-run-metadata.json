@@ -1,0 +1,32 @@
+{
+  "campaignPhase": "Phase 9 re-eval",
+  "campaignType": "structural-reeval-rq3",
+  "executionMode": "reeval-recorded",
+  "baselineMode": "STRUCTURAL",
+  "oracleUnchanged": true,
+  "apiCalled": false,
+  "sourceEvidence": "C:\\Users\\Ale Roman\\Documents\\GitHub\\TFM\\tfm_copilot_repo_template\\output\\rq3-campaign-real-phase9\\rq3-full-evidence.json",
+  "recordedInvocationsLoaded": 756,
+  "status": "completed-with-incidents",
+  "statusDetail": "technicalErrors=129; missingRecordedResponses=129",
+  "startedAt": "2026-06-12T06:44:23.309485400Z",
+  "protocolFrozen": true,
+  "protocol": {
+    "models": [
+      "gpt-4o",
+      "gpt-4.1"
+    ],
+    "temperature": 0.0,
+    "expectedInvocations": 756,
+    "caseCount": 126,
+    "attemptsPerCase": 3,
+    "maxOutputTokens": 2048,
+    "promptVersion": "v1.0"
+  },
+  "modelVersions": {
+    "gpt-4.1": "gpt-4.1",
+    "gpt-4o": "gpt-4o"
+  },
+  "completedInvocations": 756,
+  "note": "Re-evaluacion del oraculo RQ3 con baseline STRUCTURAL (P1-P4, P5 omitida; el cortocircuito de && preserva el comportamiento). Reutiliza las respuestas crudas grabadas; NO se llamo a la API. El oraculo (LlmResponseValidator) es identico al del flujo por defecto: solo cambia el modo de deteccion del baseline."
+}

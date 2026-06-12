@@ -1,0 +1,13 @@
+{
+  "artifactType": "rq2-structural-batch",
+  "detectionMode": "STRUCTURAL",
+  "startedAt": "2026-06-12T06:41:18.015994Z",
+  "finishedAt": "2026-06-12T06:41:18.732378600Z",
+  "pilotCases": 8,
+  "realCases": 118,
+  "totalCases": 126,
+  "eligibleCount": 111,
+  "ineligibleCount": 15,
+  "totalDelta": -340,
+  "note": "Modo STRUCTURAL: solo precondiciones estructurales P1-P4, P5 omitida (cortocircuito de && preserva el comportamiento). Valores de complejidad cognitiva = estimacion provisional del prototipo (proxy), no equivalente directa a SonarQube/SonarLint."
+}

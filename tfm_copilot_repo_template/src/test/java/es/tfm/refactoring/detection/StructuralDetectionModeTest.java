@@ -177,15 +177,15 @@ class StructuralDetectionModeTest {
         @DisplayName("else interno vacío → rechazado en STRUCTURAL (P4' es solo de RELAXED)")
         void emptyInnerElseRejected() {
             MethodDeclaration m = parseMethod(
-                    "class X { void f(Service svc) {" +
-                    "  if (svc.process()) {" +
-                    "    if (svc.validate()) { doSomething(); } else {}" +
+                    "class X { void f(java.util.List<?> list) {" +
+                    "  if (list.isEmpty()) {" +
+                    "    if (list.size() > 0) { doSomething(); } else {}" +
                     "  }" +
                     "} void doSomething() {} }");
 
             assertEquals(0, STRUCTURAL.detect(m).size(),
                     "STRUCTURAL debe rechazar else interno vacío (no aplica P4')");
-            // RELAXED sí lo aceptaría (P4'): contraste de comportamiento
+            // RELAXED sí lo aceptaría (P4'): isEmpty() y size() son getters/allowlist
             assertEquals(1, RELAXED.detect(m).size(),
                     "RELAXED debe aceptar else interno vacío (P4')");
         }
