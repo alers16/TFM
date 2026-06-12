@@ -34,10 +34,12 @@ El corpus consolidado (126 casos, 111 elegibles) procede mayoritariamente
 de proyectos abiertos, pero su composición no es una muestra
 estadísticamente representativa del código Java en general: es una
 \emph{muestra intencional} de métodos con condicionales anidados (sesgo de
-selección). A ello se añade una limitación de reproducibilidad: parte de
-los proyectos fuente no tiene versión ni \emph{commit} anclados y el corpus
-mezcla versiones de un mismo proyecto (\autoref{sec:corpus}), por lo que
-reconstruirlo idéntico exigiría reanclar dichas versiones. La evaluación de
+selección). A ello se añade una limitación de reproducibilidad: de algunos proyectos fuente
+no se registró la versión exacta (ni el \emph{commit}) de la que se extrajo cada
+caso, y el corpus mezcla, además, distintas versiones de un mismo proyecto
+(\autoref{sec:corpus}). Reconstruirlo de forma idéntica exigiría, por tanto,
+fijar cada caso a una versión y un \emph{commit} concretos del proyecto de
+origen. La evaluación de
 RQ3 cubre el corpus consolidado completo (126 casos), pero ese corpus es,
 igualmente, una muestra intencional de métodos con condicionales anidados y no
 una muestra aleatoria representativa del código Java en general. Además, la

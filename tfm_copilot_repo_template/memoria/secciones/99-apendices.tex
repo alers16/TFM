@@ -75,23 +75,45 @@ El procedimiento completo se describe en el \autoref{ap:sonarqube}.
 
 \chapter{Paquete de replicación}
 \label{ap:replicacion}
-La reproducibilidad se sostiene sobre artefactos versionados:
+Todo el trabajo es reproducible a partir de un único repositorio
+público,\footnote{\url{https://github.com/alers16/TFM}} que reúne el código del
+prototipo, el corpus, los \emph{scripts} de ejecución y los artefactos generados
+por cada experimento. El objetivo es doble: permitir reejecutar los experimentos
+desde cero y, además, poder auditar los resultados reportados \emph{sin} ejecutar
+el código, ya que las salidas se versionan junto al repositorio. Los comandos
+concretos de ejecución de cada experimento se recogen en los apartados~A.4 (RQ2)
+y A.5 (RQ3).
 
+El paquete se organiza en los siguientes elementos:
 \begin{itemize}
-  \item \textbf{Corpus}: \texttt{src/main/resources/pilot-corpus/} (8 casos
-  sintéticos) y \texttt{src/main/resources/real-corpus/} (118 casos reales),
-  con metadatos de procedencia (\lstinline|@project|, \lstinline|@file|,
-  \lstinline|@method|, \lstinline|@license|).
-  \item \textbf{Protocolo congelado} de RQ3 en
+  \item \textbf{Código fuente y pruebas}: el prototipo en
+  \texttt{src/main/java} (detector, transformador, cálculo de complejidad,
+  \emph{pipeline} y subsistema de evaluación de LLMs) y su batería de pruebas
+  unitarias en \texttt{src/test/java}, que fijan el comportamiento esperado de
+  cada componente.
+  \item \textbf{Corpus}: \texttt{src/\allowbreak main/\allowbreak resources/\allowbreak pilot-corpus/} (8 casos
+  sintéticos) y \texttt{src/\allowbreak main/\allowbreak resources/\allowbreak real-corpus/} (118 casos reales),
+  con los metadatos de procedencia de cada caso (\lstinline|@project|,
+  \lstinline|@file|, \lstinline|@method|, \lstinline|@license| y
+  \lstinline|@sonarCCBefore|).
+  \item \textbf{Protocolo congelado} de RQ3, codificado en
   \lstinline|LlmExperimentProtocol.defaultProtocol()| (modelos, temperatura,
-  intentos, versión del \emph{prompt}).
-  \item \textbf{Salidas RQ2}: \texttt{output/rq2-batch/} (JSON/CSV/resumen).
-  \item \textbf{Salidas RQ3}: \texttt{output/rq3-campaign-real-phase9/}
-  (agregado, evidencia por invocación, incidencias y metadatos).
-  \item \textbf{Validación SonarQube}:
-  \texttt{output/rq2-sonar-validation/fullcorpus/}.
+  número de intentos y versión del \emph{prompt}), de modo que la campaña queda
+  determinada sin parámetros ocultos.
+  \item \textbf{Salidas de RQ2}: \texttt{output/rq2-structural/}, con los
+  resultados por caso (JSON y CSV), el resumen y los metadatos de la ejecución
+  reportada.
+  \item \textbf{Salidas de RQ3}: \texttt{output/\allowbreak rq3-structural/} con los
+  veredictos del oráculo que se reportan, y
+  \texttt{output/\allowbreak rq3-campaign-real-phase9/} con la evidencia cruda de la campaña
+  \lstinline|live| (una entrada por invocación: \emph{prompt} enviado, respuesta
+  del modelo, tiempo de respuesta y veredicto).
+  \item \textbf{Validación con SonarQube}:
+  \texttt{output/\allowbreak rq2-sonar-validation/\allowbreak fullcorpus/}, con la complejidad oficial
+  por fichero y su contraste con el proxy.
   \item \textbf{Entorno}: versiones fijadas en \texttt{pom.xml} (Java~17,
-  JavaParser~3.26.4, JUnit~5.11.4, Gson~2.11.0).
+  JavaParser~3.26.4, JUnit~5.11.4, Gson~2.11.0), que garantizan que la
+  compilación y la ejecución emplean exactamente las mismas dependencias.
 \end{itemize}
 
 \chapter{Prompt RQ3 v1.0 y oráculo}
@@ -174,13 +196,13 @@ Por extensión, las tablas completas no se reproducen aquí; se conservan
 
 \begin{itemize}
   \item \textbf{RQ2, por caso} (los 126 casos con CC \emph{before}/\emph{after}
-  y $\Delta$): \texttt{output/rq2-batch/rq2-summary.md} y
-  \texttt{rq2-all-results.csv}.
+  y $\Delta$): \texttt{output/\allowbreak rq2-structural/\allowbreak rq2-structural-summary.md} y
+  \texttt{rq2-structural-all-results.csv}.
   \item \textbf{RQ3, por caso y por modelo} (veredicto de cada invocación):
-  \texttt{output/rq3-campaign-real-phase9/rq3-aggregated.md} y
-  \texttt{rq3-summary.csv}.
+  \texttt{output/\allowbreak rq3-structural/\allowbreak rq3-structural-aggregated.md} y
+  \texttt{rq3-structural-summary.csv}.
   \item \textbf{Contraste SonarQube, por caso}:
-  \texttt{output/rq2-sonar-validation/fullcorpus/comparison.csv}.
+  \texttt{output/\allowbreak rq2-sonar-validation/\allowbreak fullcorpus/\allowbreak comparison.csv}.
 \end{itemize}
 
 \chapter{Procedimiento SonarQube}
@@ -263,15 +285,15 @@ respalda.
 \caption{Trazabilidad entre preguntas de investigación, código, pruebas y
 evidencia.}
 \label{tab:trazabilidad}
-\begin{tabular}{@{}lp{2.6cm}p{2.6cm}p{4.0cm}@{}}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
 \toprule
 \textbf{RQ} & \textbf{Diseño} & \textbf{Implementación} & \textbf{Evidencia} \\
 \midrule
-RQ1 & \autoref{sec:precondiciones} (P1--P4) & paquetes \texttt{detection}, \texttt{transformation} & \texttt{output/rq2-structural/} (motivos de descarte) \\
-RQ2 & \autoref{sec:exp-rq2} & \texttt{analysis}, \texttt{experiment} & \texttt{output/rq2-batch/}, \texttt{output/rq2-sonar-validation/fullcorpus/} \\
-RQ3 & \autoref{sec:exp-rq3} & paquete \texttt{llm} & \texttt{output/rq3-campaign-real-phase9/} \\
+RQ1 & \autoref{sec:precondiciones} (P1--P4) & paquetes \texttt{detection}, \texttt{transformation} & \texttt{output/\allowbreak rq2-structural/} (motivos de descarte) \\
+RQ2 & \autoref{sec:exp-rq2} & \texttt{analysis}, \texttt{experiment} & \texttt{output/\allowbreak rq2-structural/}, \texttt{output/\allowbreak rq2-sonar-validation/\allowbreak fullcorpus/} \\
+RQ3 & \autoref{sec:exp-rq3} & paquete \texttt{llm} & \texttt{output/\allowbreak rq3-structural/}, \texttt{output/\allowbreak rq3-campaign-real-phase9/} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 Cada componente está cubierto por la batería de pruebas del proyecto
