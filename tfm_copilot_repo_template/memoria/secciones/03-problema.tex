@@ -19,7 +19,9 @@ salto mental que el lector debe sostener~\cite{10.1145/3194164.3194186}
 \lstinline|if| anidadas sin ramas alternativas no expresan dos decisiones
 distintas, sino una sola condición conjuntiva escrita en dos niveles. Cuando
 esto ocurre, aplanarlas en \lstinline|if (A && B)| simplifica el código sin
-cambiar lo que hace.
+cambiar lo que hace. La misma idea se extiende a cadenas de más de dos
+\lstinline|if| anidados, que se combinan aplicando la regla por pares de forma
+sucesiva (\autoref{sec:alcance}).
 
 El problema abordado nace de esa observación y tiene dos dimensiones. La
 primera consiste en determinar en qué condiciones esa combinación es
@@ -27,28 +29,47 @@ semánticamente segura y automatizable. La segunda consiste en medir su efecto
 sobre la complejidad cognitiva. Interesa responder a ambas no solo para una
 herramienta determinista, sino también para un gran modelo de lenguaje, lo
 que permite comparar dos formas muy distintas de afrontar la misma tarea.
-Estas dos dimensiones se recogen en las preguntas de investigación oficiales
-del trabajo, enunciadas en la \autoref{sec:rq-intro}.
+Estas dos dimensiones se recogen en las preguntas de investigación del
+trabajo, enunciadas en la \autoref{sec:rq-intro}.
 
 \section{Patrón objetivo}
 \label{sec:patron}
 
 La transformación canónica estudiada parte de un anidamiento simple y se
-transforma en una condición conjuntiva equivalente:
+transforma en una condición conjuntiva equivalente, como ilustra la
+\autoref{fig:before-after}.
 
-\begin{lstlisting}[caption={Antes: condicionales anidados.},label={lst:antes}]
+\begin{figure}[ht]
+\centering
+\begin{minipage}[c]{0.44\linewidth}
+\centering
+\textbf{Antes}\par\smallskip
+\begin{lstlisting}[numbers=none]
 if (A) {
     if (B) {
         S
     }
 }
 \end{lstlisting}
-
-\begin{lstlisting}[caption={Después: condición combinada.},label={lst:despues}]
+\end{minipage}%
+\begin{minipage}[c]{0.10\linewidth}
+\centering$\Longrightarrow$
+\end{minipage}%
+\begin{minipage}[c]{0.44\linewidth}
+\centering
+\textbf{Después}\par\smallskip
+\begin{lstlisting}[numbers=none]
 if (A && B) {
     S
 }
 \end{lstlisting}
+\end{minipage}
+\caption{Esquema \emph{before/after} del patrón objetivo: dos \texttt{if}
+anidados (izquierda) se combinan en una única condición conjuntiva
+\lstinline|A && B| (derecha). La transformación preserva el orden de
+evaluación y es semánticamente equivalente bajo las precondiciones P1--P5.}
+\label{fig:before-after}
+\end{figure}
 
 \noindent donde \lstinline|A| y \lstinline|B| son expresiones booleanas y
 \lstinline|S| un bloque de sentencias arbitrario. La equivalencia se sostiene
@@ -56,6 +77,58 @@ bajo las precondiciones de aplicabilidad (\autoref{sec:precondiciones}): el
 operador \lstinline|&&| evalúa primero \lstinline|A| y, solo si se cumple,
 \lstinline|B|, preservando así el orden y el cortocircuito del anidamiento
 original y, con ello, el comportamiento observable.
+
+Las condiciones \lstinline|A| y \lstinline|B| pueden ser expresiones booleanas
+compuestas. En ese caso, la combinación preserva la precedencia original
+añadiendo paréntesis cuando es necesario (por ejemplo, si una de ellas es una
+disyunción que pasa a formar parte de la conjunción).
+
+Para hacer tangible el efecto sobre la métrica, conviene contar la complejidad
+cognitiva de ambas versiones según el modelo de SonarSource
+(\autoref{sec:cc-antecedentes}). En la versión anidada, el \lstinline|if|
+externo aporta un incremento estructural (+1) y el \lstinline|if| interno
+aporta otro estructural más uno de anidamiento por estar un nivel más adentro
+(+2): en total, 3. En la versión combinada, el único \lstinline|if| aporta +1 y
+la secuencia de operadores lógicos \lstinline|&&| aporta +1: en total, 2. La
+combinación ahorra, por tanto, el incremento de anidamiento del segundo
+\lstinline|if|. La \autoref{fig:cc-desglose} ilustra este desglose sobre un
+método concreto, anotando la contribución de cada nodo a la complejidad
+cognitiva del método.
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}{0.9\linewidth}
+\textbf{Antes (anidado): CC del método $= 3$}
+\begin{lstlisting}[numbers=none]
+boolean puedeEnviar(boolean pagado, boolean enStock) {
+    if (pagado) {            // +1  (incremento estructural)
+        if (enStock) {       // +2  (estructural +1, anidamiento +1)
+            return true;
+        }
+    }
+    return false;
+}
+\end{lstlisting}
+\smallskip
+\textbf{Después (combinado): CC del método $= 2$}
+\begin{lstlisting}[numbers=none]
+boolean puedeEnviar(boolean pagado, boolean enStock) {
+    if (pagado && enStock) { // +1 (if) y +1 (secuencia &&)
+        return true;
+    }
+    return false;
+}
+\end{lstlisting}
+\end{minipage}
+\caption{Desglose de la complejidad cognitiva por nodo según el modelo de
+SonarSource. En la versión anidada, el \texttt{if} externo aporta $+1$ y el
+\texttt{if} interno $+2$ (incremento estructural más uno de anidamiento por
+estar un nivel más adentro), de modo que el método suma CC${}=3$; al combinar
+las condiciones, el único \texttt{if} aporta $+1$ y la conjunción
+\lstinline|&&| otro $+1$, con CC${}=2$. La combinación elimina el incremento de
+anidamiento del segundo \texttt{if}.}
+\label{fig:cc-desglose}
+\end{figure}
 
 \section{Qué es una condicional anidada combinable}
 \label{sec:definicion-combinable}
@@ -116,16 +189,16 @@ transformación de forma indiscriminada.
 \section{Familia de problemas y alcance}
 \label{sec:alcance}
 
-El patrón canónico estudiado ---dos \lstinline|if| anidados sin ramas
-alternativas--- es el caso más simple dentro de una familia más amplia de
-oportunidades de combinación de condicionales. Otras variantes, como cadenas
-de tres o más \lstinline|if| anidados, condicionales con
-\lstinline|else if| o combinaciones que exigen reordenar el flujo, comparten
-la misma motivación, pero plantean dificultades de equivalencia crecientes.
-Este trabajo aborda deliberadamente el caso base, por ser aquel en el que la
-seguridad de la transformación puede establecerse con garantías; las
-variantes restantes quedan como extensiones naturales
-(\autoref{cap:conclusiones}).
+La unidad de transformación es un par de \lstinline|if| anidados. Una cadena de
+$N$ \lstinline|if| puramente anidados (cada nivel un único \lstinline|if|, sin
+\lstinline|else| ni sentencias intercaladas) se reduce aplicando la regla de
+combinación de forma repetida, un par cada vez, hasta que una precondición lo
+impida; por eso una cadena puede combinarse total o parcialmente: si un nivel
+intermedio incumple P1--P5, la combinación se detiene en ese punto. Quedan
+fuera del alcance, como extensiones naturales (\autoref{cap:conclusiones}), las
+variantes que no son anidamiento puro: cadenas con \lstinline|else if|,
+secuencias de \lstinline|if| hermanos (no anidados) o combinaciones que exigen
+reordenar el flujo.
 
 La \autoref{tab:alcance} resume qué entra y qué queda fuera del alcance
 inicial. Las construcciones excluidas no son irrelevantes; simplemente son

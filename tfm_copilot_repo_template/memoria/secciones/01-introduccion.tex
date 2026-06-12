@@ -1,6 +1,13 @@
 \chapter{Introducción}
 \label{cap:introduccion}
 
+El mantenimiento del software dedica gran parte del esfuerzo a comprender
+código ya existente, y ciertos patrones, como los condicionales anidados,
+elevan ese coste. Este capítulo motiva el problema que aborda el trabajo y su
+situación de partida, delimita el alcance, fija los objetivos y las preguntas
+de investigación, resume las contribuciones y describe la organización del
+documento.
+
 \section{Contexto y motivación}
 \label{sec:contexto}
 
@@ -16,7 +23,7 @@ práctico de calidad del software.
 
 Para señalar de forma operativa ese código difícil de mantener, las
 herramientas de análisis estático utilizan la \emph{complejidad
-cognitiva}~\cite{10.1145/3194164.3194186}, una métrica definida por
+cognitiva} (CC)~\cite{10.1145/3194164.3194186}, una métrica definida por
 SonarSource que estima, a nivel de método, el esfuerzo necesario para
 comprender el código y que, a diferencia de métricas más clásicas, penaliza
 de forma especial el anidamiento de estructuras de control. Su presencia en
@@ -30,7 +37,7 @@ código y que el anidamiento es uno de los factores que más la penalizan.
 Ese mecanismo convierte a los condicionales anidados en uno de los principales
 contribuyentes a la complejidad cognitiva de un método, y se trata además de
 un patrón frecuente en código real. El escaneo de proyectos Java de código
-abierto realizado en este trabajo localizó numerosas instancias del patrón
+abierto realizado en este trabajo localizó numerosas instancias de este patrón
 objetivo, lo que confirma que no se trata de una construcción marginal. La
 técnica más habitual para reducir complejidad cognitiva es la extracción de
 método~\cite{10.1109/ACCESS.2022.3144743}, que descompone un método en otros
@@ -52,10 +59,10 @@ no está garantizada y debe verificarse. Surge así una pregunta natural: si
 una tarea de refactorización bien delimitada como esta puede confiarse a un
 modelo de lenguaje de forma correcta y automática, o si sigue requiriendo un
 procedimiento determinista y verificable. La confluencia de estos tres
-elementos ---el coste de la baja comprensibilidad, la existencia de un patrón
+elementos (el coste de la baja comprensibilidad, la existencia de un patrón
 frecuente con una transformación potencialmente útil pero de aplicabilidad
 delicada, y la aparición de los modelos de lenguaje como agentes de
-refactorización--- es la que motiva este trabajo y da sentido a sus tres
+refactorización) es la que motiva este trabajo y da sentido a sus tres
 preguntas de investigación.
 
 \section{Problema abordado}
@@ -64,6 +71,10 @@ preguntas de investigación.
 Este trabajo estudia la combinación segura de sentencias condicionales
 anidadas en Java, con especial atención al patrón canónico
 \lstinline|if (A) { if (B) { S } }| $\rightarrow$ \lstinline|if (A && B) { S }|.
+La elección de Java responde a tres motivos: es el lenguaje sobre el que
+SonarSource define y populariza la complejidad cognitiva, dispone de
+bibliotecas maduras de manipulación de AST (JavaParser) y es el lenguaje tanto
+del trabajo antecedente como del corpus de evaluación (\autoref{sec:corpus}).
 
 La cuestión central no es solo si esta transformación reduce la complejidad
 cognitiva, sino también en qué condiciones puede aplicarse sin alterar el
@@ -80,7 +91,7 @@ La descripción detallada del problema se desarrolla en el
 
 El objetivo general de este trabajo es diseñar, implementar y evaluar un enfoque para detectar y refactorizar de
 forma automática sentencias condicionales anidadas en Java, con el objetivo
-de reducir su complejidad cognitiva preservando, cuando corresponda, el
+de reducir su complejidad cognitiva preservando el
 comportamiento observable del código. Como parte de esta evaluación, el
 enfoque se contrasta con refactorizaciones generadas por grandes modelos de
 lenguaje bajo un protocolo experimental controlado.
@@ -113,21 +124,22 @@ lenguaje bajo un protocolo experimental controlado.
   \item[RQ3.] \textquestiondown{}Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?
 \end{description}
 
-Su operacionalización, manteniendo literalmente el enunciado oficial, se
-detalla en la \autoref{sec:operacionalizacion}.
+Cada pregunta se concreta en criterios operativos de implementación y
+evaluación en la \autoref{sec:operacionalizacion}, sin alterar su enunciado.
 
 \section{Contribuciones del TFM}
 \label{sec:contribuciones}
 
 \begin{enumerate}
-  \item La formalización de un conjunto cerrado de precondiciones
-  (P1--P5) para la combinación segura de sentencias \lstinline|if| anidadas,
-  junto con un catálogo trazable de motivos de descarte.
+  \item La formalización de un conjunto cerrado de precondiciones de
+  aplicabilidad para la combinación segura de sentencias \lstinline|if|
+  anidadas, junto con un catálogo trazable de motivos de descarte.
   \item Un prototipo determinista basado en AST con un pipeline experimental
   reproducible que cubre carga de corpus, detección, transformación, medición
   y exportación de artefactos.
   \item Una comparación controlada entre el prototipo y varios LLMs bajo un
-  protocolo congelado y un oráculo de validación automático.
+  protocolo experimental fijado de antemano y un oráculo de validación
+  automático.
   \item Un paquete de replicación que incluye corpus, scripts y artefactos
   versionados.
 \end{enumerate}
@@ -139,7 +151,9 @@ El \autoref{cap:antecedentes} presenta los antecedentes y el estado del arte.
 El \autoref{cap:problema} describe el problema y operacionaliza las
 preguntas de investigación. El \autoref{cap:metodologia} expone la
 metodología \emph{Design Science Research} seguida en el trabajo. El
-\autoref{cap:propuesta} desarrolla la propuesta, incluyendo diseño,
-arquitectura, implementación, diseño experimental, resultados y amenazas a la
-validez. Finalmente, el \autoref{cap:conclusiones} recoge las conclusiones y
-las principales líneas de trabajo futuro.
+\autoref{cap:propuesta} desarrolla la propuesta (diseño, arquitectura e
+implementación del prototipo). El \autoref{sec:experimento} detalla el diseño
+experimental; el \autoref{sec:resultados} presenta los resultados de RQ1, RQ2
+y RQ3, con su validación de contraste; y el \autoref{cap:amenazas} analiza las
+amenazas a la validez. Finalmente, el \autoref{cap:conclusiones} recoge las
+conclusiones y las principales líneas de trabajo futuro.

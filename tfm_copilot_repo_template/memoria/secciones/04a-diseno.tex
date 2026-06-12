@@ -9,7 +9,7 @@ precondiciones que delimitan cuándo es seguro aplicarlo; y, por último, la
 política de transformación y la política iterativa con las que el
 prototipo opera sobre el código.
 
-\subsection{Estrategia general.}
+\subsection{Estrategia general}
 El enfoque responde a \textbf{RQ1} mediante un prototipo determinista que
 trabaja directamente sobre el árbol de sintaxis abstracta (AST) de Java.
 La decisión de partida es deliberadamente \textbf{conservadora}: ante la
@@ -40,9 +40,8 @@ En conjunto, estos principios trazan una frontera nítida entre lo que el
 prototipo se atreve a transformar y lo que prefiere dejar intacto, frontera
 que las precondiciones de la \autoref{sec:precondiciones} formalizan.
 
-\subsection{Patrón objetivo de transformación.}
-El patrón canónico (\autoref{fig:before-after}; Listados~\ref{lst:antes}
-y~\ref{lst:despues}) es
+\subsection{Patrón objetivo de transformación}
+El patrón canónico (\autoref{fig:before-after}) es
 semánticamente equivalente al original \emph{bajo} las precondiciones
 P1--P5: en ausencia de efectos colaterales en \lstinline|A| y
 \lstinline|B|, el operador \lstinline|&&| preserva la evaluación en
@@ -53,43 +52,16 @@ demuestre formalmente, de modo que la garantía descansa enteramente en el cará
 conservador de P1--P5. Esta limitación se retoma en las amenazas a la
 validez (\autoref{cap:amenazas}).
 
-\begin{figure}[ht]
-\centering
-\begin{minipage}[c]{0.44\linewidth}
-\centering
-\textbf{Antes}\par\smallskip
-\begin{lstlisting}[numbers=none]
-if (A) {
-    if (B) {
-        S
-    }
-}
-\end{lstlisting}
-\end{minipage}%
-\begin{minipage}[c]{0.10\linewidth}
-\centering$\Longrightarrow$
-\end{minipage}%
-\begin{minipage}[c]{0.44\linewidth}
-\centering
-\textbf{Después}\par\smallskip
-\begin{lstlisting}[numbers=none]
-if (A && B) {
-    S
-}
-\end{lstlisting}
-\end{minipage}
-\caption{Esquema \emph{before/after} del patrón objetivo: dos \texttt{if}
-anidados (izquierda) se combinan en una única condición conjuntiva
-\lstinline|A && B| (derecha). La transformación preserva el orden de
-evaluación y es semánticamente equivalente bajo las precondiciones P1--P5.}
-\label{fig:before-after}
-\end{figure}
-
-\subsection{Precondiciones de aplicabilidad (P1--P5).}
+\subsection{Precondiciones de aplicabilidad (P1--P5)}
 \label{sec:precondiciones}
 El detector evalúa, para cada nodo \lstinline|IfStmt| del AST, las
 siguientes precondiciones, todas necesarias y conjuntamente suficientes
-para considerar el caso elegible:
+para considerar el caso elegible. Los nombres en monoespaciado como
+\lstinline|IfStmt|, \lstinline|MethodCallExpr| o \lstinline|AssignExpr| son
+tipos de nodo del AST de JavaParser, no clases del prototipo; las clases y
+enumeraciones propias del prototipo (incluidos los modos de detección y los
+motivos de descarte) se recogen en el diagrama de clases
+(\autoref{fig:clases-nucleo}).
 
 \begin{description}
   \item[P1 — Ausencia de \texttt{else} externo.] El \lstinline|if| externo
@@ -99,8 +71,9 @@ para considerar el caso elegible:
   \lstinline|if| externo consiste en \emph{exactamente} una sentencia, ya
   sea encerrada en un bloque \lstinline|{...}| de una sola sentencia o
   escrita directamente sin llaves.
-  \item[P3 — Esa sentencia es un \texttt{if}.] La sentencia única debe ser
-  otro \lstinline|IfStmt| (el \lstinline|if| interno candidato). El detector
+  \item[P3 — La sentencia única es un \texttt{if}.] La única sentencia de la
+  rama \lstinline|then| exigida por P2 debe ser, a su vez, otro
+  \lstinline|IfStmt| (el \lstinline|if| interno candidato). El detector
   contempla ambas formas, con y sin llaves (p.\,ej.\
   \lstinline|if (A) if (B) S;|).
   \item[P4 — Ausencia de \texttt{else} interno.] El \lstinline|if| interno
@@ -113,6 +86,11 @@ para considerar el caso elegible:
   (\lstinline|LambdaExpr|) ni instanciaciones con \lstinline|new|
   (\lstinline|ObjectCreationExpr|).
 \end{description}
+
+En conjunto, P1 y P4 exigen que ninguno de los dos \lstinline|if| (ni el
+externo ni el interno) tenga rama \lstinline|else| o \lstinline|else if|; P2 y
+P3, que el bloque externo contenga exactamente el \lstinline|if| interno y nada
+más; y P5, que las condiciones estén libres de efectos colaterales.
 
 La \autoref{fig:arbol-p1-p5} resume el flujo de decisión completo: las
 precondiciones se evalúan en orden y, en cuanto una falla, el candidato se
@@ -169,10 +147,10 @@ El criterio de P5 es deliberadamente \textbf{sintáctico y conservador}:
 cualquiera de esas construcciones se considera un riesgo potencial de
 efecto colateral observable, suficiente para descartar el caso aunque en
 la práctica la semántica fuera idéntica. Un análisis preciso de pureza
-requeriría un modelo de efectos —como el análisis de pureza y efectos
+requeriría un modelo de efectos, como el análisis de pureza y efectos
 colaterales para Java de S\u{a}lcianu y
 Rinard~\cite{10.1007/978-3-540-30579-8_14} o sistemas modulares como
-\emph{JPure}~\cite{10.1007/978-3-642-19861-8_7}— que excede el alcance del
+\emph{JPure}~\cite{10.1007/978-3-642-19861-8_7}, que excede el alcance del
 prototipo.
 
 Estas precondiciones están implementadas en \texttt{NestedIfDetector} y
@@ -191,12 +169,13 @@ El rigor de las precondiciones es además \emph{configurable} mediante el
 enumerado \texttt{DetectionMode}. El modo \texttt{STRICT} aplica P1--P5 tal
 como se han descrito y es el que sustenta los resultados principales de
 esta memoria (es el modo por defecto del detector y el que usa el lote de
-RQ2). Existe también un modo \texttt{RELAXED} que flexibiliza dos
-precondiciones —acepta un \lstinline|else| interno vacío (P4') y, en P5,
-admite llamadas a método reputadas puras mediante una lista blanca
-(\texttt{MethodCallAllowlist}) o protegidas por un patrón \emph{null-guard}
-(\lstinline|x != null|)—. Este modo no se usa en los resultados de
-referencia; su único propósito es una comparación exploratoria
+RQ2). Existe también un modo \texttt{RELAXED} que flexibiliza dos precondiciones:
+acepta un \lstinline|else| interno vacío (P4') y, en P5, admite dos excepciones
+controladas. La primera son las llamadas a método consideradas puras (sin
+efectos colaterales) según una lista blanca explícita,
+\texttt{MethodCallAllowlist}. La segunda son las condiciones protegidas por una
+guarda de nulidad (\lstinline|x != null|). Este modo no se usa en los
+resultados de referencia; su único propósito es una comparación exploratoria
 \texttt{STRICT} vs.\ \texttt{RELAXED} que cuantifica cuántas oportunidades
 adicionales abriría una política menos conservadora. Mantener
 \texttt{STRICT} como modo de referencia es coherente con la estrategia
@@ -235,8 +214,7 @@ En concreto, esta decisión garantiza que:
     \item la trazabilidad del proceso iterativo quede registrada mediante \lstinline|totalPasses|.
 \end{enumerate}
 
-\subsection{Resumen del compromiso.}
-El diseño sacrifica cobertura a cambio de garantías. En el modo de
+En conjunto, el diseño sacrifica cobertura a cambio de garantías. En el modo de
 referencia (\texttt{STRICT}), los casos con \lstinline|else|, lambdas,
 llamadas a método o múltiples sentencias quedan fuera de alcance. Esta
 restricción es coherente con la estrategia conservadora del anteproyecto y

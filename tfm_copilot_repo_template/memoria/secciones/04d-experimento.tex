@@ -1,14 +1,15 @@
 
-\section{Diseño experimental}
+\chapter{Diseño experimental}
 \label{sec:experimento}
 
 En esta sección se explica cómo están montados los experimentos. Se describe primero
 el corpus; después, las métricas y el baseline con los que se mide; y, a continuación, los
-protocolos deliberadamente congelados de RQ2 y RQ3, junto con la validación comple-
-mentaria con SonarQube. La idea que recorre todo el apartado es la reproducibilidad: el
-procedimiento aquí descrito debería poder repetirse y conducir al mismo resultado
+protocolos deliberadamente congelados de RQ2 y RQ3, junto con la validación
+complementaria con SonarQube. La idea que recorre todo el apartado es la
+reproducibilidad: el procedimiento aquí descrito debería poder repetirse y
+conducir al mismo resultado.
 
-\subsection{Corpus}
+\section{Corpus}
 \label{sec:corpus}
 El corpus se carga desde recursos del \emph{classpath} mediante
 \texttt{PilotCorpusLoader} y \texttt{RealDatasetLoader}. Su composición se
@@ -24,7 +25,7 @@ resume en la \autoref{tab:corpus}.
 \textbf{Subconjunto} & \textbf{Casos} & \textbf{Finalidad} \\
 \midrule
 Piloto (sintético) & 8   & Casos canónicos y un rechazo por cada precondición \\
-Real (código abierto) & 118 & Validación sobre código real de proyectos OSS \\
+Real (código abierto) & 118 & Validación sobre código real de proyectos de código abierto \\
 \midrule
 \textbf{Total} & \textbf{126} & 104 elegibles, 22 no elegibles \\
 \bottomrule
@@ -44,23 +45,40 @@ El corpus real está formado por fragmentos extraídos de proyectos Java de cód
 Los proyectos fuente proceden de dos orígenes principales:
 
 \begin{enumerate}
-    \item \textbf{Proyectos \emph{open source} de uso general.} Apache Ant;
-    las bibliotecas Apache Commons \emph{Lang}, \emph{IO}, \emph{Collections}
-    y \emph{Math}; Apache POI; Jackson Core y Jackson Databind (FasterXML);
-    Bytecode Viewer; y jMetal. El escaneo se realizó en varias tandas (el
-    script \texttt{scan-open-source-projects.ps1} y los lotes de
-    \texttt{output/corpus-scan/}); otros proyectos escaneados —Guava, Log4j2
-    y Apache Commons Compress— no aportaron casos al corpus.
+    \item \textbf{Proyectos de código abierto de uso general}
+    (en \texttt{tmp-projects/}), añadidos en este trabajo para ampliar la
+    variedad de dominios y estilos de código. Aportaron casos Apache Ant,
+    Apache POI, Jackson Core y Jackson Databind (FasterXML) y las bibliotecas
+    Apache Commons (\emph{Lang}, \emph{Collections}, \emph{Math} e \emph{IO}).
+    Otros proyectos de este grupo se escanearon pero no aportaron ningún caso
+    (Apache Commons \emph{Numbers}, \emph{Geometry} y \emph{Compress}, ASM y
+    PDFBox). El escaneo se realizó en varias tandas (el script
+    \texttt{scan-open-source-projects.ps1} y los lotes de
+    \texttt{output/corpus-scan/}).
 
-    \item \textbf{Proyectos de evaluación de Saborido et
-    al.}~\cite{10.1109/ACCESS.2022.3144743}, clonados en
-    \texttt{tmp-tutor-projects/}: \texttt{cybercaptor-server},
-    \texttt{MOEAFramework}, \texttt{knowage-server}, \texttt{fastjson},
-    \texttt{iotbroker}, \texttt{fiware-commons}, \texttt{jedis} y
-    \texttt{aioteslake}. De ellos, el escáner extrajo del orden de 35
-    candidatos elegibles; \texttt{fiware-commons}, \texttt{jedis} y
-    \texttt{aioteslake} no aportaron casos.
+    \item \textbf{Proyectos de la evaluación de Saborido et
+    al.}~\cite{10.1109/ACCESS.2022.3144743}: los diez proyectos del antecedente
+    (ocho en \texttt{tmp-tutor-projects/} junto con jMetal y Bytecode Viewer).
+    Aportaron casos \texttt{cybercaptor-server}, \texttt{MOEAFramework},
+    \texttt{knowage-server}, \texttt{fastjson}, \texttt{iotbroker}, jMetal y
+    Bytecode Viewer; en cambio, \texttt{fiware-commons}, \texttt{jedis} y
+    \texttt{aioteslake} se escanearon pero no aportaron ninguno.
 \end{enumerate}
+
+El detalle por proyecto (dominio, volumen de código analizado y casos
+elegibles y no elegibles) se presenta junto al análisis de RQ1
+(\autoref{sec:resultados-rq1}).
+
+\paragraph{El escaneo como censo del patrón.} El corpus real no procede de un
+muestreo arbitrario, sino del escaneo sistemático de los proyectos citados. En
+conjunto, el escaneo evaluó 82\,655 candidatos a \texttt{if} externo del patrón
+en 23 proyectos de código abierto y localizó 117 instancias elegibles del patrón
+\texttt{if}--\texttt{if} combinable. A partir de esas instancias (junto con
+casos no elegibles representativos y los 8 casos del piloto sintético) se
+consolidó el corpus de 126 casos, de los cuales 99 son casos reales elegibles.
+El corpus es, por tanto, esencialmente un censo de las oportunidades del patrón
+presentes en los proyectos analizados, y no una submuestra de los
+\emph{~}1.000 métodos con $\text{CC}>15$ considerados en el anteproyecto.
 
 \paragraph{Nota de alcance respecto al anteproyecto.} El anteproyecto aprobado
 preveía partir de los \emph{~}1.000 métodos con $\text{CC}>15$ del repositorio
@@ -71,23 +89,24 @@ verificable, no la reducción de CC en general, el corpus resultante quedó en
 fuente, más los 8 casos sintéticos del piloto. El resto de los métodos con
 $\text{CC}>15$ de esos proyectos pertenece a familias de transformación
 distintas (principalmente extracción de método) que quedan fuera del alcance
-declarado en §\ref{sec:alcance}.
+declarado en \autoref{sec:alcance}.
 
 
 \paragraph{Cobertura de RQ3.} La evaluación de RQ3 se ejecuta sobre el
 \textbf{corpus consolidado completo} (126 casos: 8 piloto y 118 reales; 104
 elegibles y 22 no elegibles), de modo que cubre todos los ejes de variación
-—casos elegibles, parciales y no elegibles— y los motivos de descarte (P1, P5).
+(casos elegibles, parciales y no elegibles) y los motivos de descarte (P1, P5).
 La \autoref{tab:subset-rq3} recoge una selección representativa de casos; los
 veredictos por intento de los 126 casos están en
 \texttt{output/rq3-campaign-real-phase9/rq3-summary.csv}.
 
 \begin{table}[ht]
 \centering
+\footnotesize
 \caption{Ejemplos representativos de los casos de evaluación de RQ3
 (la campaña cubre el corpus completo de 126 casos).}
 \label{tab:subset-rq3}
-\begin{tabular}{@{}llll@{}}
+\begin{tabularx}{\linewidth}{@{}lll>{\raggedright\arraybackslash}X@{}}
 \toprule
 \textbf{Identificador} & \textbf{Origen} & \textbf{Categoría} & \textbf{Justificación} \\
 \midrule
@@ -98,10 +117,10 @@ veredictos por intento de los 126 casos están en
 \texttt{REAL\_COMMONS\_MATH\_VALIDATE\_RANGE} & Real & No elegible (P1) & \lstinline|outer if| con \lstinline|else|. \\
 \texttt{REAL\_COMMONS\_COLLECTIONS\_GET} & Real & No elegible (P5) & Llamada a método en condición. \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-\subsection{Métricas y baseline}
+\section{Métricas y baseline}
 \textbf{Métrica primaria:} complejidad cognitiva proxy (CC) calculada por
 \texttt{CognitiveComplexityCalculator} antes y después de la
 transformación; se reporta \emph{before}, \emph{after} y
@@ -114,7 +133,7 @@ el resultado del pipeline (\texttt{BatchRunner}) constituye el baseline
 contra el que se contrastan las salidas de los LLMs en RQ3; declara
 explícitamente la elegibilidad y, en su caso, el $\Delta$ aplicable.
 
-\subsection{Protocolo RQ2 — Batch determinista \emph{before/after}}
+\section{Protocolo RQ2 — Batch determinista \emph{before/after}}
 \label{sec:exp-rq2}
 (1)~Cargar la totalidad del corpus piloto y real; (2)~para cada
 \texttt{ExperimentCase}, ejecutar \lstinline|BatchRunner.processCase| con
@@ -127,7 +146,7 @@ el detector en modo \texttt{STRICT} (P1--P5 completas) y la política
 cualquier cambio en \texttt{CognitiveComplexityCalculator} invalidaría las
 métricas y exigiría una nueva ejecución completa.
 
-\subsection{Validación complementaria con SonarQube}
+\section{Validación complementaria con SonarQube}
 \label{sec:sonar-val}
 La validación complementaria contrasta los valores del proxy con los de
 SonarQube Community Build (versión \texttt{26.4.0.121862}) sobre el
@@ -138,12 +157,12 @@ fichero mediante la API, que se compara con la del proxy. El procedimiento,
 reproducible en PowerShell mediante el goal \texttt{mvn sonar:sonar}, está en
 \texttt{docs/rq2-sonar-validation-fullcorpus.md}; el arranque del servidor (vía
 \texttt{docker-compose}) en \texttt{docs/sonarqube-setup.md}; y los artefactos
-—\texttt{comparison.csv}, \texttt{comparison.md} y \texttt{metadata.json} con
-versión, fecha y operador— se conservan en
+(\texttt{comparison.csv}, \texttt{comparison.md} y \texttt{metadata.json} con
+versión, fecha y operador) se conservan en
 \texttt{output/rq2-sonar-validation/fullcorpus/}. Los resultados de este
 contraste se presentan en la \autoref{sec:resultados-sonar}.
 
-\subsection{Protocolo RQ3 — Evaluación de LLMs}
+\section{Protocolo RQ3 — Evaluación de LLMs}
 \label{sec:exp-rq3}
 El protocolo está congelado en
 \lstinline|LlmExperimentProtocol.defaultProtocol()|
@@ -170,7 +189,7 @@ Total invocaciones & 756 & $126 \times 2 \times 3$. \\
 
 La comparación se restringe deliberadamente a un único proveedor (OpenAI) por
 tres razones. Primera, de \emph{validez interna}: contrastar dos modelos del
-mismo proveedor —\texttt{gpt-4o} y \texttt{gpt-4.1}— mantiene constantes la
+mismo proveedor (\texttt{gpt-4o} y \texttt{gpt-4.1}) mantiene constantes la
 API, el tokenizador y la vía de acceso, de modo que las diferencias observadas
 se atribuyen al modelo y no al entorno. Segunda, de \emph{alcance y recursos}:
 el trabajo dispone de una única clave de API financiada y de un presupuesto
@@ -187,13 +206,13 @@ configuración, no de arquitectura.
 El procedimiento por caso es: cargar
 caso y baseline; construir el prompt \texttt{v1.0}; invocar el modelo;
 almacenar la respuesta cruda; aplicar el
-oráculo (\autoref{sec:oraculo}); registrar \texttt{LlmEvaluationResult}; y
+oráculo (\autoref{fig:oraculo}); registrar \texttt{LlmEvaluationResult}; y
 repetir para cada intento y modelo. La parte \textbf{congelada} incluye
 modelos, temperatura, intentos, versión del prompt, oráculo y composición
 del subset; el provider es intercambiable, siendo \lstinline|live| el modo
 oficial.
 
-\subsection{Reproducibilidad}
+\section{Reproducibilidad}
 Las garantías se sostienen sobre elementos verificables; exigencia explícita
 de \lstinline|OPENAI_API_KEY| en modo \lstinline|live|; versionado del
 prompt propagado a cada artefacto; versiones fijadas en \texttt{pom.xml}

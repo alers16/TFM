@@ -1,29 +1,29 @@
 
-\section{Amenazas a la validez}
+\chapter{Amenazas a la validez}
 \label{cap:amenazas}
 
-Esta sección analiza las amenazas a la validez del estudio, organizadas por
-tipo —constructo, interna, externa y de conclusión— y cerrando con las
+Este capítulo analiza las amenazas a la validez del estudio, organizadas por
+tipo (constructo, interna, externa y de conclusión) y cerrando con las
 mitigaciones implementadas.
 
-\subsection{Validez de constructo.}
+\section{Validez de constructo}
 La métrica de RQ2 es un proxy del modelo de SonarSource, no la implementación
 oficial. No obstante, esta amenaza está fuertemente mitigada: el contraste
 sobre el corpus completo (\autoref{sec:resultados-sonar}) arroja coincidencia
 exacta con SonarQube en el 100\,\% de los casos medidos (122/122), tanto antes
 como después de refactorizar. La única regla del modelo no implementada
-—detección de recursión— no produjo divergencias en el corpus, pero sigue
+(detección de recursión) no produjo divergencias en el corpus, pero sigue
 siendo una limitación teórica del proxy. Por otra parte, el oráculo de RQ3 se
 basa en la CC y en la comparación con el baseline determinista, no en revisión
 humana ni en ejecución de los tests del proyecto original.
 
-\subsection{Validez interna.}
+\section{Validez interna}
 Determinismo del transformador validado por tests; los LLMs presentan
 no-determinismo residual aun con $T=0$ (mitigado con 3 intentos). La
 política \emph{one-at-a-time} limita interacciones inesperadas pero podría
 ocultar efectos compuestos.
 
-\subsection{Validez externa.}
+\section{Validez externa}
 El corpus consolidado (126 casos, 104 elegibles) procede mayoritariamente
 de proyectos abiertos, pero su composición no es una muestra
 estadísticamente representativa del código Java en general: es una
@@ -41,14 +41,14 @@ cuya generalización a otras familias de modelos está por comprobar
 \lstinline|else|/\lstinline|else if|, por lo que los resultados no son
 extrapolables a refactorizaciones más complejas.
 
-\subsection{Validez de conclusión.}
+\section{Validez de conclusión}
 Aunque RQ3 cubre el corpus completo (126 casos), este sigue sin sostener
 inferencia estadística fuerte sobre poblaciones de código; el análisis de
 capacidad de los modelos se realiza, además, sobre las invocaciones que
 obtuvieron respuesta (\autoref{sec:resultados-rq3}). Por último, la métrica
 única (CC) puede sesgar la valoración global de calidad.
 
-\subsection{Mitigaciones implementadas.}
+\section{Mitigaciones implementadas}
 Congelación del protocolo (\texttt{LlmExperimentProtocol}); trazabilidad
 completa (evidencias JSON/CSV/MD por invocación); guarda de elegibilidad
 v1.1 en el oráculo. La restricción a un único proveedor de LLM queda

@@ -67,7 +67,8 @@ public class NestedIfDetector {
      * Constructor con modo explícito.
      *
      * @param mode {@link DetectionMode#STRICT} para P1–P5 originales;
-     *             {@link DetectionMode#RELAXED} para P1–P4 + P5' con allowlist.
+     *             {@link DetectionMode#RELAXED} para P1–P4 + P5' con allowlist;
+     *             {@link DetectionMode#STRUCTURAL} para solo P1–P4 (omite P5).
      */
     public NestedIfDetector(DetectionMode mode) {
         this.mode = mode;
@@ -154,7 +155,9 @@ public class NestedIfDetector {
 
         // P4: el if interno no tiene else (en RELAXED: else vacío se acepta — P4')
         if (innerIf.hasElseBranch()) {
-            if (mode == DetectionMode.STRICT || !isEmptyElse(innerIf)) {
+            // P4' (else vacío aceptado) es exclusiva de RELAXED; STRICT y
+            // STRUCTURAL rechazan cualquier else del if interno.
+            if (mode != DetectionMode.RELAXED || !isEmptyElse(innerIf)) {
                 return;
             }
         }
@@ -224,6 +227,12 @@ public class NestedIfDetector {
      * RELAXED incluso si el nombre no figura en el allowlist (P5''').
      */
     private boolean containsSideEffects(Expression condition, Optional<String> nullGuardedVar) {
+        // STRUCTURAL: P5 se omite por completo. El cortocircuito de && preserva
+        // orden y condicionalidad de evaluación, por lo que los efectos
+        // colaterales no afectan a la corrección de la transformación.
+        if (mode == DetectionMode.STRUCTURAL) {
+            return false;
+        }
         List<MethodCallExpr> calls = condition.findAll(MethodCallExpr.class);
         if (!calls.isEmpty()) {
             if (mode == DetectionMode.STRICT) {
@@ -300,7 +309,9 @@ public class NestedIfDetector {
 
         // P4: el if interno no tiene else (en RELAXED: else vacío se acepta — P4')
         if (innerIf.hasElseBranch()) {
-            if (mode == DetectionMode.STRICT || !isEmptyElse(innerIf)) {
+            // P4' (else vacío aceptado) es exclusiva de RELAXED; STRICT y
+            // STRUCTURAL rechazan cualquier else del if interno.
+            if (mode != DetectionMode.RELAXED || !isEmptyElse(innerIf)) {
                 return DetectionResult.rejected(
                         Collections.singletonList(DiscardReason.INNER_HAS_ELSE), line);
             }
@@ -334,6 +345,10 @@ public class NestedIfDetector {
     private void collectSideEffectReasons(Expression condition,
                                           List<DiscardReason> reasons,
                                           Optional<String> nullGuardedVar) {
+        // STRUCTURAL: P5 se omite por completo (ver containsSideEffects).
+        if (mode == DetectionMode.STRUCTURAL) {
+            return;
+        }
         List<MethodCallExpr> calls = condition.findAll(MethodCallExpr.class);
         if (!calls.isEmpty()) {
             if (mode == DetectionMode.STRICT) {

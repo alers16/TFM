@@ -2,12 +2,22 @@
 \section{Implementación del prototipo}
 \label{sec:implementacion}
 
-Si la sección anterior describía el esqueleto, esta lo recubre de músculo.
-Recorremos las piezas en el mismo orden en que intervienen en el flujo:
+Mientras que la sección anterior presentaba la arquitectura del prototipo,
+esta detalla la implementación de cada componente.
+Se recorren las piezas en el mismo orden en que intervienen en el flujo:
 primero el detector, que decide qué se puede combinar; después el
 transformador, que efectúa la combinación; luego el cálculo de la
-complejidad cognitiva, con el que medimos el efecto; y, por último, el
-pipeline experimental y el subsistema de evaluación de LLMs. 
+complejidad cognitiva, con el que se mide el efecto; y, por último, el
+pipeline experimental y el subsistema de evaluación de LLMs.
+
+El prototipo se construye con Maven sobre Java~17 y emplea JavaParser~3.26.4
+para el análisis y la manipulación del AST. Se ejecuta desde la línea de
+órdenes a través de varios puntos de entrada (\texttt{ExperimentOrchestrator}
+para el pipeline determinista de RQ1 y RQ2, \texttt{CampaignExecutor} para la
+campaña de RQ3), que aceptan modificadores como \lstinline|--mode=live| o
+\lstinline|--mode=dry-run|. La unidad de análisis y transformación es el
+método: cada caso del corpus es un método Java individual
+(\autoref{sec:corpus}).
 
 \subsection{Detector}
 
@@ -86,7 +96,8 @@ completo.
 \paragraph{Validación frente a los casos oficiales de SonarSource.}
 La
 corrección del proxy se comprueba a nivel unitario contra los casos de
-prueba \emph{oficiales} del modelo: se ha implementado una clase que compara, con
+prueba \emph{oficiales} del modelo de complejidad cognitiva de SonarSource: se
+ha implementado una clase que compara, con
 aserciones de igualdad exacta, el valor calculado frente al valor de
 referencia de SonarSource para cada caso del \emph{fixture}
 \texttt{CognitiveComplexityMethodCheck}, el mismo conjunto que
@@ -102,7 +113,9 @@ cubiertos; la única exclusión es la recursión.
 
 \subsection{Pipeline experimental}
 El pipeline experimental, implementado por \texttt{BatchRunner}, recorre el
-corpus caso por caso y aplica las oportunidades \emph{de una en una} (la
+corpus caso por caso (cada \emph{caso} es un \texttt{ExperimentCase}: un método
+Java individual junto con sus metadatos, como su procedencia y su
+elegibilidad esperada) y aplica las oportunidades \emph{de una en una} (la
 política iterativa de la \autoref{sec:one-at-a-time}). Para no alterar el método original, mide su
 complejidad cognitiva \emph{antes}, lo clona y transforma el clon, sobre el
 que mide la complejidad \emph{después}; la diferencia entre ambas es el
@@ -112,16 +125,19 @@ el caso acabe siendo elegible, porque constituyen la evidencia de RQ1. Como
 cada pasada aplica una sola oportunidad y vuelve a detectar, el número de
 oportunidades detectadas coincide con el de aplicadas, y se registra
 cuántas pasadas hicieron falta (con un tope de seguridad de diez). Si un
-fragmento no se puede analizar —porque no compila o no contiene ningún
-método— se marca como no elegible, se le asigna una complejidad
+fragmento no se puede analizar (porque no compila o no contiene ningún
+método) se marca como no elegible, se le asigna una complejidad
 \emph{antes} de $-1$ como valor centinela y se anota el motivo.
 
 \subsection{Subsistema de evaluación de LLMs (RQ3)}
 \label{sec:llm-subsistema}
 El paquete \texttt{es.tfm.refactoring.llm} implementa el protocolo de RQ3.
 La \autoref{fig:secuencia-rq3} resume el ciclo completo de una evaluación;
-los apartados siguientes detallan cada pieza (prompt, \emph{provider},
-oráculo y campaña).
+los apartados siguientes detallan cada pieza: el \emph{prompt}, el
+\emph{provider}, el oráculo y la \emph{campaña}. Una campaña es una ejecución
+completa del protocolo sobre el subset de evaluación, es decir, la evaluación
+de todos los casos por todos los modelos y todos los intentos declarados en el
+protocolo.
 
 \begin{figure}[H]
 \centering
@@ -150,14 +166,14 @@ tercer protocolo, idéntico en parámetros
 salvo la versión del prompt (\lstinline|v2.0|, \emph{few-shot}); donde su
 finalidad es una comparación exploratoria \emph{zero-shot} (v1.0) frente a
 \emph{few-shot} (v2.0) pero \textbf{no} forma parte de la campaña de
-referencia.
+referencia, es decir, la ejecución oficial del protocolo de dos modelos con el
+\emph{prompt} \lstinline|v1.0| cuyos resultados se reportan en RQ3.
 
 \paragraph{Provider.} La interfaz \texttt{LlmResponseProvider} admite dos
 implementaciones intercambiables: la invocación real a la API de OpenAI
 (con credencial) y las respuestas grabadas para \emph{dry runs} y tests.
 
-\paragraph{Oráculo}
-\label{sec:oraculo}
+\paragraph{Oráculo.}
 
 La validación de las respuestas generadas por los modelos
 (\texttt{LlmResponseValidator}) se implementa como una cadena de

@@ -1,12 +1,17 @@
 \documentclass[12pt,a4paper,oneside]{report}
 
-% --- Codificación y tipografía -------------------------------------
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+% --- Motor: LuaLaTeX. ELIMINADOS inputenc y fontenc (eran de pdfLaTeX) ---
+\usepackage{fontspec}                 % requiere LuaLaTeX/XeLaTeX
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{TeX Gyre Termes}         % clon libre de Times (estilo LNCS)
+\setsansfont{TeX Gyre Heros}          % clon de Helvetica (titulares/sans)
+\setmonofont{Latin Modern Mono}[Scale=MatchLowercase]  % código
+
 \usepackage[spanish,es-noindentfirst,es-noshorthands]{babel}
 
-% --- Márgenes a página completa ------------------------------------
-\usepackage[a4paper,margin=2.5cm]{geometry}
+% --- Márgenes "página completa" (mancha ~160 mm). Explícito en geometry ---
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+% Variante más "llena" (mancha 170 mm) si la guía lo exige: left=right=2cm.
 
 % --- Gráficos, tablas, color ---------------------------------------
 \usepackage{graphicx}
@@ -14,19 +19,16 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{longtable}
+\usepackage{tabularx}
 \usepackage{xcolor}
 \usepackage{float}
 
-\usepackage{pgfplots}
+\usepackage{pgfplots}                 % (carga tikz automáticamente)
 \pgfplotsset{compat=1.18}
 \usepgfplotslibrary{statistics}
 \usetikzlibrary{positioning, arrows.meta, shapes.geometric, shapes.misc}
 
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
-\usepgfplotslibrary{statistics}
-
-% --- Código fuente Java --------------------------------------------
+% --- Código fuente Java (endurecido contra desbordes) --------------
 \usepackage{listings}
 \lstset{
   language=Java,
@@ -38,32 +40,43 @@
   numberstyle=\tiny\color{gray},
   frame=single,
   breaklines=true,
+  breakatwhitespace=false,
+  breakindent=0pt,
+  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
   showstringspaces=false,
   tabsize=2,
   captionpos=b
 }
 
+% --- Nombres de captions (es): Tabla en vez de Cuadro; Listado para código ---
+\addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+\renewcommand{\lstlistingname}{Listado}
+
 % --- Matemáticas y enlaces -----------------------------------------
 \usepackage{amsmath}
-\usepackage{hyperref}
-\hypersetup{hidelinks}
+% Math en Times (OPCIONAL; debe ir DESPUÉS de amsmath; ver advertencias):
+% \usepackage{unicode-math}
+% \setmathfont{TeX Gyre Termes Math}
 \usepackage{microtype}
 \setlength{\emergencystretch}{3em}
 \usepackage{pdfpages}
+\usepackage{hyperref}
+\usepackage{xurl}   % permite cortar URLs/DOIs en cualquier punto, no solo en guiones
+\hypersetup{hidelinks}
 
-% --- Profundidad del índice y de la numeración ---------------------
-% Índice hasta sección (capítulo + sección + subsección quedaría muy
-% denso). Numeración interna del cuerpo hasta subsección.
-\setcounter{tocdepth}{2}      % índice: \chapter + \section + \subsection
+% --- Índice y numeración -------------------------------------------
+\setcounter{tocdepth}{2}
 \setcounter{secnumdepth}{3}
 
+% --- Títulos al gusto LNCS (Times negrita, número sin "Capítulo") --
 \usepackage{titlesec}
 \titleformat{\chapter}[hang]
-  {\normalfont\huge\bfseries}   % tipografía del encabezado
-  {\thechapter}                 % etiqueta: solo el número (sin «Capítulo»)
-  {1ex}                         % separación número–título
-  {}                            % código antes del título
+  {\normalfont\Large\bfseries}{\thechapter}{1ex}{}
 \titlespacing*{\chapter}{0pt}{0pt}{2ex}
+\titleformat{\section}
+  {\normalfont\large\bfseries}{\thesection}{1ex}{}
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}{\thesubsection}{1ex}{}
 
 % =====================================================================
 %  Marcadores reservados de trazabilidad (NO eliminar)
@@ -83,7 +96,7 @@
 % Sustituye portada.pdf por el nombre real del fichero una vez lo tengas.
 % Colócalo en la misma carpeta que main.tex (memoria/).
 % Si el PDF de portada ocupa más de una página, cambia pages=1 por pages={1,2}.
-\includepdf[pages=1, fitpaper=true]{portada.pdf}
+\includepdf[pages=1, fitpaper=true]{Portada_TFM.pdf}
 
 % --- Resumen / Abstract / Keywords ---------------------------------
 \input{secciones/00-preliminares}

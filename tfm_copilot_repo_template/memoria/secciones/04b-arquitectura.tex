@@ -2,14 +2,20 @@
 \section{Arquitectura del prototipo}
 \label{sec:arquitectura}
 
+Esta sección describe la organización del prototipo: primero la división en
+paquetes y responsabilidades, después el flujo de datos del pipeline
+determinista (RQ1 y RQ2) y el del subsistema de evaluación de los modelos de
+lenguaje (RQ3), y por último las decisiones estructurales que lo sostienen.
+
 \subsection{Visión general}
 La organización del prototipo en paquetes responde a una idea sencilla:
-cada paquete asume una responsabilidad y solo una. Partimos de las tres
+cada paquete asume una responsabilidad y solo una. Se parte de las tres
 responsabilidades clásicas de una herramienta de análisis y
-refactorización, detección, transformación y medición; y las ampliamos
+refactorización, detección, transformación y medición; y se amplían
 con dos piezas propias de este trabajo: un pipeline experimental que
-orquesta los lotes y un subsistema dedicado a la evaluación de los LLMs
-(RQ3). Esta separación no es estética; es lo que nos permite cambiar una
+orquesta los \emph{lotes} (cada lote es una ejecución del proceso sobre todo
+el corpus) y un subsistema dedicado a la evaluación de los LLMs
+(RQ3). Esta separación no es estética; es lo que permite cambiar una
 parte sin arrastrar a las demás y, sobre todo, razonar sobre cada etapa de
 forma aislada. Todas las operaciones sobre código se apoyan en el AST que
 proporciona la biblioteca \textbf{JavaParser}, declarada como dependencia
@@ -18,7 +24,11 @@ en \texttt{pom.xml}. La \autoref{fig:paquetes} (diagrama de paquetes) y la
 acompañan esta sección.
 
 \subsection{Paquetes y responsabilidades}
+El prototipo se organiza en paquetes con responsabilidades separadas. La
+\autoref{tab:paquetes-arq} resume cada paquete y sus clases principales.
+
 \begin{longtable}{@{}p{0.30\linewidth}p{0.62\linewidth}@{}}
+\caption{Paquetes del prototipo y sus clases principales.}\label{tab:paquetes-arq}\\
 \toprule
 \textbf{Paquete} & \textbf{Responsabilidad y clases principales} \\
 \midrule
@@ -102,13 +112,38 @@ que se apoyan en el núcleo de análisis y transformación
 \label{fig:paquetes}
 \end{figure}
 
+La \autoref{fig:paquetes} muestra la organización en paquetes; la
+\autoref{fig:clases-nucleo} desciende al nivel de clases del núcleo
+determinista, con sus métodos públicos y las enumeraciones de configuración
+(\texttt{DetectionMode}) y de motivos de descarte (\texttt{DiscardReason}).
+
+% TODO: FALTA la imagen figuras/img/fig-4.4.png (solo existe el fuente .mmd).
+% Mientras no se genere, el PDF muestra la ruta como texto en lugar del diagrama.
+% Generarla antes de compilar la versión final con:
+%   mmdc -i figuras/src/fig-4.4-clases-nucleo.mmd -o figuras/img/fig-4.4.png -w 2600
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=0.85\textheight,keepaspectratio]{figuras/img/fig-4.4.png}
+\caption{Diagrama de clases (UML) del núcleo determinista: detección
+(\texttt{NestedIfDetector}), transformación (\texttt{NestedIfTransformer}),
+medición (\texttt{CognitiveComplexityCalculator}), validación
+(\texttt{RefactoringValidator}) y orquestación por lotes
+(\texttt{BatchRunner}), con las clases de dominio \texttt{RefactoringOpportunity}
+y \texttt{DetectionResult} y las enumeraciones \texttt{DetectionMode} (modos
+\texttt{STRICT}/\texttt{RELAXED}) y \texttt{DiscardReason}. Las relaciones
+siguen la notación UML: agregación (rombo) del orquestador sobre los servicios
+del núcleo, asociación con el modo de detección y dependencias de creación y
+uso.}
+\label{fig:clases-nucleo}
+\end{figure}
+
 \subsection{Flujo de datos del pipeline determinista (RQ1, RQ2)}
 
 El flujo extremo a extremo, implementado por \texttt{BatchRunner.processCase}, se organiza en las siguientes etapas:
 
 \begin{enumerate}
     \item \textbf{Carga del corpus.}  
-    Los casos se cargan desde el \emph{classpath} y se construyen como instancias de \texttt{ExperimentCase}.
+    Los casos se cargan desde el \emph{classpath} y se construyen como instancias de \texttt{ExperimentCase}; cada caso es un método Java acompañado de sus metadatos (procedencia, complejidad esperada, etc.).
 
     \item \textbf{Parseo a AST.}  
     El código fuente se parsea mediante \lstinline|StaticJavaParser.parse(...)| y se selecciona el primer \lstinline|MethodDeclaration|. Si el parseo falla, el caso se marca como inelegible con un motivo explícito.
@@ -201,7 +236,7 @@ Para RQ3 se añade un flujo paralelo coordinado por \texttt{CampaignExecutor} y 
     La ejecución del modelo se realiza a través de la interfaz \texttt{LlmResponseProvider}, con implementaciones específicas como \texttt{LiveLlmResponseProvider} y \texttt{PrerecordedResponseProvider}.
 
     \item \textbf{Validación mediante el oráculo.}  
-    Cada respuesta se procesa con \texttt{LlmResponseValidator}, que aplica el oráculo experimental descrito en \autoref{sec:oraculo}.
+    Cada respuesta se procesa con \texttt{LlmResponseValidator}, que aplica el oráculo experimental descrito en la \autoref{fig:oraculo}.
 
     \item \textbf{Agregación y exportación de resultados.}  
     Finalmente, los resultados se consolidan y exportan en artefactos.
@@ -220,5 +255,6 @@ Para RQ3 se añade un flujo paralelo coordinado por \texttt{CampaignExecutor} y 
   distintos (tabla agregada, evidencia completa, lectura humana).
   \item \textbf{Sin acoplamiento a SonarQube en el pipeline determinista.}
   El prototipo \emph{no invoca} SonarQube en el flujo principal; la
-  validación cruzada se realiza fuera de banda (\autoref{sec:sonar-val}).
+  validación cruzada se realiza de forma independiente del pipeline, como un
+  contraste externo (\autoref{sec:sonar-val}).
 \end{itemize}

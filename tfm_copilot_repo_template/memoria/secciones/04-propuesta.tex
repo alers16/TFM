@@ -2,6 +2,14 @@
 \chapter{Detalles de la propuesta}
 \label{cap:propuesta}
 
+Este capítulo desarrolla la propuesta del trabajo: un prototipo determinista que
+detecta y combina condicionales anidados de forma segura. Se presenta primero
+una visión general del enfoque y su encaje en la metodología \emph{Design
+Science Research}; a continuación, el diseño del enfoque, con el patrón objetivo
+y las precondiciones de aplicabilidad que delimitan cuándo la transformación es
+segura; después, la arquitectura del prototipo en paquetes y flujos de datos; y,
+por último, los detalles de implementación de cada componente.
+
 \section{Visión general}
 \label{sec:vision-general}
 La propuesta se plantea como un proyecto de \emph{Design Science Research}
@@ -10,7 +18,7 @@ estructura encaja de forma natural con el
 objetivo: construir un artefacto y evaluarlo. El artefacto es un prototipo
 determinista de detección y refactorización; la evaluación consiste en
 medir cómo responde a cada una de las preguntas de investigación. Esta
-doble naturaleza —construir y comprobar— recorre todo el capítulo. Conviene
+doble naturaleza (construir y comprobar) recorre todo el trabajo. Conviene
 subrayar, además, que el prototipo no es solo el objeto de estudio: actúa
 como \emph{baseline verificable}, es decir, como la referencia fiable
 contra la que se contrastan después las refactorizaciones de los grandes
@@ -18,8 +26,7 @@ modelos de lenguaje en RQ3.
 
 \paragraph{Mapa RQ $\leftrightarrow$ secciones.}
 La \autoref{tab:mapa-rq} relaciona cada pregunta de investigación con las
-secciones que la abordan. La figura \emph{Fig.~4.0} de
-\texttt{PLAN\_VISUAL.md} ofrece la versión gráfica de esta trazabilidad.
+secciones que la abordan.
 
 \begin{table}[ht]
 \centering

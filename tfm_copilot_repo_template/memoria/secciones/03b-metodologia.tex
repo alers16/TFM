@@ -2,12 +2,12 @@
 \chapter{Metodología}
 \label{cap:metodologia}
 
-Este capítulo describe el enfoque metodológico que vertebra el trabajo. La
-naturaleza del problema —proponer una transformación de código, construir un
-prototipo que la realice y comprobar empíricamente sus efectos— encaja de
-forma natural con el paradigma de \emph{Design Science Research} (DSR),
-orientado a generar conocimiento mediante la construcción y evaluación de
-artefactos.
+Este capítulo describe el enfoque metodológico que vertebra el trabajo. El
+problema abordado consiste en proponer una transformación de código, construir
+un prototipo que la realice y comprobar empíricamente sus efectos; esa
+naturaleza encaja de forma natural con el paradigma de \emph{Design Science
+Research} (DSR), orientado a generar conocimiento mediante la construcción y
+evaluación de artefactos.
 
 \section{Design Science Research}
 \label{sec:dsr-metodo}
@@ -17,13 +17,16 @@ relevante y cuya utilidad se demuestra mediante evaluación rigurosa. Hevner et
 al.~\cite{10.2307/25148625} sitúan en el núcleo de este paradigma la
 articulación entre construir el artefacto y evaluarlo frente al problema que
 pretende resolver. Peffers et al.~\cite{10.2753/MIS0742-1222240302} concretan
-ese principio en una secuencia de actividades —identificar el problema y
+ese principio en una secuencia de seis actividades: identificar el problema y
 motivarlo, fijar los objetivos de la solución, diseñar y desarrollar el
-artefacto, demostrarlo, evaluarlo y comunicarlo— que proporciona una
+artefacto, demostrarlo, evaluarlo y comunicarlo. Esta secuencia proporciona una
 estructura reconocible para presentar este tipo de investigación. La
 \autoref{fig:dsr-ciclo} representa ese ciclo y la realimentación entre
 construcción y evaluación que lo caracteriza.
 
+% TODO: REGENERAR figuras/img/DSR.png desde el fuente actualizado
+% figuras/src/fig-dsr-ciclo.mmd (el texto "impacto en CC" se cambió a
+% "impacto en complejidad cognitiva"; el PNG actual aún muestra "CC").
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.4\linewidth]{figuras/img/DSR.png}
@@ -79,13 +82,14 @@ Comunicar                           & La presente memoria y el paquete de replic
 La parte de \emph{construcción} comprende la formalización de las
 precondiciones de aplicabilidad y el desarrollo del prototipo
 (\autoref{cap:propuesta}). La parte de \emph{evaluación} se apoya en
-protocolos deliberadamente congelados y en artefactos persistentes y
-auditables, de modo que el procedimiento pueda repetirse y conducir al mismo
-resultado; sus detalles se describen en el diseño experimental
+protocolos deliberadamente congelados (con todos sus parámetros fijados de
+antemano y registrados, de modo que no varíen entre ejecuciones) y en
+artefactos persistentes y auditables, de modo que el procedimiento pueda
+repetirse y conducir al mismo resultado; sus detalles se describen en el diseño experimental
 (\autoref{sec:experimento}).
 
-Con ese marco, cada pregunta se operacionaliza ---sin alterar su enunciado
-oficial (\autoref{sec:rq-intro})--- en los términos siguientes.
+Con ese marco, cada pregunta se operacionaliza, sin alterar su enunciado
+(\autoref{sec:rq-intro}), en los términos siguientes.
 
 \paragraph{RQ1 — Alcance operativo.}
 \begin{itemize}
@@ -110,13 +114,12 @@ oficial (\autoref{sec:rq-intro})--- en los términos siguientes.
 
 \paragraph{RQ3 — Protocolo de comparación.}
 \begin{itemize}
-  \item Se selecciona un subconjunto del corpus de evaluación
-  (\autoref{sec:corpus}).
+  \item Se evalúa sobre el corpus de evaluación (\autoref{sec:corpus}).
   \item Se solicita a uno o más LLM la misma refactorización bajo un
   \emph{prompt} estandarizado y un protocolo congelado.
   \item Se comparan los resultados en corrección semántica, completitud de
   detección y calidad del código, mediante un oráculo automático
-  (\autoref{sec:oraculo}).
+  (\autoref{fig:oraculo}).
 \end{itemize}
 
 \paragraph{Criterio de corrección.}
@@ -128,8 +131,8 @@ el cortocircuito de la evaluación original, de modo que ambas versiones
 producen el mismo efecto para toda entrada. Y de forma dinámica: el resultado
 de cada caso elegible se compila con el compilador de Java para comprobar que
 la transformación no genera código inválido. La ejecución de las pruebas de
-comportamiento de los proyectos de origen excede el alcance del prototipo
----requeriría reconstruir y configurar cada proyecto--- y se señala como
+comportamiento de los proyectos de origen excede el alcance del prototipo,
+pues requeriría reconstruir y configurar cada proyecto, y se señala como
 trabajo futuro (\autoref{cap:conclusiones}).
 
 \section{Hipótesis de trabajo}

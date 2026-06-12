@@ -1,0 +1,81 @@
+%% Fig. 4.4 — Diagrama de clases (UML) del nucleo determinista
+%% (deteccion, transformacion, medicion, validacion y orquestacion por lotes).
+%% Fuente de verdad: src/main/java/es/tfm/refactoring/
+%% Render:  mmdc -i fig-4.4-clases-nucleo.mmd -o ../img/fig-4.4.png -w 2600
+%%      o:  mmdc -i fig-4.4-clases-nucleo.mmd -o ../img/fig-4.4.svg
+classDiagram
+    direction TB
+
+    class BatchRunner {
+        +MAX_PASSES: int$
+        +run(cases: List~ExperimentCase~) List~ExperimentResult~
+    }
+    class NestedIfDetector {
+        +detect(method: MethodDeclaration) List~RefactoringOpportunity~
+        +detectWithReasons(method: MethodDeclaration) List~DetectionResult~
+    }
+    class NestedIfTransformer {
+        +apply(opportunity: RefactoringOpportunity) boolean
+    }
+    class CognitiveComplexityCalculator {
+        +calculate(method: MethodDeclaration) int
+        +calculate(source: String) int
+    }
+    class RefactoringValidator {
+        +validate(case: ExperimentCase) ValidationResult
+    }
+    class DetectionResult {
+        -candidateLine: int
+        +isAccepted() boolean
+    }
+    class RefactoringOpportunity {
+        -outerIf: IfStmt
+        -innerIf: IfStmt
+        -outerCondition: String
+        -innerCondition: String
+    }
+    class ExperimentResult {
+        -eligible: boolean
+        -complexityBefore: int
+        -complexityAfter: int
+        -delta: int
+        -opportunitiesApplied: int
+        -totalPasses: int
+    }
+    class DetectionMode {
+        <<enumeration>>
+        STRICT
+        RELAXED
+    }
+    class DiscardReason {
+        <<enumeration>>
+        OUTER_HAS_ELSE
+        OUTER_BLOCK_MULTIPLE_STATEMENTS
+        SINGLE_STATEMENT_NOT_IF
+        INNER_HAS_ELSE
+        METHOD_CALL_IN_CONDITION
+        ASSIGNMENT_IN_CONDITION
+        INCREMENT_OR_DECREMENT_IN_CONDITION
+        LAMBDA_IN_CONDITION
+        OBJECT_CREATION_IN_CONDITION
+        NO_NESTED_IF_PATTERN
+    }
+
+    %% Agregacion: el orquestador se apoya en los servicios del nucleo
+    BatchRunner o-- "1" NestedIfDetector : detector
+    BatchRunner o-- "1" NestedIfTransformer : transformer
+    BatchRunner o-- "1" CognitiveComplexityCalculator : calculator
+
+    %% Asociacion: configuracion por modo de deteccion
+    NestedIfDetector --> "1" DetectionMode : mode
+    RefactoringValidator --> "1" DetectionMode : mode
+
+    %% Dependencias: creacion y uso
+    BatchRunner ..> ExperimentResult : «create»
+    NestedIfDetector ..> DetectionResult : «create»
+    NestedIfDetector ..> RefactoringOpportunity : «create»
+    NestedIfTransformer ..> RefactoringOpportunity : «use»
+
+    %% Composicion de DetectionResult
+    DetectionResult o-- "0..1" RefactoringOpportunity : opportunity
+    DetectionResult --> "0..*" DiscardReason : discardReasons
