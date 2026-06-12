@@ -23,7 +23,8 @@ método: cada caso del corpus es un método Java individual
 
 La clase \texttt{NestedIfDetector} recorre el AST del método y visita todos
 los \lstinline|if|, incluidos los anidados a cualquier profundidad. Para
-cada \lstinline|if| candidato aplica en orden las precondiciones:
+cada \lstinline|if| candidato aplica en orden las precondiciones estructurales
+P1--P4 (y, solo en el modo conservador, el filtro opcional P5):
 
 \begin{enumerate}
     \item \textbf{P1.} El \lstinline|if| externo no tiene rama \lstinline|else|.
@@ -36,15 +37,18 @@ cada \lstinline|if| candidato aplica en orden las precondiciones:
     \item \textbf{P4.} El \lstinline|if| interno tampoco tiene rama
     \lstinline|else|.
 
-    \item \textbf{P5.} Ninguna de las dos condiciones contiene efectos
-    colaterales: las cinco categorías descritas en \autoref{sec:precondiciones}.
+    \item \textbf{P5 (filtro conservador opcional).} Solo en el modo
+    conservador, además, ninguna de las dos condiciones contiene efectos
+    colaterales (las cinco categorías descritas en \autoref{sec:precondiciones});
+    no es necesaria para la corrección.
 \end{enumerate}
 
 El detector ofrece dos modos de salida: uno devuelve solo las oportunidades
 aceptadas y otro (\lstinline|detectWithReasons|) devuelve también los
 candidatos rechazados con su motivo de descarte. Los diez motivos posibles
 se agrupan en \emph{estructurales} (incumplimiento de P1--P4 o ausencia de
-patrón combinable) y de \emph{efecto colateral} (las cinco variantes de P5);
+patrón combinable) y de \emph{efecto colateral} (las cinco variantes de P5, que
+solo se emiten en el modo conservador);
 el catálogo completo está en el Apéndice~D y su árbol de decisión en la
 \autoref{fig:arbol-p1-p5}. Como los motivos se recogen por candidato y se
 agregan a nivel de método, un mismo método puede aportar varias categorías
@@ -207,7 +211,7 @@ comprobaciones secuenciales:
 
 El conjunto de veredictos (\texttt{LlmVerdict}) está formado por \texttt{SUCCESS}, \texttt{INCORRECT}, \texttt{INVALID\_OUTPUT}, \texttt{REFUSED}, \texttt{PARTIAL} y \texttt{ERROR}.
 
-El oráculo incorpora además la \textbf{guarda de elegibilidad v1.1}: si el baseline declara que un caso no es elegible (porque no se cumple alguna de las precondiciones P1--P5) y el LLM aplica una transformación con \lstinline|delta != 0|, el veredicto pasa a ser \texttt{INCORRECT}, aunque la complejidad disminuya. Con esta comprobación se evita clasificar como aciertos transformaciones que violan las precondiciones del detector.
+El oráculo incorpora además la \textbf{guarda de elegibilidad v1.1}: si el baseline declara que un caso no es elegible (porque no se cumple alguna de las precondiciones estructurales P1--P4) y el LLM aplica una transformación con \lstinline|delta != 0|, el veredicto pasa a ser \texttt{INCORRECT}, aunque la complejidad disminuya. Con esta comprobación se evita clasificar como aciertos transformaciones que violan las precondiciones del detector.
 
 La \autoref{fig:oraculo} resume esta cadena de validación en forma de diagrama de flujo, mientras que la \autoref{tab:oraculo} recoge las reglas exactas de asignación de veredicto.
 

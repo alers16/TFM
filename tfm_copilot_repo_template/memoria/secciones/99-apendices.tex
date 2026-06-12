@@ -135,7 +135,9 @@ emite el detector, con la precondición asociada y su descripción literal
 
 \begin{table}[ht]
 \centering
-\caption{Categorías de \texttt{DiscardReason} y precondición asociada.}
+\caption{Categorías de \texttt{DiscardReason} y precondición asociada. Las cinco
+categorías de P5 (efectos colaterales) solo se emiten en el modo conservador:
+P5 es un filtro opcional, no una precondición de corrección.}
 \label{tab:discardreason}
 \begin{tabular}{@{}llp{6.2cm}@{}}
 \toprule
@@ -255,7 +257,7 @@ evidencia.}
 \toprule
 \textbf{RQ} & \textbf{Diseño} & \textbf{Implementación} & \textbf{Evidencia} \\
 \midrule
-RQ1 & \autoref{sec:precondiciones} (P1--P5) & paquetes \texttt{detection}, \texttt{transformation} & \texttt{output/rq2-batch/} (motivos de descarte) \\
+RQ1 & \autoref{sec:precondiciones} (P1--P4) & paquetes \texttt{detection}, \texttt{transformation} & \texttt{output/rq2-structural/} (motivos de descarte) \\
 RQ2 & \autoref{sec:exp-rq2} & \texttt{analysis}, \texttt{experiment} & \texttt{output/rq2-batch/}, \texttt{output/rq2-sonar-validation/fullcorpus/} \\
 RQ3 & \autoref{sec:exp-rq3} & paquete \texttt{llm} & \texttt{output/rq3-campaign-real-phase9/} \\
 \bottomrule

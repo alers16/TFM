@@ -95,7 +95,7 @@ declarado en \autoref{sec:alcance}.
 \paragraph{Cobertura de RQ3.} La evaluación de RQ3 se ejecuta sobre el
 \textbf{corpus consolidado completo} (126 casos: 8 piloto y 118 reales; 104
 elegibles y 22 no elegibles), de modo que cubre todos los ejes de variación
-(casos elegibles, parciales y no elegibles) y los motivos de descarte (P1, P5).
+(casos elegibles, parciales y no elegibles) y los principales motivos de descarte estructurales.
 La \autoref{tab:subset-rq3} recoge una selección representativa de casos; los
 veredictos por intento de los 126 casos están en
 \texttt{output/rq3-campaign-real-phase9/rq3-summary.csv}.
@@ -137,12 +137,12 @@ explícitamente la elegibilidad y, en su caso, el $\Delta$ aplicable.
 \label{sec:exp-rq2}
 (1)~Cargar la totalidad del corpus piloto y real; (2)~para cada
 \texttt{ExperimentCase}, ejecutar \lstinline|BatchRunner.processCase| con
-el detector en modo \texttt{STRICT} (P1--P5 completas) y la política
-\emph{one-at-a-time}; (3)~recoger métricas \emph{before},
+el detector en modo \texttt{STRUCTURAL} (precondiciones estructurales P1--P4) y
+la política \emph{one-at-a-time}; (3)~recoger métricas \emph{before},
 \emph{after} y $\Delta$, y motivos de descarte para los no elegibles; y
-(4)~exportar a JSON y CSV bajo \texttt{output/rq2-batch/}. La parte
+(4)~exportar a JSON y CSV bajo \texttt{output/rq2-structural/}. La parte
 \textbf{congelada} es la composición del corpus, el modo de detección
-(\texttt{STRICT}), el conjunto P1--P5 y la política \emph{one-at-a-time};
+(\texttt{STRUCTURAL}), el conjunto P1--P4 y la política \emph{one-at-a-time};
 cualquier cambio en \texttt{CognitiveComplexityCalculator} invalidaría las
 métricas y exigiría una nueva ejecución completa.
 

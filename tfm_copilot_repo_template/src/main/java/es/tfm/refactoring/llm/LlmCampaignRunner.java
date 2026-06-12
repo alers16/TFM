@@ -42,6 +42,26 @@ public class LlmCampaignRunner {
     }
 
     /**
+     * Constructor con {@link BatchRunner} explícito.
+     * <p>
+     * Permite re-evaluar la campaña con un baseline determinista calculado en
+     * un modo de detección distinto (p.ej. {@link es.tfm.refactoring.detection.DetectionMode#STRUCTURAL})
+     * sin alterar el flujo por defecto, que sigue usando STRICT vía el
+     * {@code BatchRunner()} sin argumentos.
+     * <p>
+     * El {@code promptBuilder} y el oráculo {@link LlmResponseValidator} se
+     * mantienen idénticos: solo cambia la fuente del baseline (elegibilidad y Δ)
+     * con la que el oráculo compara las respuestas del LLM.
+     *
+     * @param batchRunner pipeline determinista usado para computar baselines
+     */
+    public LlmCampaignRunner(BatchRunner batchRunner) {
+        this.promptBuilder = new LlmPromptBuilder();
+        this.validator = new LlmResponseValidator();
+        this.batchRunner = batchRunner;
+    }
+
+    /**
      * Ejecuta la campaña completa según el protocolo sobre el subset definido.
      *
      * @param protocol         configuración del protocolo experimental

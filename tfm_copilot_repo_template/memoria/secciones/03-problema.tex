@@ -67,7 +67,8 @@ if (A && B) {
 \caption{Esquema \emph{before/after} del patrón objetivo: dos \texttt{if}
 anidados (izquierda) se combinan en una única condición conjuntiva
 \lstinline|A && B| (derecha). La transformación preserva el orden de
-evaluación y es semánticamente equivalente bajo las precondiciones P1--P5.}
+evaluación y es semánticamente equivalente bajo las precondiciones
+estructurales P1--P4.}
 \label{fig:before-after}
 \end{figure}
 
@@ -142,13 +143,14 @@ porque \lstinline|&&| evalúa \lstinline|A| y, solo si es cierto,
 \lstinline|B|: el mismo orden y el mismo cortocircuito que en la versión
 anidada. Esta es la condición de combinabilidad \emph{estructural}.
 
-El prototipo añade una restricción adicional: exige que las condiciones estén
-libres de efectos colaterales. No se debe a que la combinación deje de
-preservar el comportamiento en su presencia, sino a que solo bajo esa restricción puede garantizarse la
-seguridad de forma automática y verificable sobre la estructura del código,
-sin recurrir a un análisis semántico que excede el alcance del prototipo. El
-conjunto completo de precondiciones se formaliza en la
-\autoref{sec:precondiciones}.
+Esta condición estructural es, además, \emph{suficiente}: la combinación
+preserva el comportamiento aunque las condiciones tengan efectos colaterales,
+porque \lstinline|&&| evalúa \lstinline|A| y, solo si es cierto, \lstinline|B|,
+en el mismo orden y bajo las mismas condiciones que el anidamiento. No hace
+falta, por tanto, restringir los efectos colaterales para garantizar la
+corrección. El prototipo ofrece esa restricción solo como un \emph{modo
+conservador opcional}, una elección de cautela, no un requisito. El conjunto de
+precondiciones se formaliza en la \autoref{sec:precondiciones}.
 
 \section{Casos que no son combinables}
 \label{sec:no-combinables}
@@ -194,7 +196,7 @@ $N$ \lstinline|if| puramente anidados (cada nivel un único \lstinline|if|, sin
 \lstinline|else| ni sentencias intercaladas) se reduce aplicando la regla de
 combinación de forma repetida, un par cada vez, hasta que una precondición lo
 impida; por eso una cadena puede combinarse total o parcialmente: si un nivel
-intermedio incumple P1--P5, la combinación se detiene en ese punto. Quedan
+intermedio incumple P1--P4, la combinación se detiene en ese punto. Quedan
 fuera del alcance, como extensiones naturales (\autoref{cap:conclusiones}), las
 variantes que no son anidamiento puro: cadenas con \lstinline|else if|,
 secuencias de \lstinline|if| hermanos (no anidados) o combinaciones que exigen
@@ -217,10 +219,10 @@ Un \lstinline|if| que contiene exactamente otro \lstinline|if| (anidamiento simp
   & Ramas \lstinline|else| o \lstinline|else if| en cualquiera de los dos \lstinline|if| \\
 Ausencia de sentencias adicionales en el bloque externo
   & Sentencias antes o después del \lstinline|if| interno \\
-Condiciones \lstinline|A| y \lstinline|B| sin efectos colaterales
-  & Efectos colaterales o asignaciones en las condiciones \\
+Condiciones \lstinline|A| y \lstinline|B| arbitrarias, con o sin efectos colaterales
+  & Cadenas con \lstinline|else if| o secuencias de \lstinline|if| hermanos (no anidados) \\
 Cuerpo \lstinline|S| arbitrario
-  & Expresiones lambda, \emph{streams}, concurrencia \\
+  & Combinaciones que exigen reordenar el flujo \\
 Combinación mediante \lstinline|&&| con preservación del cortocircuito
   & Construcciones cuya equivalencia no se garantiza sintácticamente \\
 \bottomrule
