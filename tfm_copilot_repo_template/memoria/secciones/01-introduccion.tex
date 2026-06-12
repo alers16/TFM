@@ -40,7 +40,7 @@ un patrón frecuente en código real. El escaneo de proyectos Java de código
 abierto realizado en este trabajo localizó numerosas instancias de este patrón
 objetivo, lo que confirma que no se trata de una construcción marginal. La
 técnica más habitual para reducir complejidad cognitiva es la extracción de
-método~\cite{10.1109/ACCESS.2022.3144743}, que descompone un método en otros
+métodos~\cite{10.1109/ACCESS.2022.3144743}, que descompone un método en otros
 más pequeños. Frente a ello, este trabajo parte de una observación más
 específica: ciertos condicionales anidados pueden simplificarse de forma más
 directa, combinándolos en una sola condición mediante la fusión de sus
@@ -118,6 +118,13 @@ lenguaje bajo un protocolo experimental controlado.
 \section{Preguntas de investigación}
 \label{sec:rq-intro}
 
+De los objetivos anteriores se derivan las tres preguntas de investigación que
+componen el trabajo. La primera delimita \emph{cuándo} es segura la
+transformación; la segunda mide su \emph{efecto} sobre la complejidad cognitiva;
+y la tercera indaga si la tarea puede \emph{automatizarse} de forma fiable con
+modelos de lenguaje. Se enuncian a continuación y se mantienen sin reformular a
+lo largo de toda la memoria.
+
 \begin{description}
   \item[RQ1.] \textquestiondown{}En qué casos se pueden combinar sentencias condicionales anidadas y cuál sería el resultado?
   \item[RQ2.] \textquestiondown{}Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?
@@ -130,18 +137,21 @@ evaluación en la \autoref{sec:operacionalizacion}, sin alterar su enunciado.
 \section{Contribuciones del TFM}
 \label{sec:contribuciones}
 
+El trabajo deja cuatro contribuciones principales, que se enuncian aquí y se
+desarrollan en los capítulos correspondientes:
 \begin{enumerate}
-  \item La formalización de un conjunto cerrado de precondiciones de
-  aplicabilidad para la combinación segura de sentencias \lstinline|if|
-  anidadas, junto con un catálogo trazable de motivos de descarte.
-  \item Un prototipo determinista basado en AST con un pipeline experimental
-  reproducible que cubre carga de corpus, detección, transformación, medición
-  y exportación de artefactos.
-  \item Una comparación controlada entre el prototipo y varios LLMs bajo un
-  protocolo experimental fijado de antemano y un oráculo de validación
-  automático.
-  \item Un paquete de replicación que incluye corpus, scripts y artefactos
-  versionados.
+  \item Se formaliza un conjunto cerrado de precondiciones de aplicabilidad para
+  la combinación segura de sentencias \lstinline|if| anidadas, acompañado de un
+  catálogo trazable de motivos de descarte que da respuesta operativa a RQ1.
+  \item Se construye un prototipo determinista basado en AST, con un pipeline
+  experimental reproducible que cubre la carga del corpus, la detección, la
+  transformación, la medición y la exportación de artefactos.
+  \item Se realiza una comparación controlada entre el prototipo y varios modelos
+  de lenguaje, bajo un protocolo fijado de antemano y un oráculo de validación
+  automático, que sitúa las capacidades de los modelos frente a una referencia
+  verificable.
+  \item Se publica un paquete de replicación con el corpus, los scripts y los
+  artefactos versionados necesarios para reproducir los experimentos.
 \end{enumerate}
 
 \section{Estructura del documento}

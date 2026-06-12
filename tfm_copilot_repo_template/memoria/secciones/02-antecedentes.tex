@@ -145,7 +145,7 @@ programación de uso masivo. Desde entonces, el interés se ha desplazado desde
 la generación de código nuevo hacia tareas sobre código existente, entre ellas
 la refactorización, que es precisamente el escenario abordado en RQ3.
 
-La evidencia empírica sobre refactorización con LLM es prometedora, aunque
+La evidencia empírica sobre refactorización con LLMs es prometedora, aunque
 todavía debe interpretarse con cautela. DePalma
 et al.~\cite{10.1016/j.eswa.2024.123602} observan, sobre un conjunto de
 fragmentos de código Java, que ChatGPT propone mejoras útiles en la mayoría de
@@ -179,7 +179,7 @@ empírica; la teoría de la refactorización
 preservación del comportamiento condicionado al cumplimiento de
 precondiciones; el análisis sobre AST
 (\autoref{sec:ast-antecedentes}) ofrece la base tecnológica, aunque dentro
-de una frontera esencialmente sintáctica; y la literatura sobre LLM
+de una frontera esencialmente sintáctica; y la literatura sobre LLMs
 (\autoref{sec:llm-antecedentes}) delimita tanto el potencial de estos
 modelos como la necesidad de validar sus salidas antes de aceptarlas como
 refactorizaciones correctas.
@@ -192,7 +192,7 @@ la evalúa sobre diez proyectos de código abierto, logrando resolver una
 fracción elevada de las incidencias de complejidad cognitiva detectadas por
 SonarQube. El presente trabajo comparte con ese enfoque el objetivo general
 de reducir la complejidad cognitiva mediante refactorización automática y se
-sitúa en el mismo contexto experimental de proyectos open source
+sitúa en el mismo contexto experimental de proyectos \emph{open source}
 (\autoref{sec:corpus}). Sin embargo, difiere tanto en el tipo de
 transformación como en el alcance. Mientras que Saborido et al.
 \emph{descomponen} métodos mediante extracción, este trabajo
@@ -216,7 +216,7 @@ complejidad cognitiva y comprobación de precondiciones. Las reglas automáticas
 (\emph{quick fixes}) se limitan a sugerencias de baja complejidad y no cubren
 este patrón. Ninguna de estas herramientas aúna los tres rasgos del presente
 trabajo: transformación formalizada con precondiciones verificables, medición
-de impacto en complejidad cognitiva y evaluación de los LLM como agente
+de impacto en complejidad cognitiva y evaluación de los LLMs como agente
 alternativo.
 
 La \autoref{tab:comparativa} resume este posicionamiento frente a enfoques
@@ -224,7 +224,7 @@ previos. El hueco que cubre este trabajo se sitúa en la intersección de tres
 rasgos que, por separado, sí aparecen en la literatura: una transformación
 concreta acotada mediante precondiciones \emph{verificables}, el uso de la
 complejidad cognitiva como criterio de impacto y una evaluación explícita de
-la capacidad de los LLM para reproducir la refactorización frente a un
+la capacidad de los LLMs para reproducir la refactorización frente a un
 \emph{baseline} determinista.
 
 \begin{table}[H]
@@ -234,7 +234,7 @@ la capacidad de los LLM para reproducir la refactorización frente a un
 \small
 \begin{tabularx}{\linewidth}{@{}p{3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
 \toprule
-\textbf{Enfoque} & \textbf{Transformación} & \textbf{Garantía de seguridad} & \textbf{Papel de los LLM} \\
+\textbf{Enfoque} & \textbf{Transformación} & \textbf{Garantía de seguridad} & \textbf{Papel de los LLMs} \\
 \midrule
 Refactors de IDE / catálogo de Fowler~\cite{fowler2018refactoring}
   & Repertorio amplio
@@ -244,7 +244,7 @@ Saborido et al.~\cite{10.1109/ACCESS.2022.3144743}
   & Extracción de método (búsqueda)
   & Refactor que preserva el comportamiento
   & No considerado \\
-LLM para refactor~\cite{10.1016/j.eswa.2024.123602, liu2024llmrefactoring}
+LLMs para refactor~\cite{10.1016/j.eswa.2024.123602, liu2024llmrefactoring}
   & Abierta
   & Sin garantía formal
   & Constituyen el objeto de análisis \\

@@ -11,20 +11,26 @@ La métrica de RQ2 es un proxy del modelo de SonarSource, no la implementación
 oficial. No obstante, esta amenaza está fuertemente mitigada: el contraste
 sobre el corpus completo (\autoref{sec:resultados-sonar}) arroja coincidencia
 exacta con SonarQube en el 100\,\% de los casos medidos (122/122), tanto antes
-como después de refactorizar. La única regla del modelo no implementada
-(detección de recursión) no produjo divergencias en el corpus, pero sigue
-siendo una limitación teórica del proxy. Por otra parte, el oráculo de RQ3 se
+como después de refactorizar. El proxy implementa el modelo completo, incluida la detección de recursión, por
+lo que esa posible fuente de divergencia queda descartada; el corpus, además, no
+contiene métodos recursivos. Por otra parte, el oráculo de RQ3 se
 basa en la CC y en la comparación con el baseline determinista, no en revisión
 humana ni en ejecución de los tests del proyecto original.
 
 \section{Validez interna}
-Determinismo del transformador validado por tests; los LLMs presentan
-no-determinismo residual aun con $T=0$ (mitigado con 3 intentos). La
-política \emph{one-at-a-time} limita interacciones inesperadas pero podría
-ocultar efectos compuestos.
+La validez interna se sostiene, ante todo, en el carácter determinista del
+transformador, cuyo comportamiento está validado mediante pruebas unitarias:
+ante la misma entrada produce siempre la misma salida, de modo que los
+resultados de RQ2 no dependen del momento ni del entorno de ejecución. Los
+modelos de lenguaje, en cambio, presentan un no-determinismo residual aun con
+temperatura $T=0$; para acotarlo, cada caso se invoca tres veces y se examina la
+consistencia entre intentos. Por último, la política de aplicación una por una
+reduce el riesgo de interacciones inesperadas entre transformaciones sucesivas,
+si bien podría ocultar efectos compuestos que solo aflorarían al aplicar varias
+oportunidades a la vez.
 
 \section{Validez externa}
-El corpus consolidado (126 casos, 104 elegibles) procede mayoritariamente
+El corpus consolidado (126 casos, 111 elegibles) procede mayoritariamente
 de proyectos abiertos, pero su composición no es una muestra
 estadísticamente representativa del código Java en general: es una
 \emph{muestra intencional} de métodos con condicionales anidados (sesgo de
@@ -46,10 +52,18 @@ Aunque RQ3 cubre el corpus completo (126 casos), este sigue sin sostener
 inferencia estadística fuerte sobre poblaciones de código; el análisis de
 capacidad de los modelos se realiza, además, sobre las invocaciones que
 obtuvieron respuesta (\autoref{sec:resultados-rq3}). Por último, la métrica
-única (CC) puede sesgar la valoración global de calidad.
+única (CC) puede sesgar la valoración global de calidad. Asimismo, el límite de
+salida fijado en el protocolo (2048 \emph{tokens}) resultó insuficiente para los
+seis métodos más extensos de \texttt{Knowage}: las respuestas de \texttt{gpt-4.1}
+se truncaron antes de completar el bloque de código (las 16 salidas
+\texttt{INVALID\_OUTPUT}). Es una limitación del presupuesto de \emph{tokens}, no
+del modelo; reejecutar esos casos con un límite mayor queda como trabajo futuro.
 
 \section{Mitigaciones implementadas}
-Congelación del protocolo (\texttt{LlmExperimentProtocol}); trazabilidad
-completa (evidencias JSON/CSV/MD por invocación); guarda de elegibilidad
-v1.1 en el oráculo. La restricción a un único proveedor de LLM queda
-justificada en la \autoref{sec:exp-rq3}.
+\begin{itemize}
+  \item Congelación del protocolo (\texttt{LlmExperimentProtocol}).
+  \item Trazabilidad completa: evidencias JSON/CSV/MD por invocación.
+  \item Guarda de elegibilidad v1.1 en el oráculo.
+\end{itemize}
+La restricción a un único proveedor de LLMs queda justificada en la
+\autoref{sec:exp-rq3}.

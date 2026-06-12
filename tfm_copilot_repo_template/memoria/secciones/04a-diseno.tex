@@ -43,7 +43,7 @@ que las precondiciones de la \autoref{sec:precondiciones} formalizan.
 \subsection{Patrón objetivo de transformación}
 El patrón canónico (\autoref{fig:before-after}) es semánticamente equivalente
 al original \emph{bajo} las precondiciones estructurales P1--P4. La equivalencia
-se sostiene en el cortocircuito de \lstinline|&&|: como \lstinline|A && B|
+se sostiene en el cortocircuito de \lstinline|&&|~\cite{jls17}: como \lstinline|A && B|
 equivale a \lstinline|A ? B : false|, evalúa \lstinline|A| y, solo si es cierto,
 \lstinline|B|, exactamente igual que el anidamiento. Por ello la combinación
 preserva el comportamiento observable \emph{con independencia de que las
@@ -58,11 +58,10 @@ El detector evalúa, para cada nodo \lstinline|IfStmt| del AST, cuatro
 precondiciones \emph{estructurales}, necesarias y conjuntamente suficientes
 para considerar el caso elegible (la razón de la suficiencia, el cortocircuito
 de \lstinline|&&|, se explica en la \autoref{sec:patron}). Los nombres en monoespaciado como
-\lstinline|IfStmt|, \lstinline|MethodCallExpr| o \lstinline|AssignExpr| son
+\lstinline|IfStmt| o \lstinline|BlockStmt| son
 tipos de nodo del AST de JavaParser, no clases del prototipo; las clases y
-enumeraciones propias del prototipo (incluidos los modos de detección y los
-motivos de descarte) se recogen en el diagrama de clases
-(\autoref{fig:clases-nucleo}).
+enumeraciones propias del prototipo (incluidos los motivos de descarte) se
+recogen en el diagrama de clases (\autoref{fig:clases-nucleo}).
 
 \begin{description}
   \item[P1 — Ausencia de \texttt{else} externo.] El \lstinline|if| externo
@@ -82,13 +81,16 @@ motivos de descarte) se recogen en el diagrama de clases
 \end{description}
 
 En conjunto, P1 y P4 exigen que ninguno de los dos \lstinline|if| (ni el
-externo ni el interno) tenga rama \lstinline|else| o \lstinline|else if|, y P2 y
-P3, que el bloque externo contenga exactamente el \lstinline|if| interno y nada
-más. Estas cuatro condiciones son puramente estructurales y, por el
+externo ni el interno) tenga rama \lstinline|else| o \lstinline|else if| ---que
+en el AST de JavaParser no es una construcción propia, sino un \lstinline|else|
+cuyo cuerpo es a su vez un \lstinline|IfStmt|, de modo que la comprobación de
+ausencia de \lstinline|else| (\lstinline|hasElseBranch()|) cubre ambos casos por
+igual---, y P2 y P3, que el bloque externo contenga exactamente el
+\lstinline|if| interno y nada más. Estas cuatro condiciones son puramente estructurales y, por el
 cortocircuito de \lstinline|&&| (\autoref{sec:patron}), necesarias y
 suficientes para que la combinación preserve el comportamiento.
 
-La \autoref{fig:arbol-p1-p5} resume el flujo de decisión completo: las
+La \autoref{fig:arbol-precondiciones} resume el flujo de decisión completo: las
 precondiciones se evalúan en orden y, en cuanto una falla, el candidato se
 descarta con un motivo trazable; solo si todas se cumplen el caso se declara
 elegible.
@@ -110,53 +112,34 @@ elegible.
 \node[check]  (p2) at (0,-2)   {P2 — \textquestiondown{}rama \texttt{then} con una sola sentencia?};
 \node[check]  (p3) at (0,-4)   {P3 — \textquestiondown{}esa sentencia es un \texttt{if}?};
 \node[check]  (p4) at (0,-6)   {P4 — \textquestiondown{}\texttt{if} interno sin \texttt{else}?};
-\node[check]  (p5) at (0,-8)   {P5 (opcional, modo conservador) — \textquestiondown{}condiciones sin efectos colaterales?};
-\node[accept] (ok) at (0,-10)  {\textbf{Elegible:} combinar \texttt{A \&\& B}};
+\node[accept] (ok) at (0,-8)   {\textbf{Elegible:} combinar \texttt{A \&\& B}};
 % Columna derecha (motivos de descarte)
 \node[reject] (r1) at (8,0)    {\texttt{OUTER\_HAS\_ELSE}};
 \node[reject] (r2) at (8,-2)   {\texttt{OUTER\_BLOCK\_MULTIPLE\_STATEMENTS}};
 \node[reject] (r3) at (8,-4)   {\texttt{SINGLE\_STATEMENT\_NOT\_IF}};
 \node[reject] (r4) at (8,-6)   {\texttt{INNER\_HAS\_ELSE}};
-\node[reject] (r5) at (8,-8)   {\texttt{METHOD\_CALL}, \texttt{ASSIGNMENT},
-  \texttt{INCREMENT\_OR\_DECREMENT}, \texttt{LAMBDA} u
-  \texttt{OBJECT\_CREATION} (\texttt{\_IN\_CONDITION})};
 % Flujo "sí" (vertical)
 \draw[arr] (p1) -- node[lbl,left]{sí} (p2);
 \draw[arr] (p2) -- node[lbl,left]{sí} (p3);
 \draw[arr] (p3) -- node[lbl,left]{sí} (p4);
-\draw[arr] (p4) -- node[lbl,left]{sí} (p5);
-\draw[arr] (p5) -- node[lbl,left]{sí} (ok);
+\draw[arr] (p4) -- node[lbl,left]{sí} (ok);
 % Flujo "no" (horizontal hacia el motivo de descarte)
 \draw[arr] (p1) -- node[lbl,above]{no} (r1);
 \draw[arr] (p2) -- node[lbl,above]{no} (r2);
 \draw[arr] (p3) -- node[lbl,above]{no} (r3);
 \draw[arr] (p4) -- node[lbl,above]{no} (r4);
-\draw[arr] (p5) -- node[lbl,above]{no} (r5);
 \end{tikzpicture}
 \caption{Árbol de decisión del detector. Las precondiciones estructurales
-P1--P4 son necesarias y suficientes; P5 (último nivel) es un filtro adicional
-\emph{opcional} del modo conservador, no un requisito de corrección. Cada rama
-"no" produce un motivo de descarte estable (\texttt{DiscardReason}).}
-\label{fig:arbol-p1-p5}
+P1--P4 son necesarias y suficientes para la combinación; cada rama "no" produce
+un motivo de descarte estable (\texttt{DiscardReason}).}
+\label{fig:arbol-precondiciones}
 \end{figure}
-
-El detector ofrece, además, un \textbf{filtro conservador opcional} (la antigua
-precondición P5): descarta los casos cuyas condiciones contengan llamadas a
-método (\lstinline|MethodCallExpr|), asignaciones (\lstinline|AssignExpr|),
-operadores de incremento o decremento (\lstinline|++|, \lstinline|--|),
-expresiones lambda (\lstinline|LambdaExpr|) o instanciaciones con
-\lstinline|new| (\lstinline|ObjectCreationExpr|). Este filtro \emph{no es
-necesario para la corrección} (el cortocircuito de \lstinline|&&| preserva el
-comportamiento aunque las condiciones tengan efectos colaterales), sino una
-elección de cautela puramente sintáctica: marca como riesgo cualquier condición
-con un posible efecto observable, sin recurrir a un análisis semántico de
-pureza.
 
 Estas precondiciones están implementadas en \texttt{NestedIfDetector} y
 materializadas como categorías estables del enumerado
 \texttt{DiscardReason}, que el detector emite al rechazar un candidato. El
-catálogo completo de motivos (incluyendo las subcategorías de P5 y la
-categoría auxiliar \texttt{NO\_NESTED\_IF\_PATTERN}) se reproduce en el
+catálogo completo de motivos (incluyendo la categoría auxiliar
+\texttt{NO\_NESTED\_IF\_PATTERN}) se reproduce en el
 Apéndice~D. El detector expone dos métodos de salida:
 \texttt{detect(method)} (solo oportunidades aceptadas) y
 \texttt{detectWithReasons(method)} (también los candidatos rechazados con
@@ -164,19 +147,9 @@ sus motivos), siendo este último el que alimenta la columna
 \texttt{discardCategories} del CSV de resultados y da respuesta empírica a
 RQ1.
 
-El rigor de las precondiciones es \emph{configurable} mediante el enumerado
-\texttt{DetectionMode}, con tres modos. El modo \texttt{STRUCTURAL} aplica solo
-las precondiciones estructurales P1--P4 y es el que sustenta los \textbf{resultados
-principales} de esta memoria, pues son necesarias y suficientes para la
-corrección. El modo \texttt{STRICT} añade el filtro conservador de efectos
-colaterales (P5) descrito arriba; se conserva como \textbf{variante conservadora}
-para cuantificar cuántas oportunidades excluye una política que evita los
-efectos colaterales en las condiciones. El modo \texttt{RELAXED} es intermedio:
-parte de P1--P4, acepta un \lstinline|else| interno vacío (P4') y, sobre el
-filtro de efectos colaterales, admite dos excepciones controladas (llamadas a
-método consideradas puras según la lista blanca \texttt{MethodCallAllowlist} y
-condiciones protegidas por una guarda de nulidad, \lstinline|x != null|). La
-comparación entre modos cuantifica cuántas oportunidades abre cada política.
+El detector aplica estas cuatro precondiciones en el modo \texttt{STRUCTURAL}
+del enumerado \texttt{DetectionMode}, que es el que sustenta los
+\textbf{resultados principales} de esta memoria.
 
 \subsection{Política de transformación y seguridad semántica}
 
@@ -186,8 +159,13 @@ Una vez detectada una oportunidad, \texttt{NestedIfTransformer} aplica la transf
     \item \textbf{Guarda previa.}
     Al entrar, el transformador comprueba que ninguno de los dos \lstinline|if| tenga rama \lstinline|else|; si la tuviera, aborta devolviendo \lstinline|false| sin modificar el AST. Esta comprobación es redundante respecto a P1 y P4, pero protege frente a usos directos del transformador al margen del detector.
 
-    \item \textbf{Clonación defensiva de las condiciones.}
-    Se clonan \lstinline|A| y \lstinline|B| para evitar problemas de \emph{aliasing} entre subárboles del AST.
+    \item \textbf{Clonación de las condiciones.}
+    Se clonan \lstinline|A| y \lstinline|B| antes de reutilizarlas en la
+    condición combinada. El \emph{aliasing} es la situación en que dos partes del
+    árbol comparten el mismo nodo: como en JavaParser cada nodo tiene un único
+    nodo padre, insertar directamente la condición original en el nuevo
+    \lstinline|if| la desligaría de su ubicación previa y dejaría el AST en un
+    estado inconsistente. Clonar produce copias independientes y evita ese efecto.
 
     \item \textbf{Parentizado de subexpresiones con menor precedencia.}
     Cuando alguna condición es una expresión \lstinline=||=, se encapsula mediante \lstinline|EnclosedExpr| para preservar correctamente la precedencia frente a \lstinline|&&|.
@@ -198,22 +176,21 @@ Una vez detectada una oportunidad, \texttt{NestedIfTransformer} aplica la transf
     \item \textbf{Sustitución del nodo externo.}
     La condición del \lstinline|if| externo se reemplaza por la nueva condición combinada y el cuerpo pasa a ser el del \lstinline|if| interno, previamente clonado y normalizado a \lstinline|BlockStmt|. Por último se invoca \lstinline|removeElseStmt()| como salvaguarda adicional (\emph{no-op} si, como garantiza la guarda previa, ya no hay \lstinline|else|).
 \end{enumerate}
-\subsection{Política iterativa \emph{one-at-a-time}}
+\subsection{Política iterativa una por una}
 \label{sec:one-at-a-time}
 
-Las múltiples oportunidades dentro de un mismo método se procesan \textbf{de una en una}: tras cada transformación se vuelve a ejecutar la detección sobre el AST modificado, hasta que no queden más oportunidades o se alcance un límite de seguridad de 10 pasadas (\lstinline|MAX_PASSES| en \texttt{BatchRunner}). Esta política se adoptó al observar que aplicar todas las oportunidades en un único pase podía producir sobreconteo cuando los nodos afectados estaban anidados unos dentro de otros.
+Las múltiples oportunidades dentro de un mismo método se procesan \textbf{de una en una}: tras cada transformación se vuelve a ejecutar la detección sobre el AST modificado, hasta que no queden más oportunidades o se alcance un límite de seguridad de 10 pasadas (\lstinline|MAX_PASSES| en \texttt{BatchRunner}), un tope que garantiza la terminación del bucle de re-detección aunque, por un error inesperado, una pasada no llegara a reducir el número de oportunidades. Esta política se adoptó al observar que aplicar todas las oportunidades en un único pase podía producir sobreconteo cuando los nodos afectados estaban anidados unos dentro de otros.
 
 En concreto, esta decisión garantiza que:
 
 \begin{enumerate}
     \item \lstinline|opportunitiesApplied| refleje únicamente transformaciones realmente aplicadas;
-    \item la métrica $\Delta$ calculada antes y después de la refactorización sea exacta para cada caso; y
+    \item la métrica $\Delta (\Delta = after - before)$ calculada antes y después de la refactorización sea exacta para cada caso; y
     \item la trazabilidad del proceso iterativo quede registrada mediante \lstinline|totalPasses|.
 \end{enumerate}
 
-En conjunto, el diseño sacrifica cobertura a cambio de garantías. En el modo de
-referencia (\texttt{STRICT}), los casos con \lstinline|else|, lambdas,
-llamadas a método o múltiples sentencias quedan fuera de alcance. Esta
-restricción es coherente con la estrategia conservadora del anteproyecto y
-permite que el pipeline determinista actúe como \textbf{baseline
-verificable} frente a los LLMs en RQ3.
+En conjunto, el diseño sacrifica cobertura a cambio de garantías: los casos con
+\lstinline|else| o con sentencias adicionales en el bloque externo quedan fuera
+de alcance, pues no son combinables sin alterar el comportamiento. Esta
+restricción, puramente estructural, permite que el pipeline determinista actúe
+como \textbf{baseline verificable} frente a los LLMs en RQ3.

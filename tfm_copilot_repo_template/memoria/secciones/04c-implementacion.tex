@@ -24,7 +24,7 @@ método: cada caso del corpus es un método Java individual
 La clase \texttt{NestedIfDetector} recorre el AST del método y visita todos
 los \lstinline|if|, incluidos los anidados a cualquier profundidad. Para
 cada \lstinline|if| candidato aplica en orden las precondiciones estructurales
-P1--P4 (y, solo en el modo conservador, el filtro opcional P5):
+P1--P4:
 
 \begin{enumerate}
     \item \textbf{P1.} El \lstinline|if| externo no tiene rama \lstinline|else|.
@@ -36,51 +36,46 @@ P1--P4 (y, solo en el modo conservador, el filtro opcional P5):
 
     \item \textbf{P4.} El \lstinline|if| interno tampoco tiene rama
     \lstinline|else|.
-
-    \item \textbf{P5 (filtro conservador opcional).} Solo en el modo
-    conservador, además, ninguna de las dos condiciones contiene efectos
-    colaterales (las cinco categorías descritas en \autoref{sec:precondiciones});
-    no es necesaria para la corrección.
 \end{enumerate}
 
 El detector ofrece dos modos de salida: uno devuelve solo las oportunidades
 aceptadas y otro (\lstinline|detectWithReasons|) devuelve también los
-candidatos rechazados con su motivo de descarte. Los diez motivos posibles
-se agrupan en \emph{estructurales} (incumplimiento de P1--P4 o ausencia de
-patrón combinable) y de \emph{efecto colateral} (las cinco variantes de P5, que
-solo se emiten en el modo conservador);
-el catálogo completo está en el Apéndice~D y su árbol de decisión en la
-\autoref{fig:arbol-p1-p5}. Como los motivos se recogen por candidato y se
+candidatos rechazados con su motivo de descarte. Los motivos de descarte son
+\emph{estructurales}: incumplimiento de P1--P4 o ausencia de patrón combinable.
+El catálogo completo está en el Apéndice~D y su árbol de decisión en la
+\autoref{fig:arbol-precondiciones}. Como los motivos se recogen por candidato y se
 agregan a nivel de método, un mismo método puede aportar varias categorías
 a \lstinline|discardCategories|, lo que constituye evidencia agregada para
 RQ1.
 
 \subsection{Transformador}
 La clase \texttt{NestedIfTransformer} implementa el algoritmo de
-\autoref{sec:diseno}. Algunos detalles relevantes son: \textbf{clonación}
-para no dejar el
-AST inconsistente; \textbf{parentizado selectivo},
+\autoref{sec:diseno}. Algunos detalles relevantes son: \textbf{clonación} de \lstinline|A| y
+\lstinline|B|, para evitar el \emph{aliasing} ---compartir el mismo nodo entre
+dos puntos del árbol--- que dejaría el AST en un estado inconsistente;
+\textbf{parentizado selectivo},
 solo si la expresión es una expresión binaria con operador
 \lstinline|OR|; \textbf{normalización del cuerpo}, produciendo siempre código con llaves;
-\textbf{eliminación defensiva del \texttt{else}};
+\textbf{eliminación del \texttt{else}};
 y \textbf{verificación previa}, replicando
 P1 y P4 como salvaguarda.
 
 \subsection{Cálculo proxy de complejidad cognitiva}
 \label{sec:proxy}
-La clase \texttt{CognitiveComplexityCalculator} calcula la complejidad
+La clase \texttt{Cognitive\allowbreak Complexity\allowbreak Calculator} calcula la complejidad
 cognitiva de un método siguiendo el modelo de SonarSource
 \cite{10.1145/3194164.3194186}. Implementa las tres reglas del modelo:
 
 \begin{itemize}
   \item \textbf{Incremento estructural (+1)}: \lstinline|if|,
-  \lstinline|else if|, \lstinline|else|, \lstinline|for|, \emph{for-each},
+  \lstinline|else-if|, \lstinline|else|, \lstinline|for|, \lstinline|for-each|,
   \lstinline|while|, \lstinline|do-while|, \lstinline|switch|,
   \lstinline|catch|, \lstinline|break|/\lstinline|continue| con etiqueta y
-  el operador ternario \lstinline|?:|.
+  el operador ternario \lstinline|?:| y la recursión directa (cada llamada de
+  un método a sí mismo).
   \item \textbf{Incremento de anidamiento (+nivel)}: \lstinline|if|,
-  \lstinline|for|, \emph{for-each}, \lstinline|while|, \lstinline|do-while|,
-  \lstinline|switch| y \lstinline|catch| (no en \lstinline|else if| ni
+  \lstinline|for|, \lstinline|for-each|, \lstinline|while|, \lstinline|do-while|,
+  \lstinline|switch| y \lstinline|catch| (no en \lstinline|else-if| ni
   \lstinline|else|). Además, los cuerpos de \emph{lambdas}, clases anónimas
   y clases locales se procesan a nivel de anidamiento $+1$.
   \item \textbf{Operadores lógicos}: $+1$ por cada secuencia de operadores
@@ -89,13 +84,24 @@ cognitiva de un método siguiendo el modelo de SonarSource
   etc.). El conteo recorre la expresión de forma plana ignorando por
   completo los paréntesis, tal como especifica el modelo de referencia, de
   modo que las secuencias alternantes (p.\,ej. \lstinline=a || b && c || d=)
-  se contabilizan correctamente.
+  se contabilizan correctamente.\footnote{Java distingue los operadores lógicos
+  en cortocircuito (\lstinline|&&|, \lstinline=||=) de los aritmético-lógicos
+  sin cortocircuito (\lstinline|&|, \lstinline=|=); el modelo de complejidad
+  cognitiva —y este proxy— solo contabilizan los primeros, y la transformación
+  se apoya en el cortocircuito de \lstinline|&&|.}
 \end{itemize}
 
-\paragraph{Limitaciones.}
-La única regla del modelo no implementada es la \textbf{detección de recursión} (que
-SonarSource penaliza con $+1$). Por lo demás, el cálculo cubre el modelo
-completo.
+\paragraph{Cobertura del modelo.}
+El cálculo cubre el modelo de SonarSource en su totalidad, incluida la
+\textbf{detección de recursión directa}: cada llamada de un método a sí mismo
+---identificada de forma sintáctica por nombre, aridad y receptor implícito o
+\texttt{this}--- añade un incremento estructural de $+1$, sin incremento de
+anidamiento. La única construcción fuera de alcance es la recursión
+\emph{indirecta} (ciclos entre varios métodos), que exigiría un análisis
+interprocedural ajeno al propósito del proxy y que no aparece en el corpus. El
+corpus tampoco contiene recursión directa, por lo que esta regla no altera las
+cifras de RQ2; su implementación cierra la última regla del modelo y se valida
+con pruebas unitarias específicas.
 
 \paragraph{Validación frente a los casos oficiales de SonarSource.}
 La
@@ -110,10 +116,11 @@ casos cubren operadores lógicos (incluidas las secuencias alternantes con
 paréntesis ignorados), estructuras de control (\lstinline|switch|,
 \lstinline|try|/\lstinline|catch|/\lstinline|finally|,
 \lstinline|break|/\lstinline|continue| etiquetados,
-\lstinline|if|/\lstinline|else if|/\lstinline|else| anidados y bucles) y
-las características antes limitadas (ternario, \emph{lambda}, clase anónima
-y clase local). El proxy reproduce el valor oficial en todos los casos
-cubiertos; la única exclusión es la recursión.
+\lstinline|if|/\lstinline|else-if|/\lstinline|else| anidados y bucles) y
+las características antes limitadas (operador ternario, expresión \emph{lambda}, clase anónima
+y clase local). El proxy reproduce el valor oficial en todos los casos cubiertos por el
+\emph{fixture}; la detección de recursión, no incluida en ese conjunto, se valida
+aparte con pruebas unitarias específicas.
 
 \subsection{Pipeline experimental}
 El pipeline experimental, implementado por \texttt{BatchRunner}, recorre el
@@ -138,8 +145,8 @@ método) se marca como no elegible, se le asigna una complejidad
 El paquete \texttt{es.tfm.refactoring.llm} implementa el protocolo de RQ3.
 La \autoref{fig:secuencia-rq3} resume el ciclo completo de una evaluación;
 los apartados siguientes detallan cada pieza: el \emph{prompt}, el
-\emph{provider}, el oráculo y la \emph{campaña}. Una campaña es una ejecución
-completa del protocolo sobre el subset de evaluación, es decir, la evaluación
+proveedor, el oráculo y la \emph{campaña}. Una campaña es una ejecución
+completa del protocolo sobre el subconjunto de evaluación, es decir, la evaluación
 de todos los casos por todos los modelos y todos los intentos declarados en el
 protocolo.
 
@@ -148,7 +155,7 @@ protocolo.
 \includegraphics[width=0.92\linewidth]{fig-secuencia-rq3}
 \caption[Secuencia de una evaluación RQ3]{Diagrama de secuencia de una
 evaluación RQ3: del caso y su \emph{baseline} (de RQ2) al veredicto, pasando
-por prompt, \emph{provider}, modelo y oráculo.}
+por prompt, proveedor, modelo y oráculo.}
 \label{fig:secuencia-rq3}
 \end{figure}
 
@@ -173,9 +180,8 @@ finalidad es una comparación exploratoria \emph{zero-shot} (v1.0) frente a
 referencia, es decir, la ejecución oficial del protocolo de dos modelos con el
 \emph{prompt} \lstinline|v1.0| cuyos resultados se reportan en RQ3.
 
-\paragraph{Provider.} La interfaz \texttt{LlmResponseProvider} admite dos
-implementaciones intercambiables: la invocación real a la API de OpenAI
-(con credencial) y las respuestas grabadas para \emph{dry runs} y tests.
+\paragraph{Proveedor.} La interfaz \texttt{LlmResponseProvider} la invocación real a la API de OpenAI
+(con credencial)
 
 \paragraph{Oráculo.}
 
@@ -190,20 +196,24 @@ comprobaciones secuenciales:
     \item \textbf{Extracción del bloque de código.}  
     Se extrae el bloque \lstinline|```java| mediante una expresión regular.
 
-    \item \textbf{Comprobación de parseabilidad.}  
+    \item \textbf{Comprobación de validez sintáctica.}  
     El código extraído se analiza con JavaParser para verificar que sea sintácticamente válido.
 
     \item \textbf{Existencia de al menos un método.}  
-    Se comprueba que el fragmento parseado contenga al menos un método sobre el que aplicar la validación.
+    Se comprueba que el fragmento analizado contenga al menos un método sobre el que aplicar la validación.\footnote{La unidad de análisis es el método: cada caso del corpus es un método completo, y tanto la detección como la transformación operan sobre las sentencias condicionales anidadas que contiene.}
 
     \item \textbf{Preservación de la firma.}  
     Se verifica que la firma del método coincida con la del caso original. Si difiere, se registra como error de validación.
 
-    \item \textbf{Medición de complejidad cognitiva \emph{after}.}  
+    \item \textbf{Medición de complejidad cognitiva posterior.}  
     Una vez aceptado el código desde el punto de vista estructural, se calcula la complejidad cognitiva resultante.
 
-    \item \textbf{Cálculo del delta y comparación con el baseline.}  
-    Se obtiene el valor $\Delta$ y se compara con el delta del baseline determinista.
+    \item \textbf{Cálculo del delta y comparación con el baseline.}
+    Se obtiene la variación de complejidad de la respuesta del modelo,
+    denotada $\delta$, y se compara con la del \emph{baseline} determinista,
+    $\Delta$ (la misma magnitud que en RQ2). La notación reserva la minúscula
+    $\delta$ para el LLM y la mayúscula $\Delta$ para el prototipo, de modo que
+    el veredicto se decide enfrentando ambas (\autoref{tab:oraculo}).
 
     \item \textbf{Asignación del veredicto final.}  
     A partir de las comprobaciones anteriores se asigna el veredicto correspondiente.
@@ -231,8 +241,8 @@ La \autoref{fig:oraculo} resume esta cadena de validación en forma de diagrama 
 \node[term] (start) at (0,0)     {Respuesta del LLM};
 \node[dec]  (d1)    at (0,-2.3)  {\textquestiondown{}rechazo explícito?};
 \node[proc] (p1)    at (0,-4.6)  {Extraer bloque \lstinline|```java|};
-\node[dec]  (d2)    at (0,-6.9)  {\textquestiondown{}bloque, parsea y $\geq 1$ método?};
-\node[proc] (p2)    at (0,-9.4)  {Comprobar firma; medir CC \emph{after}; $\delta$ y comparación con baseline};
+\node[dec]  (d2)    at (0,-6.9)  {\textquestiondown{}bloque, se analiza y $\geq 1$ método?};
+\node[proc] (p2)    at (0,-9.4)  {Comprobar firma; medir CC posterior, $\delta$ y comparación con baseline};
 \node[term] (end)   at (0,-11.7) {Asignar veredicto (Tabla~\ref{tab:oraculo})};
 % Salidas laterales
 \node[endv] (refv)  at (5.4,-2.3) {Veredicto de rechazo (Tabla~\ref{tab:oraculo})};
@@ -258,7 +268,7 @@ según la \autoref{tab:oraculo}.}
 \centering
 \caption{Reglas de asignación de veredicto del oráculo (política v1.1).
 Fuente: \texttt{LlmResponseValidator.evaluate}. $\delta$ es la variación de
-CC del LLM y \emph{baseline} la del prototipo determinista.}
+CC del LLM y $\Delta$ la del prototipo determinista (\emph{baseline}).}
 \label{tab:oraculo}
 \begin{tabular}{@{}p{0.46\linewidth}p{0.30\linewidth}l@{}}
 \toprule
@@ -266,23 +276,22 @@ CC del LLM y \emph{baseline} la del prototipo determinista.}
 \midrule
 Rechazo explícito, caso inelegible & rechazo $\wedge$ \lstinline|!eligible| & \texttt{SUCCESS} \\
 Rechazo explícito, caso elegible & rechazo $\wedge$ \lstinline|eligible| & \texttt{REFUSED} \\
-Sin bloque, no parsea o sin método & --- & \texttt{INVALID\_OUTPUT} \\
+Sin bloque, no se analiza o sin método & --- & \texttt{INVALID\_OUTPUT} \\
 Firma modificada u otro error & errores $\neq \emptyset$ & \texttt{INCORRECT} \\
 Inelegible y transforma (guarda v1.1) & \lstinline|!eligible| $\wedge\ \delta \neq 0$ & \texttt{INCORRECT} \\
 Inelegible y no transforma & \lstinline|!eligible| $\wedge\ \delta = 0$ & \texttt{SUCCESS} \\
-Elegible, $\delta<0$ igual o mayor que baseline & \lstinline|eligible| $\wedge\ \delta \le$ base $< 0$ & \texttt{SUCCESS} \\
-Elegible, reduce menos que baseline & \lstinline|eligible| $\wedge$ base $< \delta < 0$ & \texttt{PARTIAL} \\
-Elegible, no reduce ($\delta=0$, base $<0$) & \lstinline|eligible| $\wedge\ \delta = 0$ & \texttt{INCORRECT} \\
-Error técnico (red, \emph{timeout}\dots) & excepción en el \emph{provider} & \texttt{ERROR} \\
+Elegible, reduce al menos tanto como el baseline & \lstinline|eligible| $\wedge\ \delta \le \Delta < 0$ & \texttt{SUCCESS} \\
+Elegible, reduce menos que baseline & \lstinline|eligible| $\wedge\ \Delta < \delta < 0$ & \texttt{PARTIAL} \\
+Elegible, no reduce ($\delta=0$, $\Delta<0$) & \lstinline|eligible| $\wedge\ \delta = 0$ & \texttt{INCORRECT} \\
+Error técnico (red, \emph{timeout}\dots) & excepción en el \emph{proveedor} & \texttt{ERROR} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Campaña y exportación.} La campaña (\texttt{LlmCampaignRunner})
-orquesta la ejecución sobre el subset, genera un registro por llamada
-(timestamp, versión de modelo, prompt enviado, tiempo de respuesta) y delega
-en el validador; las excepciones del \emph{provider} se propagan como
+orquesta la ejecución sobre el subconjunto, genera un registro por llamada
+(marca de tiempo, versión de modelo, prompt enviado, tiempo de respuesta) y delega
+en el validador; las excepciones del proveedor se propagan como
 veredicto \texttt{ERROR}. El punto de
-entrada ofrece \lstinline|--mode=live| (provider
-real, validación de credenciales obligatoria) y \lstinline|--mode=dry-run|
-(provider grabado, sin red).
+entrada ofrece \lstinline|--mode=live| (proveedor
+real, validación de credenciales obligatoria)

@@ -13,6 +13,7 @@ import java.util.List;
 import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.LambdaExpr;
+import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.ObjectCreationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.BreakStmt;
@@ -50,6 +51,9 @@ import com.github.javaparser.ast.stmt.WhileStmt;
  *   <li>Operadores lógicos: +1 por cada secuencia de operadores del mismo tipo
  *       ({@code &&} o {@code ||}) en cualquier expresión (condiciones, return,
  *       asignaciones, argumentos de método, etc.).</li>
+ *   <li>Recursión directa: +1 (estructural, sin incremento de anidamiento) por
+ *       cada llamada del método a sí mismo; se identifica de forma sintáctica
+ *       (nombre coincidente, misma aridad y receptor implícito o {@code this}).</li>
  *   <li>Lambda: el cuerpo se procesa a nestingLevel+1.</li>
  *   <li>Clase anónima ({@code new Foo() {...}}): los métodos del cuerpo se procesan
  *       a nestingLevel+1.</li>
@@ -57,15 +61,19 @@ import com.github.javaparser.ast.stmt.WhileStmt;
  *       cuerpo se procesan a nestingLevel+1.</li>
  * </ul>
  * <p>
- * Limitaciones conocidas (no cubierto en esta versión):
- * <ul>
- *   <li>Detección de recursión.</li>
- * </ul>
+ * Con la detección de recursión directa, el modelo de SonarSource queda cubierto
+ * en su totalidad; solo la recursión indirecta (ciclos entre varios métodos)
+ * queda fuera del alcance sintáctico del proxy.
  * <p>
  * Referencia del modelo: G. Ann Campbell, "Cognitive Complexity — A new way of measuring
  * understandability", SonarSource. [PENDIENTE DE CITA EXACTA — versión del documento]
  */
 public class CognitiveComplexityCalculator {
+
+    /** Nombre del método analizado (para detectar recursión directa). */
+    private String currentMethodName;
+    /** Número de parámetros del método analizado (desambigua sobrecargas por aridad). */
+    private int currentMethodParamCount;
 
     /**
      * Calcula la complejidad cognitiva estimada de un método.
@@ -77,6 +85,8 @@ public class CognitiveComplexityCalculator {
         if (method.getBody().isEmpty()) {
             return 0;
         }
+        this.currentMethodName = method.getNameAsString();
+        this.currentMethodParamCount = method.getParameters().size();
         return processStatements(method.getBody().get().getStatements(), 0);
     }
 
@@ -450,11 +460,42 @@ public class CognitiveComplexityCalculator {
             }
             return c;
         }
+        if (node instanceof MethodCallExpr) {
+            MethodCallExpr call = (MethodCallExpr) node;
+            // Recursión directa: +1 estructural (sin incremento de anidamiento)
+            // por cada llamada del método a sí mismo.
+            int c = isRecursiveCall(call) ? 1 : 0;
+            // Recorrer scope y argumentos para no perder expresiones internas
+            // (operadores lógicos, ternarios, lambdas, recursión anidada...).
+            for (Node child : node.getChildNodes()) {
+                c += processExpression(child, nestingLevel);
+            }
+            return c;
+        }
         // Caso general: recorrer todos los hijos.
         int c = 0;
         for (Node child : node.getChildNodes()) {
             c += processExpression(child, nestingLevel);
         }
         return c;
+    }
+
+    /**
+     * Determina si una llamada corresponde a recursión directa del método que se
+     * está analizando. Criterio sintáctico y conservador (sin resolución de
+     * símbolos): nombre coincidente, misma aridad que el método y receptor
+     * implícito o {@code this}.
+     */
+    private boolean isRecursiveCall(MethodCallExpr call) {
+        if (currentMethodName == null) {
+            return false;
+        }
+        if (!call.getNameAsString().equals(currentMethodName)) {
+            return false;
+        }
+        if (call.getArguments().size() != currentMethodParamCount) {
+            return false;
+        }
+        return call.getScope().map(scope -> scope.isThisExpr()).orElse(true);
     }
 }

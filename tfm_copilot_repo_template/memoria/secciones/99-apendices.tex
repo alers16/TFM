@@ -40,15 +40,20 @@ Get-Content .env | ForEach-Object {
 \end{lstlisting}
 
 \section*{A.4 Experimento RQ2 (lote determinista)}
-Genera el \emph{classpath} y ejecuta el lote sobre el corpus piloto y real; los
-artefactos se escriben en \texttt{output/rq2-batch/}.
+Genera el \emph{classpath} y ejecuta el lote estructural (P1--P4) sobre el
+corpus piloto y real; los artefactos se escriben en
+\texttt{output/rq2-structural/}. Un segundo argumento opcional indica un
+directorio de corpus (con subcarpetas \texttt{pilot-corpus/} y
+\texttt{real-corpus/}) que sustituye al empaquetado por defecto.
 \begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
 mvn -DskipTests compile dependency:build-classpath "-Dmdep.outputFile=target/classpath.txt"
 $cp = Get-Content target/classpath.txt
-java -cp "target/classes;$cp" es.tfm.refactoring.experiment.Rq2BatchExecutor
+java -cp "target/classes;$cp" es.tfm.refactoring.experiment.Rq2StructuralBatchExecutor output/rq2-structural
+# Opcional: usar un corpus externo en lugar del empaquetado
+java -cp "target/classes;$cp" es.tfm.refactoring.experiment.Rq2StructuralBatchExecutor output/rq2-structural ruta/al/corpus
 \end{lstlisting}
 
-\section*{A.5 Experimento RQ3 (campaña de LLM)}
+\section*{A.5 Experimento RQ3 (campaña de LLMs)}
 La campaña usa el protocolo congelado por defecto (modelos \texttt{gpt-4o} y
 \texttt{gpt-4.1}, temperatura 0, tres intentos, \emph{prompt} \texttt{v1.0}) y
 exige \texttt{OPENAI\_API\_KEY}; su ausencia genera un incidente registrado, no
@@ -56,7 +61,11 @@ un fallo silencioso. Los artefactos se escriben en el directorio indicado.
 \begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
 java -cp "target/classes;$cp" es.tfm.refactoring.llm.CampaignExecutor output/rq3-campaign-real-phase9
 \end{lstlisting}
-Para una prueba sin coste de API se dispone de un modo \emph{dry-run}:
+Para una prueba sin coste de API se dispone de un modo \emph{dry-run}, que no
+invoca la API de OpenAI: en su lugar, el proveedor de respuestas reproduce
+respuestas previamente grabadas, de modo que el resto del protocolo (oráculo,
+agregación y exportación de artefactos) se ejecuta de forma idéntica. Resulta
+útil para validar el \emph{pipeline} y las pruebas sin consumir cuota.
 \begin{lstlisting}[language={},basicstyle=\footnotesize\ttfamily]
 java -cp "target/classes;$cp" es.tfm.refactoring.llm.CampaignExecutor --mode=dry-run output/rq3-campaign-dry
 \end{lstlisting}
@@ -136,8 +145,9 @@ emite el detector, con la precondición asociada y su descripción literal
 \begin{table}[ht]
 \centering
 \caption{Categorías de \texttt{DiscardReason} y precondición asociada. Las cinco
-categorías de P5 (efectos colaterales) solo se emiten en el modo conservador:
-P5 es un filtro opcional, no una precondición de corrección.}
+últimas (efectos colaterales en la condición) corresponden a un filtro de pureza
+opcional, no a una precondición de corrección, y no intervienen en los
+resultados principales.}
 \label{tab:discardreason}
 \begin{tabular}{@{}llp{6.2cm}@{}}
 \toprule
@@ -147,11 +157,11 @@ P5 es un filtro opcional, no una precondición de corrección.}
 \texttt{OUTER\_BLOCK\_MULTIPLE\_STATEMENTS} & P2 & El bloque \lstinline|then| tiene más de una sentencia. \\
 \texttt{SINGLE\_STATEMENT\_NOT\_IF} & P3 & La sentencia única del bloque \lstinline|then| no es un \lstinline|if|. \\
 \texttt{INNER\_HAS\_ELSE} & P4 & El \lstinline|if| interno tiene \lstinline|else|/\lstinline|else-if|. \\
-\texttt{METHOD\_CALL\_IN\_CONDITION} & P5 & Llamada a método en condición (posible \emph{side effect}). \\
-\texttt{ASSIGNMENT\_IN\_CONDITION} & P5 & Asignación en condición (\emph{side effect}). \\
-\texttt{INCREMENT\_OR\_DECREMENT\_IN\_CONDITION} & P5 & Operador \lstinline|++|/\lstinline|--| en condición. \\
-\texttt{LAMBDA\_IN\_CONDITION} & P5 & Lambda en condición (\emph{side effect} potencial). \\
-\texttt{OBJECT\_CREATION\_IN\_CONDITION} & P5 & Instanciación con \lstinline|new| en condición. \\
+\texttt{METHOD\_CALL\_IN\_CONDITION} & --- &Llamada a método en condición (posible \emph{side effect}). \\
+\texttt{ASSIGNMENT\_IN\_CONDITION} & --- &Asignación en condición (\emph{side effect}). \\
+\texttt{INCREMENT\_OR\_DECREMENT\_IN\_CONDITION} & --- &Operador \lstinline|++|/\lstinline|--| en condición. \\
+\texttt{LAMBDA\_IN\_CONDITION} & --- &Lambda en condición (\emph{side effect} potencial). \\
+\texttt{OBJECT\_CREATION\_IN\_CONDITION} & --- &Instanciación con \lstinline|new| en condición. \\
 \texttt{NO\_NESTED\_IF\_PATTERN} & --- & No hay patrón de \lstinline|if| anidado combinable. \\
 \bottomrule
 \end{tabular}
@@ -236,7 +246,7 @@ coincidencia entre el proxy y SonarQube fue \textbf{exacta en los 122}, tanto en
 \section*{F.6 Limitaciones}
 La complejidad cognitiva es sintáctica: SonarQube la calcula sobre el AST aunque
 no resuelva todos los símbolos, por lo que envolver el método en una clase
-mínima es válido para el contraste. Un caso que no parsee aparece como
+mínima es válido para el contraste. Un caso que no se analice aparece como
 \emph{sin medida}. El resultado depende, además, de la versión del motor de
 SonarQube en el momento del análisis, que queda registrada en
 \texttt{metadata.json}. La limpieza del servidor se realiza con

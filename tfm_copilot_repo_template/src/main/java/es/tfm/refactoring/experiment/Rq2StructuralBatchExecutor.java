@@ -41,6 +41,9 @@ import java.util.Map;
  * <ul>
  *   <li>{@code java es.tfm.refactoring.experiment.Rq2StructuralBatchExecutor}</li>
  *   <li>{@code java es.tfm.refactoring.experiment.Rq2StructuralBatchExecutor output/rq2-structural}</li>
+ *   <li>{@code java es.tfm.refactoring.experiment.Rq2StructuralBatchExecutor output/rq2-structural <dir-corpus>}
+ *       — carga el corpus desde {@code <dir-corpus>/pilot-corpus} y
+ *       {@code <dir-corpus>/real-corpus} en lugar del classpath.</li>
  * </ul>
  */
 public class Rq2StructuralBatchExecutor {
@@ -64,14 +67,24 @@ public class Rq2StructuralBatchExecutor {
 
         Instant startedAt = Instant.now();
 
-        // 1. Cargar corpus (idéntico a Rq2BatchExecutor)
+        // 1. Cargar corpus: desde un directorio si se indica (args[1]), o del
+        //    classpath (comportamiento por defecto).
         PilotCorpusLoader pilotLoader = new PilotCorpusLoader();
         RealDatasetLoader realLoader = new RealDatasetLoader();
 
-        List<ExperimentCase> pilotCases =
-                pilotLoader.load(PilotCorpusLoader.standardPilotFiles());
-        List<ExperimentCase> realCases =
-                realLoader.load(RealDatasetLoader.standardRealFiles());
+        String corpusDir = (args.length > 1 && !args[1].isBlank()) ? args[1] : null;
+        List<ExperimentCase> pilotCases;
+        List<ExperimentCase> realCases;
+        if (corpusDir != null) {
+            Path base = Path.of(corpusDir).toAbsolutePath();
+            pilotCases = pilotLoader.loadFromDirectory(base.resolve("pilot-corpus"));
+            realCases = realLoader.loadFromDirectory(base.resolve("real-corpus"));
+            System.out.println("Corpus directory: " + base);
+        } else {
+            pilotCases = pilotLoader.load(PilotCorpusLoader.standardPilotFiles());
+            realCases = realLoader.load(RealDatasetLoader.standardRealFiles());
+            System.out.println("Corpus: classpath (src/main/resources)");
+        }
 
         List<ExperimentCase> allCases = new ArrayList<>();
         allCases.addAll(pilotCases);

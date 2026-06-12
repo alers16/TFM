@@ -90,6 +90,52 @@ public class RealDatasetLoader {
     }
 
     /**
+     * Carga todos los archivos {@code .java} de un directorio del sistema de
+     * archivos (no del classpath), de modo que el experimento pueda apuntarse a
+     * una carpeta de corpus arbitraria y cambiarla sin recompilar.
+     *
+     * @param dir directorio con los archivos del corpus real
+     * @return casos cargados, ordenados por nombre de archivo
+     * @throws IOException si el directorio no existe o no puede leerse
+     */
+    public List<ExperimentCase> loadFromDirectory(Path dir) throws IOException {
+        List<ExperimentCase> cases = new ArrayList<>();
+        for (Path file : listJavaFiles(dir)) {
+            cases.add(loadFromPath(file));
+        }
+        return cases;
+    }
+
+    /**
+     * Carga un caso individual desde un archivo del sistema de archivos.
+     */
+    public ExperimentCase loadFromPath(Path file) throws IOException {
+        String source = Files.readString(file, StandardCharsets.UTF_8);
+        String fileName = file.getFileName().toString();
+        String caseId = extractMetadata(source, "@caseId", deriveId(fileName));
+        String origin = extractMetadata(source, "@origin", "real-oss");
+        String description = extractMetadata(source, "@description",
+                "Caso real: " + fileName);
+        return new ExperimentCase(caseId, origin, description, source);
+    }
+
+    /**
+     * Lista, ordenados, los archivos {@code .java} de un directorio del sistema
+     * de archivos.
+     */
+    private static List<Path> listJavaFiles(Path dir) throws IOException {
+        if (!Files.isDirectory(dir)) {
+            throw new IOException("Directorio de corpus no encontrado: " + dir);
+        }
+        try (Stream<Path> files = Files.list(dir)) {
+            return files
+                    .filter(p -> p.getFileName().toString().endsWith(".java"))
+                    .sorted()
+                    .collect(Collectors.toList());
+        }
+    }
+
+    /**
      * Extrae un valor adicional de metadato del cÃ³digo fuente.
      * Ãštil para obtener @project, @file, @method, @license, @sonarCCBefore.
      *

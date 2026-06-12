@@ -35,14 +35,14 @@ El prototipo se organiza en paquetes con responsabilidades separadas. La
 \endhead
 \texttt{es.tfm.refactoring} & Punto de entrada de línea de órdenes
 (\texttt{Main}). \\
-\texttt{\dots detection} & Análisis del AST y evaluación de P1--P4 (y del filtro opcional P5):
+\texttt{\dots detection} & Análisis del AST y evaluación de P1--P4:
 \texttt{NestedIfDetector}, \texttt{RefactoringOpportunity},
 \texttt{DetectionResult}, \texttt{DiscardReason}, \texttt{DetectionMode},
 \texttt{MethodCallAllowlist}. \\
 \texttt{\dots transformation} & Aplicación de la transformación:
 \texttt{NestedIfTransformer}. \\
 \texttt{\dots analysis} & Cálculo proxy de complejidad cognitiva e impacto:
-\texttt{CognitiveComplexityCalculator}, \texttt{RefactoringImpact},
+\texttt{Cognitive\allowbreak Complexity\allowbreak Calculator}, \texttt{RefactoringImpact},
 \texttt{RefactoringImpactAnalyzer}, \texttt{CcAnalyzeCli}. \\
 \texttt{\dots validation} & Comprobación de precondiciones y validez de la
 transformación: \texttt{RefactoringValidator}, \texttt{ValidationResult}. \\
@@ -123,14 +123,15 @@ determinista, con sus métodos públicos y las enumeraciones de configuración
 %   mmdc -i figuras/src/fig-4.4-clases-nucleo.mmd -o figuras/img/fig-4.4.png -w 2600
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth,height=0.85\textheight,keepaspectratio]{figuras/img/fig-4.4.png}
+\includegraphics[width=\linewidth,height=0.85\textheight,keepaspectratio]{figuras/img/Diagrama.png}
 \caption{Diagrama de clases (UML) del núcleo determinista: detección
 (\texttt{NestedIfDetector}), transformación (\texttt{NestedIfTransformer}),
-medición (\texttt{CognitiveComplexityCalculator}), validación
+medición (\texttt{Cognitive\allowbreak Complexity\allowbreak Calculator}), validación
 (\texttt{RefactoringValidator}) y orquestación por lotes
 (\texttt{BatchRunner}), con las clases de dominio \texttt{RefactoringOpportunity}
-y \texttt{DetectionResult} y las enumeraciones \texttt{DetectionMode} (modos
-\texttt{STRICT}/\texttt{RELAXED}) y \texttt{DiscardReason}. Las relaciones
+y \texttt{DetectionResult} y las enumeraciones \texttt{DetectionMode} (con el
+modo \texttt{STRUCTURAL}, P1--P4, usado en los experimentos) y
+\texttt{DiscardReason}. Las relaciones
 siguen la notación UML: agregación (rombo) del orquestador sobre los servicios
 del núcleo, asociación con el modo de detección y dependencias de creación y
 uso.}
@@ -145,19 +146,19 @@ El flujo extremo a extremo, implementado por \texttt{BatchRunner.processCase}, s
     \item \textbf{Carga del corpus.}  
     Los casos se cargan desde el \emph{classpath} y se construyen como instancias de \texttt{ExperimentCase}; cada caso es un método Java acompañado de sus metadatos (procedencia, complejidad esperada, etc.).
 
-    \item \textbf{Parseo a AST.}  
-    El código fuente se parsea mediante \lstinline|StaticJavaParser.parse(...)| y se selecciona el primer \lstinline|MethodDeclaration|. Si el parseo falla, el caso se marca como inelegible con un motivo explícito.
+    \item \textbf{Transformación a AST.}  
+    El código fuente se transforma mediante \lstinline|StaticJavaParser.parse(...)| y se selecciona el primer \lstinline|MethodDeclaration|. Si falla, el caso se marca como inelegible con un motivo explícito.
 
     \item \textbf{Detección con motivos.}  
     Se ejecuta \lstinline|detectWithReasons| para identificar oportunidades y registrar los \texttt{DiscardReason} asociados en \lstinline|discardCategories|.
 
-    \item \textbf{Medición \emph{before}.}  
+    \item \textbf{Medición previa.}  
     Se calcula la complejidad cognitiva inicial del método antes de aplicar ninguna transformación.
 
     \item \textbf{Aplicación iterativa de la transformación.}  
-    Sobre un clon del AST se aplica la política \emph{one-at-a-time} (véase \autoref{sec:one-at-a-time}), re-detectando tras cada cambio hasta alcanzar un punto fijo o el límite de seguridad.
+    Sobre un clon del AST se aplica la política una por una (véase \autoref{sec:one-at-a-time}), re-detectando tras cada cambio hasta alcanzar un punto fijo o el límite de seguridad.
 
-    \item \textbf{Medición \emph{after}.}  
+    \item \textbf{Medición posterior.}  
     Una vez finalizado el proceso iterativo, se vuelve a calcular la complejidad cognitiva y se obtiene $\Delta = \text{after} - \text{before}$.
 
     \item \textbf{Construcción del resultado experimental.}  
@@ -212,9 +213,9 @@ El flujo extremo a extremo, implementado por \texttt{BatchRunner.processCase}, s
 \end{tikzpicture}
 \caption{Flujo de datos del pipeline determinista
 (\texttt{BatchRunner.processCase}). Se hacen explícitos la rama de
-inelegibilidad (fallo de parseo o ausencia de método $\rightarrow$
+inelegibilidad (fallo de análisis sintáctico o ausencia de método $\rightarrow$
 \texttt{CC before = -1}; el resultado inelegible también se registra y
-exporta) y el bucle de la política \emph{one-at-a-time} (detectar
+exporta) y el bucle de la política una por una (detectar
 $\rightarrow$ aplicar la primera oportunidad $\rightarrow$ re-detectar,
 hasta punto fijo o \texttt{MAX\_PASSES}). La CC \emph{before} se mide sobre
 el método original y la \emph{after} sobre el clon transformado.}
@@ -223,7 +224,10 @@ el método original y la \emph{after} sobre el clon transformado.}
 
 \subsection{Flujo del subsistema LLM (RQ3)}
 
-Para RQ3 se añade un flujo paralelo coordinado por \texttt{CampaignExecutor} y \texttt{LlmCampaignRunner}, que se organiza en las siguientes etapas:
+Para RQ3 se añade un flujo paralelo coordinado por dos clases:
+\texttt{CampaignExecutor}, el punto de entrada que lanza la campaña desde la
+línea de órdenes, y \texttt{LlmCampaignRunner}, que la orquesta caso por caso.
+Ese flujo se organiza en las siguientes etapas:
 
 \begin{enumerate}
     \item \textbf{Carga del subset de evaluación.}  
@@ -247,7 +251,7 @@ Para RQ3 se añade un flujo paralelo coordinado por \texttt{CampaignExecutor} y 
   \item \textbf{Inmutabilidad de los resultados.} \texttt{ExperimentResult}
   y \texttt{LlmEvaluationResult} se construyen una sola vez y se exportan
   sin mutación posterior, lo que facilita la trazabilidad.
-  \item \textbf{Provider intercambiable para LLM.}
+  \item \textbf{Proveedor intercambiable para LLM.}
   \texttt{LlmResponseProvider} permite ejecutar la misma campaña con
   respuestas reales o grabadas, desacoplando la lógica experimental del
   coste y la variabilidad de las llamadas remotas.

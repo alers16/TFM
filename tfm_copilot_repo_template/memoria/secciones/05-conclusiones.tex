@@ -16,46 +16,48 @@ contribuciones efectivas, las limitaciones y las líneas de trabajo futuro.
 \section{Respuesta a las preguntas de investigación}
 
 \paragraph{RQ1 — \textquestiondown{}En qué casos se pueden combinar y cuál es el resultado?}
-La combinación es segura cuando el patrón cumple las precondiciones P1--P5
-(\autoref{sec:precondiciones}): dos \lstinline|if| anidados sin ramas
-alternativas, con el bloque externo conteniendo únicamente el \lstinline|if|
-interno y con condiciones libres de efectos colaterales; el resultado es la
-condición conjuntiva \lstinline|if (A && B)|. Empíricamente, sobre el corpus de
-126 casos el detector declaró elegibles 104 (\autoref{sec:resultados-rq1}), lo
-que muestra que el patrón combinable es frecuente en código real. El análisis
-de los descartes aporta el hallazgo más informativo: cuando el patrón existe
-pero se rechaza, el obstáculo dominante no es la presencia de un
-\lstinline|else|, sino el posible \emph{efecto colateral} oculto en la
-condición (precondición P5). Esto justifica, a posteriori, la estrategia
-sintáctica y conservadora adoptada.
+La combinación es segura cuando el patrón cumple las precondiciones
+estructurales P1--P4 (\autoref{sec:precondiciones}): dos \lstinline|if| anidados
+sin ramas alternativas y con el bloque externo conteniendo únicamente el
+\lstinline|if| interno; el resultado es la condición conjuntiva
+\lstinline|if (A && B)|. La equivalencia se apoya en el cortocircuito de
+\lstinline|&&|, que preserva el orden y la condicionalidad de evaluación con
+independencia de los efectos colaterales de las condiciones; por eso no se
+requiere ninguna restricción de pureza. Empíricamente, sobre el corpus de 126
+casos el detector declaró elegibles 111 (\autoref{sec:resultados-rq1}), lo que
+muestra que el patrón combinable es muy frecuente en código real. El análisis de
+los descartes confirma que el único obstáculo es estructural (un \lstinline|else|
+o sentencias adicionales en el bloque), no lo que ocurra dentro de las
+condiciones.
 
 \paragraph{RQ2 — \textquestiondown{}Qué impacto tienen estas refactorizaciones en la complejidad
-cognitiva?} El impacto es una reducción sistemática pero acotada. Sobre los 104
+cognitiva?} El impacto es una reducción sistemática pero acotada. Sobre los 111
 casos elegibles, la complejidad cognitiva (proxy) se reduce en
-$\Delta = -295$, con \emph{todos} los casos mostrando reducción y una media de
-$-2{,}84$ puntos (\autoref{sec:resultados-rq2}). El efecto es local: combina un
+$\Delta = -340$, con \emph{todos} los casos mostrando reducción y una media de
+$-3{,}06$ puntos (\autoref{sec:resultados-rq2}). El efecto es local: combina un
 nivel de anidamiento por aplicación, por lo que mejora la legibilidad sin
 rescatar métodos intrínsecamente complejos, y solo elimina el \emph{issue} de
-SonarQube en los métodos que ya estaban cerca del umbral
-(\autoref{sec:resultados-issues}). La validez de esta métrica quedó respaldada
-por el contraste sobre el corpus completo, en el que el proxy coincide de forma
-exacta con SonarQube en el 100\,\% de los casos medidos
-(\autoref{sec:resultados-sonar}).
+SonarQube (en el 14{,}6\,\% de los métodos que lo tenían) cuando ya estaban
+cerca del umbral (\autoref{sec:resultados-issues}). La validez de esta métrica
+quedó respaldada por el contraste con SonarQube, en el que el proxy coincide de
+forma exacta en el 100\,\% de los casos medidos (\autoref{sec:resultados-sonar}).
 
 \paragraph{RQ3 — \textquestiondown{}Pueden los grandes modelos de lenguaje realizar esta
 refactorización de forma correcta y automática?} La respuesta es matizada: los
-modelos saben aplicar la transformación cuando procede, \texttt{gpt-4.1} acierta
-en el 90{,}3\,\% de las invocaciones con respuesta y \texttt{gpt-4o} en el
-71{,}9\,\%, pero la dificultad real no está en transformar, sino en
-\emph{abstenerse} cuando una precondición lo prohíbe
-(\autoref{sec:resultados-rq3}). Los dos modelos exhiben perfiles opuestos:
-\texttt{gpt-4o} prioriza la precisión (no transforma casos no elegibles) a
-costa de la cobertura, mientras que \texttt{gpt-4.1} prioriza la cobertura a
-costa de algún falso positivo. Ninguno iguala la garantía del \emph{baseline}
-determinista, que por construcción acierta en ambos extremos y a un coste
-varios órdenes de magnitud menor (\autoref{tab:comparativa-coste}). En
-consecuencia, los LLM pueden \emph{asistir} en esta tarea, pero no sustituyen a
-un procedimiento determinista y verificable en un dominio tan acotado.
+modelos saben aplicar la transformación cuando procede (\texttt{gpt-4.1} acierta
+en el 77{,}4\,\% de las invocaciones con respuesta y \texttt{gpt-4o} en el
+62{,}5\,\%), pero la dificultad real no está en transformar, sino en decidir
+\emph{cuándo} hacerlo (\autoref{sec:resultados-rq3}). Evaluados contra el
+\emph{baseline} estructural correcto, ambos modelos comparten una \textbf{cautela
+conservadora}: se abstienen de combinar condiciones con efectos colaterales
+aunque, por el cortocircuito, sea seguro, un sesgo del que el método
+determinista carece. \texttt{gpt-4.1}, además,
+comete algún falso positivo y alguna salida inválida. Ninguno iguala la garantía
+del \emph{baseline} determinista, que por construcción combina con la amplitud
+correcta y a un coste varios órdenes de magnitud menor
+(\autoref{tab:comparativa-coste}). En consecuencia, los LLMs pueden \emph{asistir}
+en esta tarea, pero no sustituyen a un procedimiento determinista y verificable
+en un dominio tan acotado.
 
 \section{Contribuciones efectivas}
 
@@ -68,7 +70,7 @@ El trabajo deja cuatro contribuciones tangibles:
   experimental reproducible, cuya métrica de complejidad cognitiva (proxy) se
   ha validado con coincidencia exacta frente a SonarQube sobre el corpus
   completo.
-  \item Un \textbf{subsistema de evaluación de LLM} con protocolo congelado y
+  \item Un \textbf{subsistema de evaluación de LLMs} con protocolo congelado y
   oráculo automático, que usa el prototipo como \emph{baseline} verificable y
   permite caracterizar el comportamiento de los modelos en la frontera de la
   elegibilidad.
@@ -84,30 +86,31 @@ alcance se restringe al patrón canónico sin \lstinline|else|/\lstinline|else i
 por lo que los resultados no son extrapolables a refactorizaciones más
 complejas. El corpus, aunque procede de proyectos reales, es una muestra
 intencional de métodos con condicionales anidados y no una muestra aleatoria
-representativa. La métrica es un proxy que no implementa la detección de
-recursión (sin divergencias observadas en el corpus, pero con validez teórica
-acotada). Y la comparación de RQ3 se limita a dos modelos de un mismo proveedor.
+representativa. La métrica es un proxy del modelo de SonarSource: aunque implementa el modelo
+completo y coincide de forma exacta con SonarQube sobre el corpus, sigue siendo
+una aproximación sintáctica cuya validez fuera del corpus es la del propio
+modelo. Y la comparación de RQ3 se limita a dos modelos de un mismo proveedor.
 
 \section{Trabajo futuro}
 
-Las limitaciones descritas delimitan un programa de investigación coherente que
-puede articularse como tesis doctoral en el área de mantenimiento automático de
-software: la hipótesis de que la refactorización automática y verificable de
-código Java puede extenderse a una familia más amplia de transformaciones
-semánticamente equivalentes, con garantías formales y evaluación empírica
-reproducible. Las líneas concretas son:
+Las limitaciones descritas delimitan varias líneas de investigación futuras en
+el área del mantenimiento automático de software, todas en torno a una misma
+idea: extender la refactorización automática y verificable de código Java a una
+familia más amplia de transformaciones semánticamente equivalentes, con
+garantías formales y evaluación empírica reproducible. Las líneas concretas son:
 \begin{itemize}
-  \item \textbf{Ampliar la familia de patrones}: cadenas de tres o más
-  \lstinline|if| anidados, condicionales con \lstinline|else if| y otras
-  consolidaciones, así como su combinación con la extracción de método del
-  trabajo de Saborido et al.~\cite{10.1109/ACCESS.2022.3144743}, con la que es
-  complementaria.
-  \item \textbf{Relajar P5 con análisis semántico}: dado que el efecto
-  colateral en la condición es el principal obstáculo detectado en RQ1, un
-  análisis de pureza permitiría declarar seguros más casos sin perder garantías.
-  \item \textbf{Completar el modelo de complejidad} con la detección de
-  recursión, cerrando la única regla del modelo de SonarSource no implementada.
-  \item \textbf{Extender la evaluación de LLM}: incorporar otros proveedores y
+  \item \textbf{Ampliar la familia de patrones}: condicionales con
+  \lstinline|else if|, fusión con guardas de \lstinline|return| temprano y otras
+  consolidaciones más allá del anidamiento simple ---que el prototipo ya combina,
+  incluso en cadenas de tres o más \lstinline|if|---, así como su combinación con
+  la extracción de método del trabajo de Saborido
+  et al.~\cite{10.1109/ACCESS.2022.3144743}, con la que es complementaria.
+  \item \textbf{Reducir el sesgo conservador de los LLMs}: RQ3 reveló que los
+  modelos se abstienen de combinar condiciones con efectos colaterales aunque,
+  por el cortocircuito de \lstinline|&&|, sea seguro. Cabe investigar si
+  estrategias de \emph{prompting} que expliciten ese argumento, o un ajuste
+  fino, reducen esa cautela y acercan los modelos al \emph{baseline} estructural.
+  \item \textbf{Extender la evaluación de LLMs}: incorporar otros proveedores y
   familias de modelos, estrategias de \emph{prompting} guiado y reintento ante
   límites de tasa, y ampliar el corpus hacia una muestra más representativa.
   \item \textbf{Transferir el prototipo a la práctica}: integrarlo como
@@ -119,6 +122,6 @@ En conjunto, el trabajo confirma que existe un subconjunto no trivial de
 condicionales anidados combinables de forma segura, que su combinación reduce
 de forma medible la complejidad cognitiva y que los grandes modelos de lenguaje
 abordan la tarea con solvencia desigual, siempre por detrás de la garantía de
-un procedimiento determinista. La aportación última no es solo la
+un procedimiento formal y determinista. La aportación última no es solo la
 transformación, sino el marco verificable que permite decidir \emph{cuándo}
 aplicarla con seguridad.

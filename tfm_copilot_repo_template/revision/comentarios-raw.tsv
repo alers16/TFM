@@ -1,0 +1,162 @@
+﻿1	2		qué quiere decir esto?
+2	3	eligible cases and reduces cognitive complexity by a total of 295 points (all eligible cases improve), with 100 % exact agreement against SonarQube on the full corpus. Regarding the language models,	idem
+3	6		métodos
+4	7	trabajo y da sentido a sus tres preguntas de investigación.	línea viuda
+5	7	de Java responde a tres motivos: es el lenguaje sobre el que SonarSource define y populariza la complejidad cognitiva, dispone de bibliotecas maduras de manipulación de AST (JavaParser) y	seguro??? No lo tengo tan claro
+6	7	—	Aquí falta un poco de texto para presentar las preguntas de investigación
+7	8	—	Aquí falta un poco de texto para presentarlas contribuciones. Este estilo telegráfico no es muy bienvenido en estos documentos, además delata el uso de IA para escritura, lo cual está prohibido si no se dice de qué forma se ha usado ((el tribunal podría suspender el trabajo si ve indicios suficientes de escritura mediante IA). Copio el uso no permitido:•Presentar trabajos o informes generados por IA como creación personal. •Incorporar contenido generado por IA sin la debida cita. •Usar IA para responder preguntas de exámenes o pruebas de evaluación continua, salvo otras indicaciones del equipo docente.
+8	8	—	(el tribunal podría suspender el trabajo si ve indicios suficientes de escritura mediante IA)
+9	8	cubre carga de corpus, detección, transformación, medición y exportación de artefactos.	cubre la carga
+10	9	2 Antecedentes	son capítulos? No lo parece. En los libros los capítuslo tienen una cabecera más grande. Parecen secciones
+11	12		LLMs
+12	12		extranjerismos en cursiva
+13	12	—	Hay un trabajo que obvias y que tiene mucha relación con este. Se trata del TFM de Andrés Juárez. No recuerdo si está publicado en arXiv, pero creo que debe estar en RIUMA.
+14	13	reproducir la refactorización frente a un baseline determinista.	línea viuda
+15	13	—	Aquí falta el trabajo de Andrés Juárez, que se parece a este pero aborda otra transformación
+16	15	—	Este ejemplo es aún peor porque usa dos returns booleanos y se puede quitar el if.... No sé si es el mejor ejemplo. Si poners algo qu eno devuelve Booleano quizá iría mejor (o que relaice alguna acción en caso positivo)
+17	15	—	Pero podría haber más if anidados, ¿esto se considera?
+18	15	colaterales. No se debe a que la combinación deje de preservar el comportamiento en su presencia, sino a que solo bajo esa restricción puede garantizarse la seguridad de forma automática y verificable sobre la estructura del código, sin recurrir a un análisis semántico que excede el alcance del prototipo. El conjunto completo de precondiciones se formaliza en la Subsección 5.2.3.	aquí tengo dudas, si tiene efectos laterales no sería igual??
+19	16	(cada nivel un único if, sin else ni sentencias intercaladas) se reduce aplicando la regla de combinación de forma repetida, un par cada vez, hasta que una precondición lo impida; por eso	OK, entonces entiendo que sí se cubre
+20	16		se han mencionado ya dos veces sin haberlas presentado
+21	17	y B sin efectos colate-	esto no creo que sea necesario
+22	17	terno Efectos colaterales o asignaciones en las condiciones	no veo por qué
+23	17	las condiciones streams, concu- rrencia	no veo tampoco esta restricción
+24	19	—	haz máz anchas las dos primeras columnas y la tercera más estrecha
+25	19		esto es un nuevo nombre para RQ1? Yo creo que repetiría la pregunta original (lo mismo con RQ2 y RQ3)
+26	19	—	Demasiado esquemático. Típicamente se espera aquí un párrafo donde expliques cómo abordas la preguntas de investigación
+27	19	—	Te digo lo mismo en las demás
+28	22	las precondiciones P1–P5: en ausencia de efectos colaterales en A y B, el operador && preserva la evaluación en cortocircuito y, por tanto, el comportamiento observable. Esta propiedad de diseño está justificada	con efectos colaterales no la preserva?
+29	22		qué es esto ? Quizá debería spoenr referencia o explicar
+30	22	. Un flujo alter-	En Java, si no recuerdo mal, las ramas "else if no existen, en realidad son ramas else desde el punto de vista del AST (lo puedes confirmar en JavaParser)
+31	22	.	idem
+32	22	Ao B) contiene: llamadas a método (MethodCallExpr), asignaciones (AssignExpr), operadores de incremento o decremento ( ++, --), expresiones lambda ( LambdaExpr) ni instanciaciones con new (ObjectCreationExpr).	pues esta no la entiendo, yo creo que no es necesario
+33	23	: cualquiera de esas construc-	demasiado conservador, yo creo qeu se puede eliminar, no veo ninguna justificación par amantenerlo. Si no la tienes el tribunal va a preguntar
+34	24	interno vacío (P4’) y, en P5, admite dos excepciones controladas. La primera	claro! por qu é no?
+35	24	—	Sigo sin encontrar justificada la restricción P5
+36	24		defensiva? Esto suerna raro
+37	24		¿Qué es el aliasing?
+38	24	—	Explícalo
+39	24	Cuando alguna condición es una expresión ||, se encapsula mediante EnclosedExpr	solo esto? No hay más casos en que hay que aplicar paréntesis? Yo diría que siempre. De todas formas, entiendo que JavaParser controla esto, no?
+40	24		no hay equivalente en español? "una por una"
+41	24	: tras	aquí lo tienes
+42	24	queden más oportunidades o se alcance un límite de seguridad de 10 pasadas ( MAX_PASSES enBatchRunner). Esta política se adoptó al observar que aplicar todas las oportunidades en un	qué es todo esto? Explicar
+43	25	(STRICT), los casos con else, lambdas, llamadas a método o múltiples sentencias quedan fuera de alcance. Esta restricción es coherente con la estrategia conservadora del anteproyecto y permite que el pipeline determinista actúe como baseline verificable frente a los LLMs en RQ3.	sigo sin ver esto
+44	28	—	Esto es muy pequeño, no se lee bien
+45	28	, se organiza en las	esto qué es? debes explicarlo si vas a hablar de él
+46	28	El código fuente se parsea mediante	este verbo no existe. En español es análisis sintáctico, puede shablar de lectura también
+47	28	. Se calcula la complejidad cognitiva inicial del método antes de aplicar	previa? antes?
+48	28	Sobre un clon del AST se aplica la políticaone-at-a-time (véase Subsección 5.2.5), re-detectando tras cada cambio hasta alcanzar un	español
+49	29	after. Una vez finalizado el proceso iterativo, se vuelve a calcular la complejidad	Medición posterior?
+50	29	CampaignExecutor y LlmCampaignRunner,	explicar qué es esto?
+51	30	—	AQuí fatla un poco de texto para explicar lo que viene aquí
+52	31	Ninguna de las dos condiciones contiene efectos colaterales: las cinco categorías descritas en Subsección 5.2.3.	No recuerdo si en las categorías incluías los pre-incrementos y post-incrementos, creo que no son asignacinoes técicamente
+53	31	—	Ahora que veo esto me recuerda que no he visto ninguna referencia a la especificación del lenguaje Java (https://docs.oracle.com/javase/specs/). Esta debería ser la fuente para decidir lo que se puede o no se puede hacer. Cualquier decisión sobre las precondiciones debería estar basada y justificada en base a esta especificación, porque es la base de cómo se interpreta Java. Sin embargo, ni siquiera creo que lo he visto como refeencia!
+54	31	para no dejar el AST inconsistente;	que´hace esto y cómo contirbuye a no dejar el AST inconsistente?
+55	31	; normalización del cuerpo	es el único caso a tener en cuenta? Esto deberías consultarlo en la especificación del lenguaje Java
+56	31		defensiva? es un término extraño, no creo que se diga así en espaol, parece una mala traducción
+57	31	, switch	cambias el estilo de do-while pero no de for-each, ¿es porque no son palabras bclave?
+58	31	o	En Java hay dos parejas de operadores binarios: (&&, ||) y (&,|). Los primeros hacen evaluación en cortocircuito y los segundos no. Acabo de caer en que tampoco mencionas este hecho, lo cual es muy llamativo en un TFM sobre sentencias condiciones. Creo que habría que hablar de ello, aunque en este caso no te afecta mucho
+59	31	—	ME pregunto, ¿qué hace la CC de SonarSource con eso?
+60	31	detección de recursión (que	¿Por qué no??
+61	31	—	Justificar
+62	32	/else if/else	parece qu epones dos veces lo mismo, quizá deberías unir else-if con un guión
+63	32	/continue	operador ternario
+64	32	etiquetados, if, clase anónima y clase local). El proxy reproduce el valor oficial	expresion lambda
+65	32	, clase anónima y clase local). El proxy reproduce el valor oficial	no entiendo por qué no lo incluyes
+66	33	del prompt: un system	¿Por qué no le exiges que respete P5? Curioso.... Estás limitando tu propio sistema más d elo necesario pero no limitas a los competidores
+67	33	y gpt-4.1	no es poco? Podría haber ifs más largos? Has comprobado esto?
+68	33	—	Deberías justificar este valor en base a datos
+69	33	la invocación real a la API de OpenAI (con credencial) y las respuestas grabadas para dry runs y tests.	qué es esto? NO lo entiendo, creo qu eno está explicado
+70	34	Se comprueba que el fragmento parseado contenga al menos un método sobre el que aplicar la validación.	se trabaja aquí a nivel de método o de sentencia condicional? Creo que lo segundo sería lo más razonable
+71	34		firma? Te refieres ala signatura?
+72	34		aquí no pones la letra griega?
+73	34	: si el baseline declara que un	pero al LLM solo le exiges que cumpla P1 a P4, por qué lo frenas aquí? Esto del tratamiento de P5 lo veo inconsistente y no tiene mucho sentido
+74	34	caso no es elegible (porque no se cumple alguna de las precondiciones P1–P5) y el LLM aplica una transformación con delta != 0, el veredicto pasa a ser INCORRECT	¿Qué quiere decir esto? Expicar mejor
+75	35	es la variación de CC del LLM y baseline	antes la ponías en mayúscula, por qué en minúscula ahora?
+76	35	∧ δ ̸= 0 INCORRECT	esto no lo tengo claro. Como al LLM solo le exiges que cumpla P1 a P4, podría ocurrir que haga la transformación, siendo correcta, y le estás diciendo que lo ha hecho mal cuando lo ha hecho mejor qeu tu herramienta
+77	35	—	no entiendo, igual o mayor? está poniendo menor
+78	36	to ERROR. El punto de entrada ofrece --mode=liveobligatoria) y --mode=dry-run	qué es esto? NO recuerod que lo hayas mencionado
+79	36	—	En el modo dry-run, ¡cómo decides el dato que le das?
+80	37		trata de usar el ´termino en español
+81	37	después, las métricas y el baseline con los que se mide; y, a continuación, los protocolos delibera- damente congelados de RQ2 y RQ3, junto con la validación complementaria con SonarQube. La	¿QUé quieres decir con "congelados"?
+82	37	mediante PilotCorpusLoader	¿cómo? Lo has metido en el classpath? Esto no debería ser así, debería poder ejecutarse todo esto sobre una carpeta donde se encuentre el corpus, de manea que pueda cambiarse fácilmetne
+83	37	src/main/resources/pilot-corpus/): ficheros sintéticos que cubren los	Esto no debería estar ahí! Esto es muy "cutre"
+84	37	src/main/resources/real-corpus/)	Idem
+85	37	El corpus real está formado por fragmentos extraídos de proyectos Java de código abierto.	como en el caso anterior, pon la descripción separad por dos puntos de la cabecera
+86	37	@project, @file, @method, @license y @sonarCCBefore.	¿Estas anotaciones qué son? ¿De alguna biblioteca estándar? Deberías comentarlo, es la primera vez que aparecen en el documento
+87	38	El escaneo como censo del patrón. El corpus real no procede de un muestreo arbitrario,	¿Qué es esto? sospecho que una mala traducción
+88	38		aquí usas seprador d emiles (punto) antes usas espacio, sé consistente
+89	38	—	Aquí falta un poco de texto intoruciendo lo que vas a presentar aquí
+90	38	∆negativo indica reducción). Las limitaciones del proxy están en Subsección 5.4.3. Métrica complementaria: complejidad cognitiva medida por SonarQube Community Build sobre un	¿Esto no debería ser un itemize o enumerate?
+91	38	—	Todo este párrafo requiere reescritura, muy esquemático y telegráfico (huele muchísismo a LLM)
+92	39	—	Aquí pasa lo m ismo que en la secicón anterior, muy corto, telegráfico
+93	39	es la composi-	esto no se entiende
+94	39	—	En este punto ya ando perdido. Toda esta sección requiere de una mayor coherencia y de guiar mejor al lector por toda ella. Parece una enumeración de elementos sin orden lógico
+95	39		entiendo que no es necesario usar PowerShell: línea de comandos
+96	39	goal mvn sonar:sonar , está en docs/rq2-sonar-validation-fullcorpus.mdque del servidor (vía docker-compose) en docs/sonarqube-setup.md; y los artefactos	esta es la primera mención a docker y se hace de manera muy abrupta. Esto se debe explicar mejor
+97	39		qué quieres decir con "congelado"?
+98	39	dispone de una única clave de API financiada y de un presupuesto temporal acotado, lo que hace inviable una campaña multiproveedor sin comprometer la profundidad del resto del estudio.	Tenemos APIs para los modelos de Mistral y DeepSeek tambie´n. Y podemos conseguir d eClaude, en esto no hay problema
+99	40		por qué señalas la figura aquí , no has terminado la enumeración
+100	40	incluye	esto hay que explicarlo mejor
+101	40	modelos, temperatura, intentos, versión del prompt, oráculo y composición del subset; el provider es intercambiable, siendo live el modo oficial.	estas frases resultan un tanto crípticas, muy esquemáticas. Hay que reescribir par ahacerlo más comprensible y coherente
+102	40	Las garantías se sostienen sobre elementos verificables; exigencia explícita de OPENAI_API_KEYen modo live; versionado del prompt propagado a cada artefacto; versiones fijadas en pom.xml(Java 17, JavaParser 3.26.4, JUnit 5.11.4, Gson 2.11.0); y artefactos persistentes auditables sin ejecutar el código.	es una enumeración? pues quizá debería serlo, pero es muy telegráfico todo: reescribir
+103	41		aquí usas espacio como separador d emiles, antes punto, hay inconsistencias
+104	42		¿Qué P* es esta?
+105	42	aparece pero se rechaza, el bloqueo proviene sobre todo de P5 (y dentro de P5, de las llamadas a método en la condición), seguido de los bloques externos con más de una sentencia. En otras	que yo pienso que no debería descartarse...
+106	42	, sino el posible efecto colateral escondido en la condición. Este resultado respalda, a posteriori, la decisión de diseño de tratar P5 de forma sintáctica y conservadora.	no creo que lo respalde, no veo cómo lo hace
+107	43	cola larga de métodos muy complejos (hasta 257, varios de Knowage) que aparecen como valores atípicos según el criterio de T ukey. El histograma de ∆	puedes describir el criterio como nota al pie
+108	43		punto
+109	43	,5 · IQR). La distribución	mejor al pie
+110	43		esto no debería estar entre paréntesis, es demasiado importante
+111	43	las cajas; los puntos son valores atípicos según el criterio de T ukey de 1de la reducción ∆ se muestra en la Figura 7.2.	No es habitual que una figura referenie a otra futura. MEjor en el texto
+112	43		masa? mejor, la distribución d eprobabilidad
+113	43	, que baja de 52 a 38 ( ∆ = −14	esta expresión, aunque bonita y poética, no es muy científica.
+114	44	− −	comprueba si esta columna está "centrada", tengo esa impesión al ver el 2 y el 0, debería estar alineada a la derecha
+115	44	—	Esta tabla se sale del borde de escritura
+116	44		si no tienen CC, por qué están entre los elegibles?
+117	45	—	No tengo claro por qué hay métodos que no tienen CC
+118	45	—	Esto hay que repararlo o explicarlo bien
+119	45		repetición de expresión
+120	45		operador ternario
+121	45		por el límite d etokens?
+122	45	—	eso significa que te quedaste corot, luego el número usado no está justificado
+123	45	—	Estos son lo smimos números que arriba, no hace falta otra tabla. Simplemente pon la Tasa de éxito en la tabla de arriba y listo
+124	45	—	falta el mensaje, debería empezar aquí
+125	46		cuidado con la alinuación aquí, usa \phantom abajo
+126	46	gpt-4o es conservador: rechaza correctamente el 100 % de los intentos sobre casos no	dos puntos dentro de dos puntos
+127	46	—	Creo que es mejor "darle la vuelta". Es decir, poner tres etiquetas en el eje X, que sean éxito, abstención y errores. Luego poenr dos columnas para comparar una al lado d ela otra. Cro que se verá mejor todo así (parecido al que hay al lado)
+128	46		por qué se abstiene? Qué responde para considerarlo "abstención"? Dice qu eno es elegible? Entiendo que no, eso sería "incorrecto" Esto debería explicarse
+129	46	: la fracción de casos elegibles que efectivamente transforma; gpt-4.1	sensibilidad en español
+130	47	efectos colaterales reales ( s.isEmpty(), map.containsKey()) que P5 rechaza de forma correcta según la política del prototipo pero que serían combinables en la práctica. Esto indica que el	Incluso si tiene efectos claterales
+131	48		mejor Discusión (a secas)
+132	48	cuando una precondición lo prohíbe. Un modelo peca de	has comprobado si los resultados que daban este modelo son semánticamente equivalentes al código original?
+133	48	varios órdenes de magnitud. El prototipo determinista procesó los 126 casos del corpus en 0,26 s (del orden de 2 ms por caso), de forma local, reproducible y sin dependencias externas.	ponlo en milisegundos, para que se pueda comparar fácilmente con lo sLLMs
+134	49	—	En realidad podemos ver el coste económico que tuvo, creo que eso lo puedes calcular con los datos qeu devolvió en cada respuesta. Estaría bien ponerlo . No srá mucho, pero es interesante
+135	50		que no entiendo por que´no se ha implementado
+136	50	Determinismo del transformador validado por tests; los LLMs presentan no-determinismo re- sidual aun con T = 0 (mitigado con 3 intentos). La política one-at-a-time limita interacciones inesperadas pero podría ocultar efectos compuestos.	muy telegráfico, reescribir
+137	50		qué es esto?
+138	50		qué significa esto?
+139	51	Congelación del protocolo ( LlmExperimentProtocol); trazabilidad completa (evidencias JSON/CSV/MD por invocación); guarda de elegibilidad v1.1 en el oráculo. La restricción a un único proveedor de LLM queda justificada en la Sección 6.5. 51	reescribir: es una enumeración no un texto describiendo las mitigaciones
+140	52	un else, sino el posible efecto colateral oculto en la condición (precondición P5). Esto justifica, a posteriori, la estrategia sintáctica y conservadora adoptada.	esto no lo justifica, diría más bien que justifica la no presencia de P5 entre las precondiciones
+141	52		coste en tiempo, pero no hablas de dinero (que también e smerno)
+142	52		P5 no lo veo justificado
+143	53	—	Me acabo de acordar que hablabas de una versión relajada de las precondiciones y no reucerdo haber isto su evaluación
+144	53	Las limitaciones descritas delimitan un programa de investigación coherente que puede articularse como tesis doctoral en el área de mantenimiento automático de software: la hipótesis de que	uff, esto es demasiado para algo tan sencillo, una tesis implicaría una contribución mucho mayor que eliminar las limitciones de este trabajo
+145	53	anidados, condicionales con	esto no lo hace ya tu aplicación?
+146	53	Relajar P5 con análisis semántico : dado que el efecto colateral en la condición es el principal obstáculo detectado en RQ1, un análisis de pureza permitiría declarar seguros más casos sin perder garantías.	es que P5 no debería estar en este trabajo siquiera
+147	53	Completar el modelo de complejidad con la detección de recursión, cerrando la única regla del modelo de SonarSource no implementada.	Esto tendría que estar hecho aquí también, es algo muy sencillo
+148	53		LLMs
+149	54		más que "determinista" yo lo llamaría "formal"
+150	55	lity of large language models (2024), arXiv:2411.02320; publicado en ACM TOSEM, doi:10.1145/3801158	en ese caso, pon la referencia d eTOSEM
+151	55		106
+152	55	—	Por qué este salto en la indentación?
+153	55	LNCS, vol. 6601, pp. 104–123. Springer (2011). https://doi.org/10.1007/978-3-642-19861- 87	corrige esto
+154	56	14	corrige esto
+155	56	https://le	esto es un libro, no debes poner una URL, le falta información de editor, etc
+156	57	Genera el classpath y ejecuta el lote sobre el corpus piloto y real; los artefactos se escriben enoutput/rq2-batch/.1 mvn -DskipTests compile dependency:build-classpath ”-Dmdep.outputFile=↪→ target/classpath.txt”2 $cp = Get-Content target/classpath.txt3 java -cp ”target/classes;$cp” es.tfm.refactoring.experiment.	Esto no debe ser así, se deba dar un directorio donde encontrar todo el corpus
+157	58	:	y de donde toma las respuestas grabadas? Eso no se dice
+158	59	—	Describe mejor lo que presentas aquí
+159	63	↪→ system/status).status; $s }	esto puede estar fuera del bucle, no?
+160	64		ejecución
+161	64	de SonarQube en el momento del análisis, que queda registrada en metadata.json. La limpieza del servidor se realiza con docker compose -f docker-compose.sonarqube.yml down -v.	esto no es una limitación
+162	65	—	Haz la tabla más ancha para evitar tantas líneas

@@ -73,7 +73,7 @@ Identificar el problema y motivarlo & Coste cognitivo del anidamiento de condici
 Fijar los objetivos de la solución  & Objetivos y preguntas de investigación RQ1--RQ3 & \ref{cap:introduccion} \\
 Diseñar y desarrollar el artefacto  & Precondiciones P1--P4, prototipo basado en AST y oráculo & \ref{cap:propuesta} \\
 Demostrar el artefacto              & Ejecución sobre el corpus piloto y real & \ref{sec:experimento} \\
-Evaluar                             & Medición de $\Delta$ de complejidad y evaluación de los LLM & \ref{sec:resultados} \\
+Evaluar                             & Medición de $\Delta$ de complejidad y evaluación de los LLMs & \ref{sec:resultados} \\
 Comunicar                           & La presente memoria y el paquete de replicación & --- \\
 \bottomrule
 \end{tabular}
@@ -91,7 +91,10 @@ repetirse y conducir al mismo resultado; sus detalles se describen en el diseño
 Con ese marco, cada pregunta se operacionaliza, sin alterar su enunciado
 (\autoref{sec:rq-intro}), en los términos siguientes.
 
-\paragraph{RQ1 — Alcance operativo.}
+\paragraph{RQ1 — \textquestiondown{}En qué casos se pueden combinar sentencias condicionales anidadas y cuál sería el resultado?}
+Se aborda de forma constructiva: se delimita el patrón objetivo y se formalizan
+las precondiciones que hacen segura su combinación, que el detector aplica sobre
+el corpus para separar los casos elegibles de los que no lo son. En concreto:
 \begin{itemize}
   \item Se estudian condicionales anidados de tipo \lstinline|if| en Java.
   \item Foco inicial: un \lstinline|if| que contiene exactamente otro
@@ -103,7 +106,10 @@ Con ese marco, cada pregunta se operacionaliza, sin alterar su enunciado
   (\autoref{sec:precondiciones}).
 \end{itemize}
 
-\paragraph{RQ2 — Criterio de medición.}
+\paragraph{RQ2 — \textquestiondown{}Qué impacto tienen estas refactorizaciones en la complejidad cognitiva?}
+Se aborda de forma empírica: se mide la complejidad cognitiva de cada método
+antes y después de aplicar la transformación y se agrega el efecto sobre todo el
+corpus. En concreto:
 \begin{itemize}
   \item La complejidad cognitiva se mide siguiendo el modelo de
   SonarSource~\cite{10.1145/3194164.3194186}, mediante una implementación
@@ -112,10 +118,13 @@ Con ese marco, cada pregunta se operacionaliza, sin alterar su enunciado
   \item Se reporta la reducción absoluta y relativa, por caso y agregada.
 \end{itemize}
 
-\paragraph{RQ3 — Protocolo de comparación.}
+\paragraph{RQ3 — \textquestiondown{}Pueden los grandes modelos de lenguaje realizar esta refactorización de forma correcta y automática?}
+Se aborda de forma comparativa: se solicita la misma transformación a varios
+modelos de lenguaje bajo un protocolo controlado y sus salidas se contrastan con
+el \emph{baseline} determinista mediante un oráculo automático. En concreto:
 \begin{itemize}
   \item Se evalúa sobre el corpus de evaluación (\autoref{sec:corpus}).
-  \item Se solicita a uno o más LLM la misma refactorización bajo un
+  \item Se solicita a uno o más LLMs la misma refactorización bajo un
   \emph{prompt} estandarizado y un protocolo congelado.
   \item Se comparan los resultados en corrección semántica, completitud de
   detección y calidad del código, mediante un oráculo automático
@@ -146,7 +155,7 @@ que, deliberadamente, no anticipan cifras.
   precondiciones de aplicabilidad.
   \item[H2.] La combinación reduce la complejidad cognitiva (proxy) de forma
   medible en los casos elegibles.
-  \item[H3.] Los LLM pueden reproducir la transformación con tasas de acierto
+  \item[H3.] Los LLMs pueden reproducir la transformación con tasas de acierto
   elevadas en casos elegibles, pero pueden fallar en el rechazo de casos no
   elegibles.
 \end{description}

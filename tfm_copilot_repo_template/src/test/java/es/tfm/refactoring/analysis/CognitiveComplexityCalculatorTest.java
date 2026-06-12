@@ -349,4 +349,63 @@ class CognitiveComplexityCalculatorTest {
             assertEquals(0, calculator.calculate("class T { int x = 5; }"));
         }
     }
+
+    // =========================================================================
+    // Recursión (regla SonarSource: +1 estructural por llamada del método a sí mismo)
+    // =========================================================================
+
+    @Nested
+    @DisplayName("Recursión")
+    class Recursion {
+
+        @Test
+        @DisplayName("Recursión directa simple → 2 (if:1 + llamada recursiva:1)")
+        void directRecursion() {
+            // if (n<=1): +1 ; fact(n-1): +1 (recursión, sin anidamiento) → 2
+            assertEquals(2, calculator.calculate(
+                    "class T { int fact(int n) { if (n <= 1) { return 1; } "
+                            + "return n * fact(n - 1); } }"));
+        }
+
+        @Test
+        @DisplayName("Dos llamadas recursivas (Fibonacci) → 3 (if:1 + 2 llamadas)")
+        void twoRecursiveCalls() {
+            // if (n<2): +1 ; fib(n-1): +1 ; fib(n-2): +1 → 3
+            assertEquals(3, calculator.calculate(
+                    "class T { int fib(int n) { if (n < 2) { return n; } "
+                            + "return fib(n - 1) + fib(n - 2); } }"));
+        }
+
+        @Test
+        @DisplayName("La recursión suma +1 plano, sin multiplicar por anidamiento → 4")
+        void recursionIsFlatRegardlessOfNesting() {
+            // if(n>0):+1 ; if(n>1):+1+1=2 ; f(n-1) en nivel 2: +1 (plano) → 4
+            assertEquals(4, calculator.calculate(
+                    "class T { int f(int n) { if (n > 0) { if (n > 1) { "
+                            + "return f(n - 1); } } return 0; } }"));
+        }
+
+        @Test
+        @DisplayName("Recursión a través de this → 1")
+        void recursionViaThis() {
+            assertEquals(1, calculator.calculate(
+                    "class T { int f(int n) { return this.f(n - 1); } }"));
+        }
+
+        @Test
+        @DisplayName("Llamada con aridad distinta no es recursión → 0")
+        void differentArityIsNotRecursion() {
+            // m(a, a) tiene 2 argumentos; el método tiene 1 parámetro → no cuenta
+            assertEquals(0, calculator.calculate(
+                    "class T { void m(int a) { m(a, a); } }"));
+        }
+
+        @Test
+        @DisplayName("Llamada sobre otro receptor no es recursión → 0")
+        void callOnOtherReceiverIsNotRecursion() {
+            // o.f(...) tiene un receptor distinto de this → no cuenta
+            assertEquals(0, calculator.calculate(
+                    "class T { int f(int n) { T o = null; return o.f(n - 1); } }"));
+        }
+    }
 }

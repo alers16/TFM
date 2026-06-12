@@ -2,23 +2,29 @@
 \chapter{Diseño experimental}
 \label{sec:experimento}
 
-En esta sección se explica cómo están montados los experimentos. Se describe primero
-el corpus; después, las métricas y el baseline con los que se mide; y, a continuación, los
-protocolos deliberadamente congelados de RQ2 y RQ3, junto con la validación
-complementaria con SonarQube. La idea que recorre todo el apartado es la
-reproducibilidad: el procedimiento aquí descrito debería poder repetirse y
-conducir al mismo resultado.
+Este capítulo detalla cómo se han diseñado y ejecutado los experimentos que
+responden a RQ2 y RQ3. En primer lugar se describe el corpus sobre el que se
+trabaja. A continuación se definen las métricas y la línea base con las que se
+mide el efecto de la transformación. Después se presentan, por separado, el
+protocolo determinista de RQ2 y el protocolo de evaluación de los modelos de
+lenguaje de RQ3, y el capítulo se cierra con la validación complementaria de la
+métrica frente a SonarQube. Un principio recorre todo el capítulo: la
+\textbf{reproducibilidad}. Cada decisión experimental se fija de antemano y se
+registra, de modo que el procedimiento aquí descrito pueda repetirse y conducir
+al mismo resultado.
 
 \section{Corpus}
 \label{sec:corpus}
-El corpus se carga desde recursos del \emph{classpath} mediante
-\texttt{PilotCorpusLoader} y \texttt{RealDatasetLoader}. Su composición se
-resume en la \autoref{tab:corpus}.
+El corpus se carga, por defecto, desde recursos empaquetados mediante
+\texttt{PilotCorpusLoader} y \texttt{RealDatasetLoader}; ambos cargadores
+admiten además un \emph{directorio del sistema de archivos} ---con subcarpetas
+\texttt{pilot-corpus/} y \texttt{real-corpus/}---, de modo que el corpus puede
+sustituirse, sin recompilar, indicando esa ruta al ejecutar el lote. Su
+composición se resume en la \autoref{tab:corpus}.
 
 \begin{table}[ht]
 \centering
-\caption{Composición del corpus de los experimentos RQ1/RQ2. Fuente:
-\texttt{output/rq2-batch/rq2-run-metadata.json}.}
+\caption{Composición del corpus de los experimentos RQ1/RQ2.}
 \label{tab:corpus}
 \begin{tabular}{@{}lrl@{}}
 \toprule
@@ -27,38 +33,35 @@ resume en la \autoref{tab:corpus}.
 Piloto (sintético) & 8   & Casos canónicos y un rechazo por cada precondición \\
 Real (código abierto) & 118 & Validación sobre código real de proyectos de código abierto \\
 \midrule
-\textbf{Total} & \textbf{126} & 104 elegibles, 22 no elegibles \\
+\textbf{Total} & \textbf{126} & 111 elegibles, 15 no elegibles \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Corpus piloto} (\texttt{src/main/resources/pilot-corpus/}):
-ficheros sintéticos que cubren los casos canónicos del patrón objetivo y
+\paragraph{Corpus piloto}:
+
+Ficheros sintéticos que cubren los casos canónicos del patrón objetivo y
 sus rechazos típicos (casos válidos, inválidos por violación de cada
 precondición y un caso mixto con varias oportunidades). Su finalidad es
 servir de prueba controlada del pipeline.
 
-\paragraph{Corpus real} (\texttt{src/main/resources/real-corpus/})
+\paragraph{Corpus real}:
 
-El corpus real está formado por fragmentos extraídos de proyectos Java de código abierto. Cada caso conserva metadatos que permiten trazar su procedencia y contexto original, incluyendo \lstinline|@project|, \lstinline|@file|, \lstinline|@method|, \lstinline|@license| y \lstinline|@sonarCCBefore|.
+El corpus real está formado por fragmentos extraídos de proyectos Java de código abierto. Cada caso conserva metadatos que permiten trazar su procedencia y contexto original. No son anotaciones de Java ni proceden de ninguna biblioteca: son etiquetas propias del proyecto, escritas como comentarios de línea al inicio de cada fichero (\lstinline|@project|, \lstinline|@file|, \lstinline|@method|, \lstinline|@license| y \lstinline|@sonarCCBefore|), que el cargador del corpus lee y asocia a cada caso.
 
 Los proyectos fuente proceden de dos orígenes principales:
 
 \begin{enumerate}
-    \item \textbf{Proyectos de código abierto de uso general}
-    (en \texttt{tmp-projects/}), añadidos en este trabajo para ampliar la
+    \item \textbf{Proyectos de código abierto de uso general}, añadidos en este trabajo para ampliar la
     variedad de dominios y estilos de código. Aportaron casos Apache Ant,
     Apache POI, Jackson Core y Jackson Databind (FasterXML) y las bibliotecas
     Apache Commons (\emph{Lang}, \emph{Collections}, \emph{Math} e \emph{IO}).
     Otros proyectos de este grupo se escanearon pero no aportaron ningún caso
     (Apache Commons \emph{Numbers}, \emph{Geometry} y \emph{Compress}, ASM y
-    PDFBox). El escaneo se realizó en varias tandas (el script
-    \texttt{scan-open-source-projects.ps1} y los lotes de
-    \texttt{output/corpus-scan/}).
+    PDFBox). El escaneo se realizó en varias tandas.
 
     \item \textbf{Proyectos de la evaluación de Saborido et
-    al.}~\cite{10.1109/ACCESS.2022.3144743}: los diez proyectos del antecedente
-    (ocho en \texttt{tmp-tutor-projects/} junto con jMetal y Bytecode Viewer).
+    al.}~\cite{10.1109/ACCESS.2022.3144743}: los diez proyectos del antecedente.
     Aportaron casos \texttt{cybercaptor-server}, \texttt{MOEAFramework},
     \texttt{knowage-server}, \texttt{fastjson}, \texttt{iotbroker}, jMetal y
     Bytecode Viewer; en cambio, \texttt{fiware-commons}, \texttt{jedis} y
@@ -69,7 +72,7 @@ El detalle por proyecto (dominio, volumen de código analizado y casos
 elegibles y no elegibles) se presenta junto al análisis de RQ1
 (\autoref{sec:resultados-rq1}).
 
-\paragraph{El escaneo como censo del patrón.} El corpus real no procede de un
+El corpus real no procede de un
 muestreo arbitrario, sino del escaneo sistemático de los proyectos citados. En
 conjunto, el escaneo evaluó 82\,655 candidatos a \texttt{if} externo del patrón
 en 23 proyectos de código abierto y localizó 117 instancias elegibles del patrón
@@ -78,10 +81,10 @@ casos no elegibles representativos y los 8 casos del piloto sintético) se
 consolidó el corpus de 126 casos, de los cuales 99 son casos reales elegibles.
 El corpus es, por tanto, esencialmente un censo de las oportunidades del patrón
 presentes en los proyectos analizados, y no una submuestra de los
-\emph{~}1.000 métodos con $\text{CC}>15$ considerados en el anteproyecto.
+\emph{~}1\,000 métodos con $\text{CC}>15$ considerados en el anteproyecto.
 
 \paragraph{Nota de alcance respecto al anteproyecto.} El anteproyecto aprobado
-preveía partir de los \emph{~}1.000 métodos con $\text{CC}>15$ del repositorio
+preveía partir de los \emph{~}1\,000 métodos con $\text{CC}>15$ del repositorio
 de Saborido et al., sin acotar el tipo de transformación. Al concretar el
 alcance en la combinación de condicionales anidados, un patrón específico y
 verificable, no la reducción de CC en general, el corpus resultante quedó en
@@ -96,9 +99,7 @@ declarado en \autoref{sec:alcance}.
 \textbf{corpus consolidado completo} (126 casos: 8 piloto y 118 reales; 104
 elegibles y 22 no elegibles), de modo que cubre todos los ejes de variación
 (casos elegibles, parciales y no elegibles) y los principales motivos de descarte estructurales.
-La \autoref{tab:subset-rq3} recoge una selección representativa de casos; los
-veredictos por intento de los 126 casos están en
-\texttt{output/rq3-campaign-real-phase9/rq3-summary.csv}.
+La \autoref{tab:subset-rq3} recoge una selección representativa de casos.
 
 \begin{table}[ht]
 \centering
@@ -113,54 +114,69 @@ veredictos por intento de los 126 casos están en
 \texttt{PILOT\_VALID\_SIMPLE} & Piloto & Elegible & Caso base \lstinline|if + if|. \\
 \texttt{PILOT\_VALID\_NESTED\_IN\_LOOP} & Piloto & Elegible & Anidamiento en \lstinline|for|. \\
 \texttt{REAL\_COMMONS\_MATH\_CONVERGED} & Real & Elegible & Doble condición numérica. \\
-\texttt{REAL\_ANT\_MATCH\_PATH} & Real & Elegible parcial & Triple \lstinline|if|; 3.\textsuperscript{er} nivel rechazado por P5. \\
+\texttt{REAL\_ANT\_MATCH\_PATH} & Real & Elegible & Triple \lstinline|if|; se combinan los dos pares anidados. \\
 \texttt{REAL\_COMMONS\_MATH\_VALIDATE\_RANGE} & Real & No elegible (P1) & \lstinline|outer if| con \lstinline|else|. \\
-\texttt{REAL\_COMMONS\_COLLECTIONS\_GET} & Real & No elegible (P5) & Llamada a método en condición. \\
+\texttt{REAL\_COMMONS\_COLLECTIONS\_GET} & Real & Elegible & Llamada a método en la condición (combinable). \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\section{Métricas y baseline}
-\textbf{Métrica primaria:} complejidad cognitiva proxy (CC) calculada por
-\texttt{CognitiveComplexityCalculator} antes y después de la
-transformación; se reporta \emph{before}, \emph{after} y
-$\Delta = \text{after} - \text{before}$ (un $\Delta$ negativo indica
-reducción). Las limitaciones del proxy están en \autoref{sec:proxy}.
-\textbf{Métrica complementaria:} complejidad cognitiva medida por
-SonarQube Community Build sobre un subconjunto representativo
-(\autoref{sec:sonar-val}). \textbf{Baseline determinista:} para cada caso,
-el resultado del pipeline (\texttt{BatchRunner}) constituye el baseline
-contra el que se contrastan las salidas de los LLMs en RQ3; declara
-explícitamente la elegibilidad y, en su caso, el $\Delta$ aplicable.
+\section{Métricas y línea base}
+La evaluación se apoya en dos métricas de complejidad y una referencia de
+comparación, todas fijadas de antemano para garantizar la reproducibilidad:
+\begin{itemize}
+  \item \textbf{Métrica primaria:} complejidad cognitiva proxy (CC) calculada
+  por \texttt{Cognitive\allowbreak Complexity\allowbreak Calculator} antes y después de la
+  transformación; se reporta \emph{before}, \emph{after} y
+  $\Delta = \text{after} - \text{before}$ (un $\Delta$ negativo indica
+  reducción). Las limitaciones del proxy están en \autoref{sec:proxy}.
+  \item \textbf{Métrica complementaria:} complejidad cognitiva medida por
+  SonarQube Community Build sobre el corpus completo, que sirve para validar el
+  proxy (\autoref{sec:sonar-val}).
+  \item \textbf{Baseline determinista:} para cada caso, el resultado del
+  pipeline (\texttt{BatchRunner}) constituye el baseline contra el que se
+  contrastan las salidas de los LLMs en RQ3; declara explícitamente la
+  elegibilidad y, en su caso, el $\Delta$ aplicable.
+\end{itemize}
+
+\section{Validación del proxy frente a SonarQube}
+\label{sec:sonar-val}
+Como la métrica primaria es un \emph{proxy} y no la implementación oficial,
+conviene comprobar su validez antes de emplearla en los experimentos. Para ello
+se contrastan sus valores con los de SonarQube Community Build (versión
+\texttt{26.4.0.121862}) sobre el \textbf{corpus completo}.
+
+El contraste se realiza caso por caso: se materializan los métodos \emph{before}
+y \emph{after} como ficheros Java independientes, se analizan en dos proyectos
+de SonarQube y se recupera su complejidad cognitiva oficial por fichero mediante
+la API, que se compara con la del proxy.
+
+El procedimiento es reproducible desde PowerShell: el análisis se lanza con el
+\emph{goal} \texttt{mvn sonar:sonar} contra un servidor local de SonarQube,
+arrancado en un contenedor \emph{Docker} mediante \texttt{docker-compose}. Los
+resultados de este contraste se presentan en la \autoref{sec:resultados-sonar}.
 
 \section{Protocolo RQ2 — Batch determinista \emph{before/after}}
 \label{sec:exp-rq2}
-(1)~Cargar la totalidad del corpus piloto y real; (2)~para cada
-\texttt{ExperimentCase}, ejecutar \lstinline|BatchRunner.processCase| con
-el detector en modo \texttt{STRUCTURAL} (precondiciones estructurales P1--P4) y
-la política \emph{one-at-a-time}; (3)~recoger métricas \emph{before},
-\emph{after} y $\Delta$, y motivos de descarte para los no elegibles; y
-(4)~exportar a JSON y CSV bajo \texttt{output/rq2-structural/}. La parte
-\textbf{congelada} es la composición del corpus, el modo de detección
-(\texttt{STRUCTURAL}), el conjunto P1--P4 y la política \emph{one-at-a-time};
-cualquier cambio en \texttt{CognitiveComplexityCalculator} invalidaría las
-métricas y exigiría una nueva ejecución completa.
+El protocolo consta de cuatro pasos:
 
-\section{Validación complementaria con SonarQube}
-\label{sec:sonar-val}
-La validación complementaria contrasta los valores del proxy con los de
-SonarQube Community Build (versión \texttt{26.4.0.121862}) sobre el
-\textbf{corpus completo}. Para cada caso se materializan los métodos
-\emph{before} y \emph{after} como ficheros Java independientes, se analizan en
-dos proyectos de SonarQube y se recupera su complejidad cognitiva oficial por
-fichero mediante la API, que se compara con la del proxy. El procedimiento,
-reproducible en PowerShell mediante el goal \texttt{mvn sonar:sonar}, está en
-\texttt{docs/rq2-sonar-validation-fullcorpus.md}; el arranque del servidor (vía
-\texttt{docker-compose}) en \texttt{docs/sonarqube-setup.md}; y los artefactos
-(\texttt{comparison.csv}, \texttt{comparison.md} y \texttt{metadata.json} con
-versión, fecha y operador) se conservan en
-\texttt{output/rq2-sonar-validation/fullcorpus/}. Los resultados de este
-contraste se presentan en la \autoref{sec:resultados-sonar}.
+\begin{enumerate}
+    \item Cargar la totalidad del corpus piloto y real.
+    \item Para cada \texttt{ExperimentCase}, ejecutar
+    \lstinline|BatchRunner.processCase| con el detector en modo
+    \texttt{STRUCTURAL} (precondiciones estructurales P1--P4) y la política
+    una por una.
+    \item Recoger métricas \emph{before}, \emph{after} y $\Delta$, y motivos de
+    descarte para los no elegibles.
+    \item Exportar a JSON y CSV.
+\end{enumerate}
+
+De este protocolo se \textbf{congelan} ---es decir, se fijan de antemano y no
+varían entre ejecuciones--- cuatro elementos: la composición del corpus, el modo
+de detección (\texttt{STRUCTURAL}), el conjunto de precondiciones P1--P4 y la
+política de aplicación una por una. Cualquier cambio en
+\texttt{Cognitive\allowbreak Complexity\allowbreak Calculator} invalidaría las métricas y exigiría
+repetir la ejecución completa.
 
 \section{Protocolo RQ3 — Evaluación de LLMs}
 \label{sec:exp-rq3}
@@ -203,18 +219,31 @@ queda explícitamente como amenaza a la validez externa y trabajo futuro
 protocolo es intercambiable y añadir otro proveedor es un cambio de
 configuración, no de arquitectura.
 
-El procedimiento por caso es: cargar
-caso y baseline; construir el prompt \texttt{v1.0}; invocar el modelo;
-almacenar la respuesta cruda; aplicar el
-oráculo (\autoref{fig:oraculo}); registrar \texttt{LlmEvaluationResult}; y
-repetir para cada intento y modelo. La parte \textbf{congelada} incluye
-modelos, temperatura, intentos, versión del prompt, oráculo y composición
-del subset; el provider es intercambiable, siendo \lstinline|live| el modo
-oficial.
+El procedimiento que se aplica a cada caso consta de los siguientes pasos:
+\begin{enumerate}
+  \item cargar el caso y su \emph{baseline} determinista;
+  \item construir el \emph{prompt} \texttt{v1.0};
+  \item invocar el modelo;
+  \item almacenar la respuesta cruda;
+  \item aplicar el oráculo (\autoref{fig:oraculo});
+  \item registrar el \texttt{LlmEvaluationResult}.
+\end{enumerate}
+Estos pasos se repiten para cada intento y cada modelo. Como en RQ2, el
+protocolo está \textbf{congelado}: se fijan de antemano los modelos, la
+temperatura, el número de intentos, la versión del \emph{prompt}, el oráculo y
+la composición del conjunto evaluado. El único componente intercambiable es el
+\emph{proveedor} de respuestas, cuyo modo oficial es \lstinline|live| (la
+invocación real a la API); esa indirección permite, por ejemplo, sustituir las
+llamadas por respuestas grabadas en las pruebas sin alterar el resto del
+protocolo.
 
 \section{Reproducibilidad}
-Las garantías se sostienen sobre elementos verificables; exigencia explícita
-de \lstinline|OPENAI_API_KEY| en modo \lstinline|live|; versionado del
-prompt propagado a cada artefacto; versiones fijadas en \texttt{pom.xml}
-(Java 17, JavaParser 3.26.4, JUnit 5.11.4, Gson 2.11.0); y artefactos
-persistentes auditables sin ejecutar el código.
+La reproducibilidad del estudio no se enuncia como aspiración, sino que se apoya
+en elementos concretos y verificables:
+\begin{itemize}
+  \item exigencia explícita de \lstinline|OPENAI_API_KEY| en modo \lstinline|live|;
+  \item versionado del \emph{prompt} propagado a cada artefacto;
+  \item versiones fijadas en \texttt{pom.xml} (Java 17, JavaParser 3.26.4,
+  JUnit 5.11.4, Gson 2.11.0);
+  \item artefactos persistentes auditables sin ejecutar el código.
+\end{itemize}

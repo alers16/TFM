@@ -68,7 +68,7 @@ if (A && B) {
 anidados (izquierda) se combinan en una única condición conjuntiva
 \lstinline|A && B| (derecha). La transformación preserva el orden de
 evaluación y es semánticamente equivalente bajo las precondiciones
-estructurales P1--P4.}
+estructurales P1--P4 (\autoref{sec:precondiciones}).}
 \label{fig:before-after}
 \end{figure}
 
@@ -94,30 +94,30 @@ la secuencia de operadores lógicos \lstinline|&&| aporta +1: en total, 2. La
 combinación ahorra, por tanto, el incremento de anidamiento del segundo
 \lstinline|if|. La \autoref{fig:cc-desglose} ilustra este desglose sobre un
 método concreto, anotando la contribución de cada nodo a la complejidad
-cognitiva del método.
+cognitiva del método. El mismo razonamiento se aplica a cadenas de tres o más
+\lstinline|if| anidados, que se combinan aplicando la regla por pares de forma
+repetida (\autoref{sec:alcance}).
 
 \begin{figure}[ht]
 \centering
 \begin{minipage}{0.9\linewidth}
 \textbf{Antes (anidado): CC del método $= 3$}
 \begin{lstlisting}[numbers=none]
-boolean puedeEnviar(boolean pagado, boolean enStock) {
+void procesarPedido(boolean pagado, boolean enStock, Pedido p) {
     if (pagado) {            // +1  (incremento estructural)
         if (enStock) {       // +2  (estructural +1, anidamiento +1)
-            return true;
+            enviar(p);
         }
     }
-    return false;
 }
 \end{lstlisting}
 \smallskip
 \textbf{Después (combinado): CC del método $= 2$}
 \begin{lstlisting}[numbers=none]
-boolean puedeEnviar(boolean pagado, boolean enStock) {
+void procesarPedido(boolean pagado, boolean enStock, Pedido p) {
     if (pagado && enStock) { // +1 (if) y +1 (secuencia &&)
-        return true;
+        enviar(p);
     }
-    return false;
 }
 \end{lstlisting}
 \end{minipage}
@@ -148,8 +148,7 @@ preserva el comportamiento aunque las condiciones tengan efectos colaterales,
 porque \lstinline|&&| evalúa \lstinline|A| y, solo si es cierto, \lstinline|B|,
 en el mismo orden y bajo las mismas condiciones que el anidamiento. No hace
 falta, por tanto, restringir los efectos colaterales para garantizar la
-corrección. El prototipo ofrece esa restricción solo como un \emph{modo
-conservador opcional}, una elección de cautela, no un requisito. El conjunto de
+corrección. El conjunto de
 precondiciones se formaliza en la \autoref{sec:precondiciones}.
 
 \section{Casos que no son combinables}
