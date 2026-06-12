@@ -298,10 +298,10 @@ class CognitiveComplexityFromFileTest {
         }
 
         @Test
-        @DisplayName("isPalindrome – else + && en return → CC=3 [SONAR=3]")
+        @DisplayName("isPalindrome – else + && en return + recursión → CC=4 [SONAR=3]")
         void isPalindrome() {
-            // if: +1; else: +1; return ... && ...: +1 → 3
-            assertEquals(3, calculator.calculate(method("isPalindrome")));
+            // if: +1; else: +1; return ... && ...: +1; recursive call: +1 → 4
+            assertEquals(4, calculator.calculate(method("isPalindrome")));
         }
 
         @Test

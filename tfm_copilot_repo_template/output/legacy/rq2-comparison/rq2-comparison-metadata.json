@@ -1,9 +1,0 @@
-{
-  "artifactType": "rq2-comparison",
-  "startedAt": "2026-06-03T15:36:13.916257700Z",
-  "finishedAt": "2026-06-03T15:36:14.192269600Z",
-  "pilotCases": 8,
-  "realCases": 118,
-  "tutorCases": 12,
-  "note": "Comparativa STRICT (P1-P5) vs RELAXED (P1-P4 + P5'). Valores de complejidad = estimacion proxy del prototipo."
-}

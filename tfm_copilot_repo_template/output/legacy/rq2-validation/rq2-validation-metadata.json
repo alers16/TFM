@@ -1,9 +1,0 @@
-{
-  "artifactType": "rq2-validation",
-  "startedAt": "2026-05-04T12:17:04.040050600Z",
-  "finishedAt": "2026-05-04T12:17:06.634788700Z",
-  "totalRows": 24,
-  "passStrict": 10,
-  "passRelaxed": 14,
-  "note": "Validacion dinamica: compilacion con javac del output del transformador. No incluye ejecucion de tests del proyecto fuente (trabajo futuro)."
-}
